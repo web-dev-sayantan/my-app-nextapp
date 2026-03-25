@@ -61,7 +61,7 @@ export function KnowBeforeYouGo({ articles }: { articles: Article[] }) {
               {articles.map((article, idx) => (
                 <div
                   key={idx}
-                  className="flex-shrink-0 w-full md:w-1/3 bg-gray-800/40 border border-gray-700 rounded-lg overflow-hidden hover:border-blue-400 transition duration-300 group cursor-pointer flex flex-col"
+                  className="shrink-0 w-full md:w-1/3 bg-gray-800/40 border border-gray-700 rounded-lg overflow-hidden hover:border-blue-400 transition duration-300 group cursor-pointer flex flex-col"
                 >
                   <div className="relative h-48 overflow-hidden">
                     <Image

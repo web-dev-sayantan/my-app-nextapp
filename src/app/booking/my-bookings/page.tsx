@@ -23,21 +23,21 @@ export default function MyBookingsPage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Track Your Adventures</h3>
                   <p className="text-gray-400">Monitor all your registered treks and upcoming departures</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Easy Modifications</h3>
                   <p className="text-gray-400">Change dates, add friends, or update your preferences anytime</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Digital Access</h3>
                   <p className="text-gray-400">Get instant access to itineraries, documents, and guides</p>

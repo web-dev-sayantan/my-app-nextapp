@@ -23,21 +23,21 @@ export default function Next100YearsPage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Global Impact</h3>
                   <p className="text-gray-400">Trail Makers becomes the standard-bearer for ethical, sustainable adventure tourism</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Ecosystem Restoration</h3>
                   <p className="text-gray-400">Millions of trees and restored ecosystems across all mountainous regions</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Human Flourishing</h3>
                   <p className="text-gray-400">Thriving mountain communities with sustainable livelihoods and prosperity</p>
@@ -74,7 +74,7 @@ export default function Next100YearsPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-20">
-          <div className="bg-gradient-to-br from-blue-900/40 to-purple-900/40 border border-blue-600 rounded-lg p-8">
+          <div className="bg-linear-to-br from-blue-900/40 to-purple-900/40 border border-blue-600 rounded-lg p-8">
             <h3 className="text-xl font-bold text-blue-400 mb-4">🌍 The World We're Building</h3>
             <ul className="space-y-3 text-gray-300">
               <li className="flex items-start gap-3">
@@ -96,7 +96,7 @@ export default function Next100YearsPage() {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 border border-green-600 rounded-lg p-8">
+          <div className="bg-linear-to-br from-green-900/40 to-emerald-900/40 border border-green-600 rounded-lg p-8">
             <h3 className="text-xl font-bold text-green-400 mb-4">🌱 Legacy Milestones</h3>
             <ul className="space-y-3 text-gray-300">
               <li className="flex items-start gap-3">

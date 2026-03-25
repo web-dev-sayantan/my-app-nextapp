@@ -24,7 +24,7 @@ export function ItineraryMap({ waypoints, trekName }: ItineraryMapProps) {
   const mapWidth = 100;
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-gray-950 to-black border-t border-gray-800">
+    <section className="py-20 px-6 bg-linear-to-b from-gray-950 to-black border-t border-gray-800">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
           Your Journey Map
@@ -180,7 +180,7 @@ export function ItineraryMap({ waypoints, trekName }: ItineraryMapProps) {
                     className="w-full px-4 py-4 flex items-start justify-between hover:bg-gray-800 transition"
                   >
                     <div className="flex items-start gap-3 text-left flex-1">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-bold">
+                      <div className="shrink-0 w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-bold">
                         {waypoint.day}
                       </div>
                       <div>
@@ -195,7 +195,7 @@ export function ItineraryMap({ waypoints, trekName }: ItineraryMapProps) {
                       </div>
                     </div>
                     {waypoint.description && (
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         {expandedDay === waypoint.day ? (
                           <FiChevronUp className="w-5 h-5 text-gray-400" />
                         ) : (

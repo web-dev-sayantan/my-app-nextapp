@@ -161,7 +161,7 @@ export default function PaymentPage() {
 
   if (!bookingId || !amount) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-400 mb-4">Invalid booking details</p>
           <Link href="/all" className="text-blue-400 hover:text-blue-300">
@@ -173,7 +173,7 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+    <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white">
       {/* Header */}
       <div className="border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-6">
@@ -256,7 +256,7 @@ export default function PaymentPage() {
 
           {/* Order Summary */}
           <div className="h-fit">
-            <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 sticky top-20">
+            <div className="bg-linear-to-br from-blue-900 to-blue-800 rounded-lg p-6 sticky top-20">
               <h3 className="text-lg font-bold mb-6">Order Summary</h3>
 
               <div className="space-y-4 mb-6 pb-6 border-b border-blue-700">

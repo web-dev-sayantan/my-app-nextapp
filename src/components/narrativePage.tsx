@@ -193,7 +193,7 @@ export function NarrativePage({
       )}
 
       {/* Bottom CTA */}
-      <section className="bg-gradient-to-r from-blue-900 to-purple-900 py-20 px-4 md:px-8">
+      <section className="bg-linear-to-r from-blue-900 to-purple-900 py-20 px-4 md:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             {cta ? "Ready to Continue Your Journey?" : "Ready to Start Your Adventure?"}

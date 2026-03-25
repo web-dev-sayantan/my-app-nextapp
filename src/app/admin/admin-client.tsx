@@ -161,7 +161,7 @@ export default function AdminClient({
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 shadow">
+      <div className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Admin Dashboard
@@ -190,7 +190,7 @@ export default function AdminClient({
         </div>
 
         {activeTab === "users" && (
-          <div className="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+          <div className="overflow-hidden rounded-lg bg-white shadow-sm dark:bg-gray-800">
             <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Users
@@ -277,24 +277,24 @@ export default function AdminClient({
                         <td className="px-6 py-4">
                           <div className="flex flex-wrap items-center gap-2">
                             {user.isDenied && (
-                              <span className="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                              <span className="rounded-sm bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-400">
                                 Denied
                               </span>
                             )}
                             {user.isLocked && (
-                              <span className="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                              <span className="rounded-sm bg-red-100 px-2 py-1 text-xs font-medium text-red-800 dark:bg-red-900/30 dark:text-red-400">
                                 Locked
                               </span>
                             )}
                             {!user.isActive && (
-                              <span className="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-400">
+                              <span className="rounded-sm bg-gray-100 px-2 py-1 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-400">
                                 Inactive
                               </span>
                             )}
                             {user.isActive &&
                               !user.isLocked &&
                               !user.isDenied && (
-                                <span className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                <span className="rounded-sm bg-green-100 px-2 py-1 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-400">
                                   Active
                                 </span>
                               )}
@@ -319,14 +319,14 @@ export default function AdminClient({
                                     setEditRole(user.role);
                                     setIsModalOpen(true);
                                   }}
-                                  className="whitespace-nowrap rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
+                                  className="whitespace-nowrap rounded-sm bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
                                 >
                                   Edit Role
                                 </button>
                                 {user.isLocked && (
                                   <button
                                     onClick={() => handleUnlockAccount(user.id)}
-                                    className="whitespace-nowrap rounded bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/50"
+                                    className="whitespace-nowrap rounded-sm bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:hover:bg-yellow-900/50"
                                   >
                                     Unlock
                                   </button>
@@ -360,7 +360,7 @@ export default function AdminClient({
                                           alert("Failed to reset password");
                                         }
                                       }}
-                                      className="whitespace-nowrap rounded bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50"
+                                      className="whitespace-nowrap rounded-sm bg-indigo-100 px-2 py-0.5 text-xs font-medium text-indigo-700 hover:bg-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:hover:bg-indigo-900/50"
                                     >
                                       Reset Pwd
                                     </button>
@@ -369,7 +369,7 @@ export default function AdminClient({
                                   onClick={() =>
                                     handleToggleActive(user.id, user.isActive)
                                   }
-                                  className={`whitespace-nowrap rounded px-2 py-0.5 text-xs font-medium ${user.isActive ? "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400" : "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400"}`}
+                                  className={`whitespace-nowrap rounded-sm px-2 py-0.5 text-xs font-medium ${user.isActive ? "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400" : "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400"}`}
                                 >
                                   {user.isActive ? "Deactivate" : "Activate"}
                                 </button>
@@ -384,7 +384,7 @@ export default function AdminClient({
                                       user.isDenied,
                                     )
                                   }
-                                  className={`whitespace-nowrap rounded px-2 py-0.5 text-xs font-medium ${user.isDenied ? "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400"}`}
+                                  className={`whitespace-nowrap rounded-sm px-2 py-0.5 text-xs font-medium ${user.isDenied ? "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400"}`}
                                 >
                                   {user.isDenied ? "Allow" : "Deny"}
                                 </button>
@@ -401,7 +401,7 @@ export default function AdminClient({
         )}
 
         {activeTab === "audit-logs" && (
-          <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <div className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
             <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
               Audit Logs
             </h2>
@@ -413,7 +413,7 @@ export default function AdminClient({
         )}
 
         {activeTab === "settings" && (
-          <div className="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+          <div className="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
             <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
               System Settings
             </h2>
@@ -438,7 +438,7 @@ export default function AdminClient({
                 onChange={(event) =>
                   setEditRole(event.target.value as EditableRole)
                 }
-                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 outline-hidden focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="USER">User</option>
                 <option value="MODERATOR">Moderator</option>

@@ -58,7 +58,7 @@ export function TrekByRegionClient({ regions, regionStats }: TrekByRegionClientP
               const stats = regionStats[region];
               return (
                 <Link key={region} href={`/treks?region=${region}`}>
-                  <div className="relative w-48 md:w-56 lg:w-60 h-64 md:h-75 lg:h-80 rounded-card-lg overflow-hidden group cursor-pointer flex-shrink-0 shadow-warm hover:shadow-warm-md transition-all duration-300">
+                  <div className="relative w-48 md:w-56 lg:w-60 h-64 md:h-75 lg:h-80 rounded-card-lg overflow-hidden group cursor-pointer shrink-0 shadow-warm hover:shadow-warm-md transition-all duration-300">
                     {stats.image && (
                       <Image
                         src={stats.image}
@@ -68,7 +68,7 @@ export function TrekByRegionClient({ regions, regionStats }: TrekByRegionClientP
                       />
                     )}
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-text-primary via-text-primary/40 to-transparent group-hover:via-text-primary/50 transition duration-300"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-text-primary via-text-primary/40 to-transparent group-hover:via-text-primary/50 transition duration-300"></div>
                     
                     {/* Content */}
                     <div className="absolute inset-0 flex flex-col items-center justify-end p-4 md:p-6 text-center">

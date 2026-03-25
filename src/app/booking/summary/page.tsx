@@ -87,7 +87,7 @@ export default function BookingSummary() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+    <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white">
       {/* Header */}
       <div className="border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-6">
@@ -137,7 +137,7 @@ export default function BookingSummary() {
                   onClick={() =>
                     setNumberOfPeople(Math.max(1, numberOfPeople - 1))
                   }
-                  className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded"
+                  className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-sm"
                 >
                   −
                 </button>
@@ -150,7 +150,7 @@ export default function BookingSummary() {
                   }
                   min="1"
                   max={parseInt(availableSeats || "0")}
-                  className="bg-gray-700 text-white px-4 py-2 rounded text-center w-20"
+                  className="bg-gray-700 text-white px-4 py-2 rounded-sm text-center w-20"
                 />
 
                 <button
@@ -162,7 +162,7 @@ export default function BookingSummary() {
                       ),
                     )
                   }
-                  className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded"
+                  className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-sm"
                 >
                   +
                 </button>
@@ -187,7 +187,7 @@ export default function BookingSummary() {
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
                     placeholder="Your full name"
-                    className="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:border-blue-500 focus:outline-none"
+                    className="w-full bg-gray-700 border border-gray-600 rounded-sm px-4 py-2 text-white focus:border-blue-500 focus:outline-hidden"
                   />
                 </div>
 
@@ -200,7 +200,7 @@ export default function BookingSummary() {
                     value={contactPhone}
                     onChange={(e) => setContactPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:border-blue-500 focus:outline-none"
+                    className="w-full bg-gray-700 border border-gray-600 rounded-sm px-4 py-2 text-white focus:border-blue-500 focus:outline-hidden"
                   />
                 </div>
 
@@ -213,7 +213,7 @@ export default function BookingSummary() {
                     value={contactEmail}
                     onChange={(e) => setContactEmail(e.target.value)}
                     placeholder="your.email@example.com"
-                    className="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 text-white focus:border-blue-500 focus:outline-none"
+                    className="w-full bg-gray-700 border border-gray-600 rounded-sm px-4 py-2 text-white focus:border-blue-500 focus:outline-hidden"
                   />
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function BookingSummary() {
 
           {/* Price Summary */}
           <div className="h-fit">
-            <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 sticky top-20">
+            <div className="bg-linear-to-br from-blue-900 to-blue-800 rounded-lg p-6 sticky top-20">
               <h3 className="text-lg font-bold mb-6">Price Breakdown</h3>
 
               <div className="space-y-3 mb-6 pb-6 border-b border-blue-700">

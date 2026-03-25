@@ -81,10 +81,10 @@ function SandakphuTrekGuide() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <main className='min-h-screen leading-relaxed text-stone-800 bg-gradient-to-b from-blue-50 to-green-50'>
+      <main className='min-h-screen leading-relaxed text-stone-800 bg-linear-to-b from-blue-50 to-green-50'>
 
         {/* Hero Section */}
-        <div className='bg-gradient-to-r from-blue-600 via-purple-600 to-green-600 flex flex-col w-full items-center justify-center text-white pt-16 pb-12 relative overflow-hidden'>
+        <div className='bg-linear-to-r from-blue-600 via-purple-600 to-green-600 flex flex-col w-full items-center justify-center text-white pt-16 pb-12 relative overflow-hidden'>
           <div className='absolute inset-0 bg-black opacity-20'></div>
           <div className='relative z-10 text-center max-w-4xl mx-auto px-4'>
             <h1 className='text-5xl lg:text-6xl font-bold mb-6 leading-tight'>
@@ -180,7 +180,7 @@ function SandakphuTrekGuide() {
           <section className='mb-12'>
             <div className='prose prose-lg max-w-none'>
               <p className='text-xl leading-relaxed mb-6 font-medium text-gray-700'>
-                <span className='text-6xl bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent font-bold mr-3 float-left leading-none'>I</span>
+                <span className='text-6xl bg-linear-to-r from-blue-600 to-green-600 bg-clip-text text-transparent font-bold mr-3 float-left leading-none'>I</span>
                 magine stepping into a living, breathing Instagram filter—except it's 100% real and 200% windy. Welcome to the Sandakphu trek, the crown jewel of West Bengal's trekking destinations and your gateway to witnessing some of the world's most spectacular mountain views.
               </p>
               
@@ -197,7 +197,7 @@ function SandakphuTrekGuide() {
               Why Sandakphu Trek Should Be Your Next Adventure
             </h2>
             
-            <div className='bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-2xl border-l-8 border-orange-400 mb-8'>
+            <div className='bg-linear-to-r from-yellow-50 to-orange-50 p-8 rounded-2xl border-l-8 border-orange-400 mb-8'>
               <h3 className='text-2xl font-bold mb-4 text-orange-800'>The Ultimate Himalayan Theater Experience</h3>
               <p className='text-lg leading-relaxed mb-4'>
                 Here's what makes Sandakphu absolutely unmissable: Where else can you spot four of the world's five highest peaks—Mount Everest, Lhotse, Makalu, and Kanchenjunga—while sipping chai in thermal socks that smell like pure ambition? This isn't just a trek; it's a cinematic experience with altitude that Christopher Nolan would be jealous of.
@@ -234,7 +234,7 @@ function SandakphuTrekGuide() {
               </div>
             </div>
 
-            <div className='bg-gradient-to-r from-purple-100 to-pink-100 p-8 rounded-2xl'>
+            <div className='bg-linear-to-r from-purple-100 to-pink-100 p-8 rounded-2xl'>
               <h4 className='text-2xl font-bold mb-4 text-purple-800'>The Sandakphu Magic</h4>
               <p className='text-lg leading-relaxed mb-4'>
                 The sunrise from Sandakphu is legendary - each dawn feels like Simba's naming ceremony, complete with chills, awe, and the overwhelming feeling that you've witnessed something truly divine. The wet fog looks like it was directed for a Christopher Nolan film, and you'll meet locals whose smiles are warmer than your fleece jacket.
@@ -334,7 +334,7 @@ function SandakphuTrekGuide() {
             </h2>
 
             <div className='grid lg:grid-cols-3 gap-6 mb-8'>
-              <div className='bg-gradient-to-br from-green-400 to-green-600 text-white p-6 rounded-xl'>
+              <div className='bg-linear-to-br from-green-400 to-green-600 text-white p-6 rounded-xl'>
                 <h3 className='text-2xl font-bold mb-4'>Peak Season</h3>
                 <p className='text-lg font-semibold mb-2'>April - May & October - November</p>
                 <ul className='space-y-2 text-green-100'>
@@ -345,7 +345,7 @@ function SandakphuTrekGuide() {
                 </ul>
               </div>
               
-              <div className='bg-gradient-to-br from-yellow-400 to-orange-500 text-white p-6 rounded-xl'>
+              <div className='bg-linear-to-br from-yellow-400 to-orange-500 text-white p-6 rounded-xl'>
                 <h3 className='text-2xl font-bold mb-4'>Good Season</h3>
                 <p className='text-lg font-semibold mb-2'>December - March</p>
                 <ul className='space-y-2 text-yellow-100'>
@@ -356,7 +356,7 @@ function SandakphuTrekGuide() {
                 </ul>
               </div>
               
-              <div className='bg-gradient-to-br from-gray-400 to-gray-600 text-white p-6 rounded-xl'>
+              <div className='bg-linear-to-br from-gray-400 to-gray-600 text-white p-6 rounded-xl'>
                 <h3 className='text-2xl font-bold mb-4'>Avoid</h3>
                 <p className='text-lg font-semibold mb-2'>June - September</p>
                 <ul className='space-y-2 text-gray-200'>
@@ -386,7 +386,7 @@ function SandakphuTrekGuide() {
           <section className='mb-12'>
             <h2 className='text-4xl font-bold mb-8 text-gray-800'>Historical Significance & Cultural Heritage</h2>
             
-            <div className='bg-gradient-to-r from-amber-50 to-orange-50 p-8 rounded-2xl border-l-8 border-amber-400'>
+            <div className='bg-linear-to-r from-amber-50 to-orange-50 p-8 rounded-2xl border-l-8 border-amber-400'>
               <h3 className='text-2xl font-bold mb-4 text-amber-800'>Victorian Legacy & Local Folklore</h3>
               <p className='text-lg leading-relaxed mb-4'>
                 They say British officers huffed their way to Sandakphu in the 1800s looking for "leisure," which is fancy Victorian speak for mountain-induced hallucinations and deeply judgmental tea picnics. But long before the British arrived, local shepherds were probably vibing up here with their yaks, watching spectacular sunsets and wondering when tourists would show up asking for Wi-Fi.
@@ -426,7 +426,7 @@ function SandakphuTrekGuide() {
 
           {/* Call to Action */}
           <section className='mb-20 text-center'>
-            <div className='bg-gradient-to-r from-blue-600 to-green-600 text-white p-10 rounded-2xl shadow-xl'>
+            <div className='bg-linear-to-r from-blue-600 to-green-600 text-white p-10 rounded-2xl shadow-xl'>
               <h2 className='text-3xl font-bold mb-4'>Ready to Conquer Bengal's Rooftop?</h2>
               <p className='text-lg mb-6 max-w-2xl mx-auto'>Join The Trail Makers on an unforgettable Sandakphu adventure where each sunrise feels like magic, each trail tells a story, and every view humbles you with its beauty.</p>
               <Link href="/contact" className='inline-block bg-white text-blue-700 font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-blue-100 transition'>

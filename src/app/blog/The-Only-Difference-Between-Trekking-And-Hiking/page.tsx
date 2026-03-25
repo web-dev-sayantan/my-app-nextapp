@@ -49,7 +49,7 @@ const HikingTrekkingGuide = () => {
         </div>
         
         <div className="relative z-10 text-center text-white max-w-5xl mx-auto px-6">
-          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-8 border border-white/20">
+          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-xs rounded-full mb-8 border border-white/20">
             <span className="text-sm font-medium tracking-wider">COMPLETE GUIDE 2025</span>
           </div>
           
@@ -113,7 +113,7 @@ const HikingTrekkingGuide = () => {
               { title: "Activity Comparison", desc: "Practical differences today", time: "4 min" },
               { title: "Choosing Guide", desc: "Which suits your style", time: "3 min" }
             ].map((item, index) => (
-              <div key={index} className="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 cursor-pointer">
+              <div key={index} className="group bg-white p-8 rounded-2xl shadow-xs border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 cursor-pointer">
                 <div className="w-12 h-12 bg-black rounded-xl mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <span className="text-white font-bold text-lg">{index + 1}</span>
                 </div>
@@ -382,7 +382,7 @@ const HikingTrekkingGuide = () => {
           {/* Warning Box */}
           <div className="bg-yellow-50 border-l-8 border-yellow-400 p-8 rounded-r-3xl">
             <div className="flex items-start space-x-4">
-              <div className="w-6 h-6 bg-yellow-400 rounded-full flex-shrink-0 mt-1 flex items-center justify-center">
+              <div className="w-6 h-6 bg-yellow-400 rounded-full shrink-0 mt-1 flex items-center justify-center">
                 <span className="text-white text-sm font-bold">!</span>
               </div>
               <div>

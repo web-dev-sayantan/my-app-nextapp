@@ -6,7 +6,7 @@ import { FaInstagram } from "react-icons/fa6";
 
 function Contact() {
   return (
-    <div className="bg-gradient-to-b from-black via-sky-900 to-neutral-800 min-h-screen text-white text-center pt-40">
+    <div className="bg-linear-to-b from-black via-sky-900 to-neutral-800 min-h-screen text-white text-center pt-40">
       <div className="font-bold text-5xl mb-4 mx-1 uppercase below-xs:text-2xl">
         Contact Us
       </div>

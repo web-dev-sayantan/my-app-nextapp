@@ -23,21 +23,21 @@ export default function UniversePage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Cosmic Perspective</h3>
                   <p className="text-gray-400">Experience the night sky as it was meant to be seen: pristine and endless</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Spiritual Connection</h3>
                   <p className="text-gray-400">Mountains as spaces for contemplation, reflection, and inner transformation</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Wonder & Discovery</h3>
                   <p className="text-gray-400">Rekindling that sense of awe that connects us to something greater</p>
@@ -73,7 +73,7 @@ export default function UniversePage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-20">
-          <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 border border-purple-600 rounded-lg p-8">
+          <div className="bg-linear-to-br from-purple-900/40 to-indigo-900/40 border border-purple-600 rounded-lg p-8">
             <h3 className="text-xl font-bold text-purple-400 mb-4">🌌 Astronomical Experiences</h3>
             <ul className="space-y-3 text-gray-300">
               <li className="flex items-start gap-3">
@@ -95,7 +95,7 @@ export default function UniversePage() {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-900/40 to-cyan-900/40 border border-blue-600 rounded-lg p-8">
+          <div className="bg-linear-to-br from-blue-900/40 to-cyan-900/40 border border-blue-600 rounded-lg p-8">
             <h3 className="text-xl font-bold text-blue-400 mb-4">🧘 Spiritual Growth</h3>
             <ul className="space-y-3 text-gray-300">
               <li className="flex items-start gap-3">
@@ -118,7 +118,7 @@ export default function UniversePage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-indigo-900 to-purple-900 border border-indigo-600 rounded-lg p-8 mb-20 text-center">
+        <div className="bg-linear-to-r from-indigo-900 to-purple-900 border border-indigo-600 rounded-lg p-8 mb-20 text-center">
           <p className="text-xl text-gray-200 italic mb-6">
             "In the quiet moments atop a mountain peak, watching the sun merge with the horizon, 
             you understand that you are part of something eternal, vast, and infinitely beautiful."

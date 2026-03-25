@@ -14,7 +14,7 @@ function Scrollables({ Name, Img, PageLink }: ScrollablesProps) {
   const default_Link = "/contact";
 
   return (
-    <div className="my-4 mx-2 snap-center w-32 h-40 flex-shrink-0">
+    <div className="my-4 mx-2 snap-center w-32 h-40 shrink-0">
       <Link href={PageLink || default_Link}>
         <div className="relative  flex flex-col justify-center items-center">
           <Image
@@ -26,7 +26,7 @@ function Scrollables({ Name, Img, PageLink }: ScrollablesProps) {
             sizes="(max-width: 768px) 250px, 400px"
           ></Image>
 
-          <div className="absolute w-full h-full  bg-gradient-to-b from-black to-transparent to-50% border-t-2 border-t-blue-600 border-e-blue-600 rounded-xl"></div>
+          <div className="absolute w-full h-full  bg-linear-to-b from-black to-transparent to-50% border-t-2 border-t-blue-600 border-e-blue-600 rounded-xl"></div>
 
           <h4 className="absolute top-2 text-base uppercase text-center leading-5 px-2 font-semibold">
             {Name}

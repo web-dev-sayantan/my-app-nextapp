@@ -79,7 +79,7 @@ export default function ConfirmationPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
           <p>Loading booking details...</p>
@@ -90,7 +90,7 @@ export default function ConfirmationPage() {
 
   if (error || !booking) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-400 mb-4">{error}</p>
           <Link href="/all" className="text-blue-400 hover:text-blue-300">
@@ -105,9 +105,9 @@ export default function ConfirmationPage() {
   const endDate = new Date(booking.departure.endDate);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+    <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white">
       {/* Success Banner */}
-      <div className="bg-gradient-to-r from-green-900 to-green-800 border-b border-green-700">
+      <div className="bg-linear-to-r from-green-900 to-green-800 border-b border-green-700">
         <div className="max-w-6xl mx-auto px-4 py-12 text-center">
           <FiCheckCircle className="w-16 h-16 mx-auto mb-4 text-green-300" />
           <h1 className="text-4xl font-bold mb-2">Booking Confirmed! 🎉</h1>
@@ -125,7 +125,7 @@ export default function ConfirmationPage() {
             {/* Booking Reference */}
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
               <h2 className="text-xl font-bold mb-4">Booking Reference</h2>
-              <div className="bg-gray-900 rounded p-4 font-mono text-center text-2xl tracking-wider mb-4">
+              <div className="bg-gray-900 rounded-sm p-4 font-mono text-center text-2xl tracking-wider mb-4">
                 {bookingId}
               </div>
               <p className="text-sm text-gray-400">
@@ -265,7 +265,7 @@ export default function ConfirmationPage() {
               
               <ol className="space-y-3">
                 <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
+                  <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
                     1
                   </span>
                   <div>
@@ -275,7 +275,7 @@ export default function ConfirmationPage() {
                 </li>
                 
                 <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
+                  <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
                     2
                   </span>
                   <div>
@@ -285,7 +285,7 @@ export default function ConfirmationPage() {
                 </li>
                 
                 <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
+                  <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
                     3
                   </span>
                   <div>
@@ -295,7 +295,7 @@ export default function ConfirmationPage() {
                 </li>
                 
                 <li className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
+                  <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
                     4
                   </span>
                   <div>
@@ -309,7 +309,7 @@ export default function ConfirmationPage() {
 
           {/* Right Column - Summary */}
           <div className="h-fit">
-            <div className="bg-gradient-to-br from-green-900 to-green-800 rounded-lg p-6 sticky top-20">
+            <div className="bg-linear-to-br from-green-900 to-green-800 rounded-lg p-6 sticky top-20">
               <h3 className="text-lg font-bold mb-6">Booking Summary</h3>
 
               <div className="space-y-4 mb-6 pb-6 border-b border-green-700">
@@ -346,7 +346,7 @@ export default function ConfirmationPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-green-200 bg-green-900/30 rounded p-2">
+                <div className="flex items-center justify-between text-sm text-green-200 bg-green-900/30 rounded-sm p-2">
                   <span>✓ Payment Confirmed</span>
                   <span className="text-xs font-mono">
                     {new Date(booking.createdAt).toLocaleDateString()}

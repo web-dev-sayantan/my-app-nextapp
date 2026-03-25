@@ -130,7 +130,7 @@ function ResultCard({ result }: { result: SearchResult }) {
       <div className="cursor-pointer rounded-lg border border-gray-700 p-6 transition hover:border-blue-400 hover:bg-gray-800/50">
         <div className="flex items-start gap-4">
           <div
-            className={`${typeColors[result.type]} flex-shrink-0 rounded-full px-3 py-1 text-xs font-semibold uppercase text-white`}
+            className={`${typeColors[result.type]} shrink-0 rounded-full px-3 py-1 text-xs font-semibold uppercase text-white`}
           >
             {result.type}
           </div>

@@ -88,7 +88,7 @@ export default function ReviewsPage() {
           ))}
         </div>
 
-        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-600 rounded-lg p-12 text-center mb-20">
+        <div className="bg-linear-to-r from-blue-900/30 to-purple-900/30 border border-blue-600 rounded-lg p-12 text-center mb-20">
           <h2 className="text-3xl font-bold mb-4">Join Our Happy Trekkers</h2>
           <p className="text-gray-200 mb-8 max-w-2xl mx-auto">
             With over 50,000 satisfied adventurers and a 4.9/5 average rating, 

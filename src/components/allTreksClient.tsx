@@ -58,7 +58,7 @@ const TrekCardSmall = ({ trek }: { trek: TrekCardProps }) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-gray-900 via-transparent to-transparent"></div>
 
           {/* State Badge - smaller; show short on small screens, full on larger */}
           <div className="absolute top-2 right-2 bg-blue-600/90 px-2 py-0.5 rounded-full text-[10px] font-semibold text-white">

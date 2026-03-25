@@ -52,7 +52,7 @@ const blogPosts = [
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+    <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white">
       {/* Header */}
       <div className="px-4 py-12 border-b border-gray-800">
         <div className="max-w-6xl mx-auto">
@@ -110,7 +110,7 @@ export default function BlogPage() {
           </div>
 
           {/* CTA Section */}
-          <div className="mt-20 bg-gradient-to-r from-blue-900 to-blue-600 rounded-lg p-12 text-center">
+          <div className="mt-20 bg-linear-to-r from-blue-900 to-blue-600 rounded-lg p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">Have a story to share?</h2>
             <p className="text-lg text-gray-100 mb-8 max-w-2xl mx-auto">
               We'd love to hear about your trekking experiences and adventures.

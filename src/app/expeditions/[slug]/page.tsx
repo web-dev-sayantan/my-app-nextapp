@@ -170,7 +170,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
           {/* Left Column - Details */}
           <div className="lg:col-span-2">
             {/* Key Stats */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 Expedition Details
               </h2>
@@ -212,7 +212,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
 
             {/* Description */}
             {expedition.longDescription && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   About
                 </h2>
@@ -224,7 +224,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
 
             {/* Itinerary */}
             {expedition.itinerary && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   Itinerary
                 </h2>
@@ -236,7 +236,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
 
             {/* Inclusions */}
             {expedition.inclusions && expedition.inclusions.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   What's Included
                 </h2>
@@ -258,7 +258,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
 
             {/* Exclusions */}
             {expedition.exclusions && expedition.exclusions.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   What's Not Included
                 </h2>
@@ -280,7 +280,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
 
             {/* Requirements */}
             {expedition.requirements && expedition.requirements.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                   Requirements
                 </h2>
@@ -304,7 +304,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
           {/* Right Column - Sidebar */}
           <div>
             {/* Price and Booking */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 sticky top-4">
               <div className="mb-6">
                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
                   Starting Price
@@ -327,7 +327,7 @@ export default async function ExpeditionDetailPage(props: PageProps) {
                     {expedition.sessions.map((session) => (
                       <div
                         key={session.id}
-                        className="border border-gray-200 dark:border-gray-700 rounded p-3"
+                        className="border border-gray-200 dark:border-gray-700 rounded-sm p-3"
                       >
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">
                           {session.startDate.toLocaleDateString("en-IN")}

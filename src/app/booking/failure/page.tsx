@@ -12,7 +12,7 @@ export default function PaymentFailurePage() {
   const error = searchParams.get('error');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white flex items-center justify-center">
       <div className="max-w-3xl mx-auto p-8">
         <div className="bg-red-900/20 border border-red-700 rounded-lg p-8 text-center">
           <FiXCircle className="w-16 h-16 mx-auto mb-4 text-red-400" />
@@ -30,14 +30,14 @@ export default function PaymentFailurePage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               onClick={() => router.back()}
-              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded text-white"
+              className="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-sm text-white"
             >
               Try Again
             </button>
 
             <Link
               href="/booking/summary"
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded text-white text-center"
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-sm text-white text-center"
             >
               Edit Booking
             </Link>

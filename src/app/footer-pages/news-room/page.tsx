@@ -87,7 +87,7 @@ export default function NewsRoomPage() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-400"
+              className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-hidden focus:border-blue-400"
             />
             <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition duration-300">
               Subscribe

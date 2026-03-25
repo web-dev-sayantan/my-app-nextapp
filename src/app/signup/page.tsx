@@ -47,7 +47,7 @@ export default function SignUp() {
         </h1>
 
         {error && (
-          <div className="bg-red-500 text-white p-3 rounded mb-4">
+          <div className="bg-red-500 text-white p-3 rounded-sm mb-4">
             {error}
           </div>
         )}
@@ -59,7 +59,7 @@ export default function SignUp() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded border border-gray-700 focus:border-red-500 outline-none"
+              className="w-full px-4 py-2 bg-gray-800 text-white rounded-sm border border-gray-700 focus:border-red-500 outline-hidden"
               placeholder="Enter username"
               required
             />
@@ -71,7 +71,7 @@ export default function SignUp() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded border border-gray-700 focus:border-red-500 outline-none"
+              className="w-full px-4 py-2 bg-gray-800 text-white rounded-sm border border-gray-700 focus:border-red-500 outline-hidden"
               placeholder="Enter email"
               required
             />
@@ -83,7 +83,7 @@ export default function SignUp() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded border border-gray-700 focus:border-red-500 outline-none"
+              className="w-full px-4 py-2 bg-gray-800 text-white rounded-sm border border-gray-700 focus:border-red-500 outline-hidden"
               placeholder="Enter password (min 6 characters)"
               required
             />
@@ -92,7 +92,7 @@ export default function SignUp() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded transition disabled:opacity-50"
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-sm transition disabled:opacity-50"
           >
             {loading ? "Signing up..." : "Sign Up"}
           </button>

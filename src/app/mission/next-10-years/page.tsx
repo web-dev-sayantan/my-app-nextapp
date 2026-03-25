@@ -23,21 +23,21 @@ export default function Next10YearsPage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Expand to 100+ Treks</h3>
                   <p className="text-gray-400">Reach every major mountain region across India and Asia</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">1 Million Happy Adventurers</h3>
                   <p className="text-gray-400">Empower 1 million people to experience mountains safely and sustainably</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">1 Million Trees</h3>
                   <p className="text-gray-400">Plant and protect 1 million trees across mountain regions</p>
@@ -80,7 +80,7 @@ export default function Next10YearsPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-600 rounded-lg p-8">
+          <div className="bg-linear-to-r from-blue-900/30 to-purple-900/30 border border-blue-600 rounded-lg p-8">
             <h2 className="text-2xl font-bold mb-4">Key Initiatives</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>

@@ -69,7 +69,7 @@ export default function Navbar() {
     <header className="sticky top-0 left-0 right-0 bg-black border-b border-slate-800 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex-shrink-0">
+        <Link href="/" className="shrink-0">
           <Image
             src="/TTM.png"
             alt="The Trail Makers Logo"
@@ -108,7 +108,7 @@ export default function Navbar() {
             placeholder="Search treks, lessons, FAQs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-gray-800 text-white placeholder-gray-500 outline-none flex-1 text-sm"
+            className="bg-gray-800 text-white placeholder-gray-500 outline-hidden flex-1 text-sm"
           />
           <button
             type="submit"
@@ -181,7 +181,7 @@ export default function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               autoFocus
-              className="bg-gray-800 text-white placeholder-gray-500 outline-none flex-1 text-sm"
+              className="bg-gray-800 text-white placeholder-gray-500 outline-hidden flex-1 text-sm"
             />
             <button
               type="submit"

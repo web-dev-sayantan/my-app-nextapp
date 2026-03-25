@@ -28,7 +28,7 @@ function Footer() {
               <div>
                 <Link
                   href="/booking/my-bookings"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   My Bookings
                 </Link>
@@ -36,7 +36,7 @@ function Footer() {
               <div>
                 <Link
                   href="/booking/submit-feedback"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Submit Feedback
                 </Link>
@@ -44,7 +44,7 @@ function Footer() {
               <div>
                 <Link
                   href="/booking/cancellation-policy"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Cancellation Policy
                 </Link>
@@ -52,7 +52,7 @@ function Footer() {
               <div>
                 <Link
                   href="/booking/safety-standards"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Safety Standards
                 </Link>
@@ -67,7 +67,7 @@ function Footer() {
               <div>
                 <Link
                   href="/company/about-us"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   About Us
                 </Link>
@@ -75,7 +75,7 @@ function Footer() {
               <div>
                 <Link
                   href="/company/careers"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Careers
                 </Link>
@@ -90,7 +90,7 @@ function Footer() {
               <div>
                 <Link
                   href="/footer-pages/get-in-touch"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Get in Touch
                 </Link>
@@ -98,7 +98,7 @@ function Footer() {
               <div>
                 <Link
                   href="/footer-pages/faq"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   FAQ
                 </Link>
@@ -106,7 +106,7 @@ function Footer() {
               <div>
                 <Link
                   href="/footer-pages/reviews"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Reviews
                 </Link>
@@ -114,7 +114,7 @@ function Footer() {
               <div>
                 <Link
                   href="/footer-pages/news-room"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   News Room
                 </Link>
@@ -129,7 +129,7 @@ function Footer() {
               <div>
                 <Link
                   href="/mission/next-10-years"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Next 10 Years
                 </Link>
@@ -137,7 +137,7 @@ function Footer() {
               <div>
                 <Link
                   href="/mission/next-100-years"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Next 100 Years
                 </Link>
@@ -145,7 +145,7 @@ function Footer() {
               <div>
                 <Link
                   href="/mission/people"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   People
                 </Link>
@@ -153,7 +153,7 @@ function Footer() {
               <div>
                 <Link
                   href="/mission/living-beings"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Living Beings
                 </Link>
@@ -161,7 +161,7 @@ function Footer() {
               <div>
                 <Link
                   href="/mission/planet"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Planet
                 </Link>
@@ -169,7 +169,7 @@ function Footer() {
               <div>
                 <Link
                   href="/mission/universe"
-                  className="hover:text-blue-400 transition break-words"
+                  className="hover:text-blue-400 transition wrap-break-word"
                 >
                   Universe
                 </Link>

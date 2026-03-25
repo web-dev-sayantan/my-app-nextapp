@@ -69,7 +69,7 @@ export default function Login() {
         </h1>
 
         {error && (
-          <div className="bg-red-500 text-white p-3 rounded mb-4">{error}</div>
+          <div className="bg-red-500 text-white p-3 rounded-sm mb-4">{error}</div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -79,7 +79,7 @@ export default function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded border border-gray-700 focus:border-red-500 outline-none"
+              className="w-full px-4 py-2 bg-gray-800 text-white rounded-sm border border-gray-700 focus:border-red-500 outline-hidden"
               placeholder="Enter email"
               required
             />
@@ -91,7 +91,7 @@ export default function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded border border-gray-700 focus:border-red-500 outline-none"
+              className="w-full px-4 py-2 bg-gray-800 text-white rounded-sm border border-gray-700 focus:border-red-500 outline-hidden"
               placeholder="Enter password"
               required
             />
@@ -100,7 +100,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded transition disabled:opacity-50"
+            className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-sm transition disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

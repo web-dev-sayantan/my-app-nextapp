@@ -23,21 +23,21 @@ export default function CancellationPolicyPage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Flexible Terms</h3>
                   <p className="text-gray-400">Cancel up to 30 days before your trek for full refund</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Easy Process</h3>
                   <p className="text-gray-400">No hassles, no hidden conditions - straightforward refund procedure</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Reschedule Option</h3>
                   <p className="text-gray-400">Free rebooking on any future trek within 12 months</p>

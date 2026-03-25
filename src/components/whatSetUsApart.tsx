@@ -20,7 +20,7 @@ export function WhatSetUsApart() {
   ];
 
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-black to-gray-900 border-t border-gray-800">
+    <section className="py-20 px-6 bg-linear-to-b from-black to-gray-900 border-t border-gray-800">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">

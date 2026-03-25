@@ -23,21 +23,21 @@ export default function LivingBeingsPage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Wildlife Conservation</h3>
                   <p className="text-gray-400">Protect habitat for endangered species including snow leopards and musk deer</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Research Partnership</h3>
                   <p className="text-gray-400">Support scientific studies on mountain wildlife and ecosystems</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Responsible Trekking</h3>
                   <p className="text-gray-400">Educate visitors on minimal impact trekking practices</p>
@@ -86,7 +86,7 @@ export default function LivingBeingsPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-600 rounded-lg p-8">
+          <div className="bg-linear-to-r from-green-900/30 to-emerald-900/30 border border-green-600 rounded-lg p-8">
             <h2 className="text-2xl font-bold mb-6">Mountain Wildlife We Protect</h2>
             <div className="grid md:grid-cols-2 gap-6 text-gray-300">
               <div>

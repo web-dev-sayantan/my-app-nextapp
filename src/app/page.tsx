@@ -177,14 +177,14 @@ async function UpcomingAdventuresTable() {
                       {trek.name}
                     </p>
                     <p className="text-xs text-text-muted flex items-center gap-1 mt-1">
-                      <FiMapPin className="w-3 h-3 flex-shrink-0" />
+                      <FiMapPin className="w-3 h-3 shrink-0" />
                       <span className="truncate">{trek.state}</span>
                     </p>
                     <span className="inline-block mt-2 text-xs bg-brand-sage text-white px-2 py-0.5 rounded-full">
                       {formatDifficulty(trek.difficulty)}
                     </span>
                   </div>
-                  <div className="text-right flex-shrink-0 ml-3">
+                  <div className="text-right shrink-0 ml-3">
                     <p className="text-xs text-brand-burnt font-medium">
                       {startDate}
                     </p>

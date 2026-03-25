@@ -34,7 +34,7 @@ export default function DashboardClient({
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <header className="sticky top-0 z-40 border-b border-gray-800 bg-black/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-gray-800 bg-black/95 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
@@ -53,9 +53,9 @@ export default function DashboardClient({
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mb-12 rounded-2xl border border-blue-800/30 bg-gradient-to-r from-blue-900/20 to-purple-900/20 p-8">
+        <div className="mb-12 rounded-2xl border border-blue-800/30 bg-linear-to-r from-blue-900/20 to-purple-900/20 p-8">
           <div className="mb-6 flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-            <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full bg-blue-600/20">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-blue-600/20">
               <FiUser className="h-10 w-10 text-blue-400" />
             </div>
             <div className="flex-1">
@@ -66,14 +66,14 @@ export default function DashboardClient({
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="flex items-center gap-3">
-              <FiMail className="h-5 w-5 flex-shrink-0 text-blue-400" />
+              <FiMail className="h-5 w-5 shrink-0 text-blue-400" />
               <div>
                 <p className="text-sm text-gray-400">Email Address</p>
                 <p className="font-semibold text-white">{user.email}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <FiUser className="h-5 w-5 flex-shrink-0 text-blue-400" />
+              <FiUser className="h-5 w-5 shrink-0 text-blue-400" />
               <div>
                 <p className="text-sm text-gray-400">Username</p>
                 <p className="font-semibold text-white">{user.username || 'Guest'}</p>
@@ -190,7 +190,7 @@ export default function DashboardClient({
                             event.stopPropagation();
                             handleViewDetails(booking);
                           }}
-                          className="inline-flex flex-shrink-0 items-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition hover:bg-blue-700"
+                          className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition hover:bg-blue-700"
                         >
                           View Details
                           <FiChevronRight className="h-5 w-5" />

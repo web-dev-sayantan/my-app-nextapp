@@ -30,8 +30,8 @@ export default function TrekCard({
 
   return (
     <div
-      className="m-4 border-[1px] snap-center relative border-border bg-bg-card shadow-warm
-                        w-80 flex-shrink-0 rounded-card-lg font"
+      className="m-4 border snap-center relative border-border bg-bg-card shadow-warm
+                        w-80 shrink-0 rounded-card-lg font"
     >
       <Link href={PageLink || "/contact"}>
         <Image
@@ -44,7 +44,7 @@ export default function TrekCard({
         ></Image>
       </Link>
 
-      <div className="border-b-[1px] border-border p-2 min-h-40">
+      <div className="border-b border-border p-2 min-h-40">
         <div className="flex items-center">
           <h2 className=" pl-1 font-semibold uppercase text-text-primary ">
             {Name}

@@ -75,7 +75,7 @@ export function BookingDetailsModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
       <div className="bg-gray-900 border border-gray-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-gray-900 border-b border-gray-700 px-8 py-6 flex items-center justify-between">
@@ -254,22 +254,22 @@ export function BookingDetailsModal({
                           <input
                             type="text"
                             placeholder="Full Name"
-                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                            className="bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white placeholder-gray-500"
                           />
                           <input
                             type="email"
                             placeholder="Email Address"
-                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                            className="bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white placeholder-gray-500"
                           />
                           <input
                             type="tel"
                             placeholder="Phone Number"
-                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                            className="bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white placeholder-gray-500"
                           />
                           <input
                             type="date"
                             placeholder="Birth Date"
-                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                            className="bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white placeholder-gray-500"
                           />
                         </div>
                       </div>
@@ -303,7 +303,7 @@ export function BookingDetailsModal({
                     onChange={(e) =>
                       setFormData({ ...formData, bloodGroup: e.target.value })
                     }
-                    className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white"
                   >
                     <option value="">Select Blood Group</option>
                     <option value="A+">A+</option>
@@ -327,7 +327,7 @@ export function BookingDetailsModal({
                     onChange={(e) =>
                       setFormData({ ...formData, birthDate: e.target.value })
                     }
-                    className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white"
                   />
                 </div>
 
@@ -341,7 +341,7 @@ export function BookingDetailsModal({
                       setFormData({ ...formData, treksDone: e.target.value })
                     }
                     placeholder="List any previous trekking experience..."
-                    className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500 h-24"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white placeholder-gray-500 h-24"
                   />
                 </div>
 
@@ -358,7 +358,7 @@ export function BookingDetailsModal({
                       })
                     }
                     placeholder="Any medical conditions we should know about..."
-                    className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500 h-24"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white placeholder-gray-500 h-24"
                   />
                 </div>
 
@@ -374,7 +374,7 @@ export function BookingDetailsModal({
                         foodPreference: e.target.value,
                       })
                     }
-                    className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white"
                   >
                     <option value="">Select Food Preference</option>
                     <option value="veg">Vegetarian</option>
@@ -394,7 +394,7 @@ export function BookingDetailsModal({
                       setFormData({ ...formData, allergies: e.target.value })
                     }
                     placeholder="List any food or other allergies..."
-                    className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                    className="w-full bg-gray-800 border border-gray-700 rounded-sm px-4 py-2 text-white placeholder-gray-500"
                   />
                 </div>
               </div>

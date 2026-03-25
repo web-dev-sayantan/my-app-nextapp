@@ -242,7 +242,7 @@ interface Trek {
   {trek.safetyStandards && trek.safetyStandards.length > 0 ? (
     trek.safetyStandards.map((standard, idx) => (
       <li key={idx} className="flex items-start gap-2">
-        <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+        <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
         <span>{standard}</span>
       </li>
     ))

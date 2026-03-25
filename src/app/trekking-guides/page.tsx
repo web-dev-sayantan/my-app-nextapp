@@ -62,7 +62,7 @@ const guides = [
 
 export default function TrekkingGuidesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+    <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white">
       {/* Header */}
       <div className="px-4 py-12 border-b border-gray-800">
         <div className="max-w-6xl mx-auto">
@@ -123,7 +123,7 @@ export default function TrekkingGuidesPage() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              <div className="bg-gradient-to-br from-blue-900 to-blue-700 rounded-lg p-8">
+              <div className="bg-linear-to-br from-blue-900 to-blue-700 rounded-lg p-8">
                 <div className="text-4xl font-bold mb-4">50+</div>
                 <h3 className="text-xl font-bold mb-2">Detailed Trek Routes</h3>
                 <p className="text-blue-100">
@@ -132,7 +132,7 @@ export default function TrekkingGuidesPage() {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-green-900 to-green-700 rounded-lg p-8">
+              <div className="bg-linear-to-br from-green-900 to-green-700 rounded-lg p-8">
                 <div className="text-4xl font-bold mb-4">1000+</div>
                 <h3 className="text-xl font-bold mb-2">Happy Trekkers</h3>
                 <p className="text-green-100">
@@ -141,7 +141,7 @@ export default function TrekkingGuidesPage() {
                 </p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-900 to-purple-700 rounded-lg p-8">
+              <div className="bg-linear-to-br from-purple-900 to-purple-700 rounded-lg p-8">
                 <div className="text-4xl font-bold mb-4">24/7</div>
                 <h3 className="text-xl font-bold mb-2">Expert Support</h3>
                 <p className="text-purple-100">
@@ -152,7 +152,7 @@ export default function TrekkingGuidesPage() {
             </div>
 
             {/* CTA */}
-            <div className="bg-gradient-to-r from-blue-900 to-blue-600 rounded-lg p-12 text-center">
+            <div className="bg-linear-to-r from-blue-900 to-blue-600 rounded-lg p-12 text-center">
               <h2 className="text-3xl font-bold mb-4">
                 Ready to start your adventure?
               </h2>

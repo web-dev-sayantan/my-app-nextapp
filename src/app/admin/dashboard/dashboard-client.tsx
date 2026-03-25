@@ -177,14 +177,14 @@ export default function AdminDashboardClient({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
+      <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">
                 Admin Dashboard
               </h1>
-              <span className="ml-3 rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+              <span className="ml-3 rounded-sm bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
                 {initialRole}
               </span>
             </div>
@@ -258,7 +258,7 @@ export default function AdminDashboardClient({
           <>
             {activeTab === "overview" && stats && (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <div className="text-sm font-medium text-gray-500">
                     Total Bookings (This Month)
                   </div>
@@ -266,7 +266,7 @@ export default function AdminDashboardClient({
                     {stats.totalBookingsThisMonth}
                   </div>
                 </div>
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <div className="text-sm font-medium text-gray-500">
                     Revenue (This Month)
                   </div>
@@ -274,7 +274,7 @@ export default function AdminDashboardClient({
                     {formatCurrency(stats.revenueThisMonth)}
                   </div>
                 </div>
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <div className="text-sm font-medium text-gray-500">
                     Upcoming Treks (Next 30 days)
                   </div>
@@ -282,7 +282,7 @@ export default function AdminDashboardClient({
                     {stats.upcomingTreksNext30Days}
                   </div>
                 </div>
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <div className="text-sm font-medium text-gray-500">
                     Occupancy Rate
                   </div>
@@ -293,7 +293,7 @@ export default function AdminDashboardClient({
                     of total capacity filled
                   </div>
                 </div>
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <div className="text-sm font-medium text-gray-500">
                     Cancellation Rate
                   </div>
@@ -301,7 +301,7 @@ export default function AdminDashboardClient({
                     {stats.cancellationRate}%
                   </div>
                 </div>
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <div className="text-sm font-medium text-gray-500">
                     Refund Pending
                   </div>
@@ -322,7 +322,7 @@ export default function AdminDashboardClient({
                     </button>
                   )}
                 </div>
-                <div className="overflow-hidden rounded-lg bg-white shadow">
+                <div className="overflow-hidden rounded-lg bg-white shadow-sm">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
@@ -362,7 +362,7 @@ export default function AdminDashboardClient({
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span
-                              className={`rounded px-2 py-1 text-xs font-medium ${trek.difficulty === "EASY" ? "bg-green-100 text-green-800" : trek.difficulty === "MODERATE" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}`}
+                              className={`rounded-sm px-2 py-1 text-xs font-medium ${trek.difficulty === "EASY" ? "bg-green-100 text-green-800" : trek.difficulty === "MODERATE" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}`}
                             >
                               {trek.difficulty}
                             </span>
@@ -396,7 +396,7 @@ export default function AdminDashboardClient({
                     Participant Management
                   </h2>
                 </div>
-                <div className="overflow-hidden rounded-lg bg-white shadow">
+                <div className="overflow-hidden rounded-lg bg-white shadow-sm">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
@@ -434,7 +434,7 @@ export default function AdminDashboardClient({
                               {participant.contactEmail}
                             </div>
                             {participant.isRepeatTrekker && (
-                              <span className="mt-1 inline-flex items-center rounded bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800">
+                              <span className="mt-1 inline-flex items-center rounded-sm bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-800">
                                 Repeat Trekker
                               </span>
                             )}
@@ -444,7 +444,7 @@ export default function AdminDashboardClient({
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span
-                              className={`rounded px-2 py-1 text-xs font-medium ${getStatusColor(participant.status)}`}
+                              className={`rounded-sm px-2 py-1 text-xs font-medium ${getStatusColor(participant.status)}`}
                             >
                               {participant.status}
                             </span>
@@ -474,7 +474,7 @@ export default function AdminDashboardClient({
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span
-                              className={`rounded px-2 py-1 text-xs font-medium ${getStatusColor(participant.payment?.status || "PENDING")}`}
+                              className={`rounded-sm px-2 py-1 text-xs font-medium ${getStatusColor(participant.payment?.status || "PENDING")}`}
                             >
                               {participant.payment?.status || "PENDING"}
                             </span>
@@ -491,7 +491,7 @@ export default function AdminDashboardClient({
               <div>
                 <h2 className="mb-6 text-xl font-semibold">Finance Overview</h2>
                 <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Total Revenue
                     </div>
@@ -499,7 +499,7 @@ export default function AdminDashboardClient({
                       {formatCurrency(finance.totalRevenue)}
                     </div>
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Advance Collected
                     </div>
@@ -507,7 +507,7 @@ export default function AdminDashboardClient({
                       {formatCurrency(finance.advanceCollected)}
                     </div>
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Balance Pending
                     </div>
@@ -515,7 +515,7 @@ export default function AdminDashboardClient({
                       {formatCurrency(finance.balancePending)}
                     </div>
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       GST Collected
                     </div>
@@ -526,7 +526,7 @@ export default function AdminDashboardClient({
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <h3 className="mb-4 text-lg font-medium">
                       Payment Method Split
                     </h3>
@@ -544,7 +544,7 @@ export default function AdminDashboardClient({
                       </div>
                     ))}
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <h3 className="mb-4 text-lg font-medium">
                       Trek Leader Payouts
                     </h3>
@@ -571,7 +571,7 @@ export default function AdminDashboardClient({
                   Marketing Metrics
                 </h2>
                 <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Website Visitors
                     </div>
@@ -579,7 +579,7 @@ export default function AdminDashboardClient({
                       {marketing.websiteVisitors}
                     </div>
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Conversion Rate
                     </div>
@@ -587,7 +587,7 @@ export default function AdminDashboardClient({
                       {marketing.conversionRate}%
                     </div>
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Instagram Clicks
                     </div>
@@ -595,7 +595,7 @@ export default function AdminDashboardClient({
                       {marketing.instagramClicks}
                     </div>
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Repeat Customer %
                     </div>
@@ -603,7 +603,7 @@ export default function AdminDashboardClient({
                       {marketing.repeatCustomerPercent}%
                     </div>
                   </div>
-                  <div className="rounded-lg bg-white p-6 shadow">
+                  <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="text-sm font-medium text-gray-500">
                       Referral Bookings
                     </div>
@@ -613,7 +613,7 @@ export default function AdminDashboardClient({
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <h3 className="mb-4 text-lg font-medium">
                     Top Performing Treks
                   </h3>
@@ -655,7 +655,7 @@ export default function AdminDashboardClient({
             {activeTab === "users" && canManageUsers && (
               <div>
                 <h2 className="mb-6 text-xl font-semibold">User Management</h2>
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                   <p className="text-gray-600">
                     User management features are available in the main admin
                     panel.

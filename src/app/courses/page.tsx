@@ -56,7 +56,7 @@ export default async function CoursesPage() {
   const courses = await getCourses();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-linear-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
       {/* Header Section */}
       <div className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">

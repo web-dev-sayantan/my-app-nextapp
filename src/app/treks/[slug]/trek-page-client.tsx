@@ -313,7 +313,7 @@ export default function TrekPageClient({ trek }: { trek: TrekPageData }) {
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Header Navigation */}
-      <header className="sticky top-0 z-40 bg-black/95 backdrop-blur border-b border-gray-800">
+      <header className="sticky top-0 z-40 bg-black/95 backdrop-blur-sm border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Link
             href="/all"
@@ -345,7 +345,7 @@ export default function TrekPageClient({ trek }: { trek: TrekPageData }) {
           />
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end">
+        <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent flex items-end">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
             <h1 className="text-5xl md:text-6xl font-bold mb-4">{trek.name}</h1>
             <p className="text-lg text-gray-300 max-w-2xl">
@@ -429,26 +429,26 @@ export default function TrekPageClient({ trek }: { trek: TrekPageData }) {
             {/* 4. SAFETY STANDARDS */}
             <section className="bg-yellow-950/30 border border-yellow-700/40 rounded-lg p-6">
               <div className="flex items-start gap-4">
-                <FiAlertCircle className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" />
+                <FiAlertCircle className="w-6 h-6 text-yellow-500 shrink-0 mt-1" />
                 <div>
                   <h3 className="text-xl font-bold text-yellow-200 mb-3">
                     Safety Standards
                   </h3>
                   <ul className="text-gray-200 space-y-2 text-sm">
                     <li className="flex items-start gap-2">
-                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
                       <span>Experienced guides and trained support staff</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
                       <span>First aid and emergency medical support</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
                       <span>Comprehensive travel insurance included</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
+                      <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
                       <span>Weather-appropriate equipment provided</span>
                     </li>
                   </ul>

@@ -23,21 +23,21 @@ export default function PlanetPage() {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Carbon Neutral Operations</h3>
                   <p className="text-gray-400">All treks offset carbon footprint through reforestation and renewable energy</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Ecosystem Restoration</h3>
                   <p className="text-gray-400">1 million trees planted with 80% survival rate and continuous monitoring</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 flex-shrink-0"></div>
+                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2 shrink-0"></div>
                 <div>
                   <h3 className="font-bold text-lg mb-1">Climate Research</h3>
                   <p className="text-gray-400">Partner with universities on glacier monitoring and climate adaptation studies</p>
@@ -86,7 +86,7 @@ export default function PlanetPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-emerald-900/30 to-teal-900/30 border border-emerald-600 rounded-lg p-8">
+          <div className="bg-linear-to-r from-emerald-900/30 to-teal-900/30 border border-emerald-600 rounded-lg p-8">
             <h2 className="text-2xl font-bold mb-6">Environmental Metrics</h2>
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-4">
