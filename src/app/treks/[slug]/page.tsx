@@ -6,6 +6,7 @@
 import { notFound } from "next/navigation";
 import { TrekService } from "@/lib/services/trekService";
 import TrekPageClient from "./trek-page-client";
+import { isDatabaseConfigured } from "@/lib/databaseAvailability";
 
 interface PageProps {
   params: Promise<{
@@ -16,9 +17,13 @@ interface PageProps {
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
+  if (!isDatabaseConfigured()) {
+    return [];
+  }
+
   try {
     const { treks } = await TrekService.listTreks({ page: 1, limit: 50 });
-    return treks.map((trek: any) => ({ slug: trek.slug }));
+    return treks.map((trek) => ({ slug: trek.slug }));
   } catch (error) {
     console.warn(
       "Skipping generateStaticParams – DB unreachable during build:",
@@ -30,6 +35,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps) {
   const params = await props.params;
+  if (!isDatabaseConfigured()) {
+    return { title: "Trail Makers" };
+  }
+
   try {
     const trek = await TrekService.getTrekBySlug(params.slug);
     return {
@@ -48,6 +57,10 @@ export async function generateMetadata(props: PageProps) {
 
 export default async function TrekPage(props: PageProps) {
   const params = await props.params;
+  if (!isDatabaseConfigured()) {
+    notFound();
+  }
+
   const trek = await TrekService.getTrekBySlug(params.slug).catch(() => null);
 
   if (!trek) {

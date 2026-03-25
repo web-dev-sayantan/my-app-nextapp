@@ -34,10 +34,7 @@ export class PaymentService {
    * Create payment intent for a booking
    * Implements idempotency for safety in retries
    */
-  static async createPaymentIntent(
-    bookingId: string,
-    userId: string
-  ) {
+  static async createPaymentIntent(bookingId: string, userId: string) {
     // Get booking details
     const booking = await prisma.booking.findUnique({
       where: { id: bookingId },
@@ -115,12 +112,13 @@ export class PaymentService {
         where: { id: payment.id },
         data: {
           status: "FAILED",
-          errorMessage: error instanceof Error ? error.message : "Unknown error",
+          errorMessage:
+            error instanceof Error ? error.message : "Unknown error",
         },
       });
 
       throw new PaymentRequiredError(
-        "Failed to initiate payment. Please try again."
+        "Failed to initiate payment. Please try again.",
       );
     }
   }
@@ -132,11 +130,11 @@ export class PaymentService {
   static verifyPaymentSignature(
     razorpayOrderId: string,
     razorpayPaymentId: string,
-    razorpaySignature: string
+    razorpaySignature: string,
   ): boolean {
     const shasum = crypto.createHmac(
       "sha256",
-      process.env.RAZORPAY_KEY_SECRET!
+      process.env.RAZORPAY_KEY_SECRET!,
     );
     shasum.update(`${razorpayOrderId}|${razorpayPaymentId}`);
     const expectedSignature = shasum.digest("hex");
@@ -151,14 +149,14 @@ export class PaymentService {
   static async processPaymentSuccess(
     razorpayOrderId: string,
     razorpayPaymentId: string,
-    razorpaySignature: string
+    razorpaySignature: string,
   ) {
     // Verify signature first (security critical!)
     if (
       !this.verifyPaymentSignature(
         razorpayOrderId,
         razorpayPaymentId,
-        razorpaySignature
+        razorpaySignature,
       )
     ) {
       throw new ValidationError("Invalid payment signature");
@@ -167,13 +165,13 @@ export class PaymentService {
     // Find payment record
     const payment = await prisma.payment.findUnique({
       where: { transactionId: razorpayOrderId },
-      include: { 
+      include: {
         booking: {
           include: {
             departure: { include: { trek: true } },
             user: true,
-          }
-        }
+          },
+        },
       },
     });
 
@@ -227,16 +225,29 @@ export class PaymentService {
     if (result.booking.user && result.booking.user.email) {
       sendBookingConfirmationEmail({
         to: result.booking.user.email,
-        userName: result.booking.user.firstName || result.booking.user.username || 'Adventurer',
+        userName:
+          result.booking.user.firstName ||
+          result.booking.user.username ||
+          "Adventurer",
         bookingDetails: {
-          trekName: result.booking.departure?.trek?.name || 'Your Trek',
-          startDate: result.booking.departure?.startDate ? new Date(result.booking.departure.startDate).toLocaleDateString('en-IN') : 'TBD',
-          endDate: result.booking.departure?.endDate ? new Date(result.booking.departure.endDate).toLocaleDateString('en-IN') : 'TBD',
+          trekName: result.booking.departure?.trek?.name || "Your Trek",
+          startDate: result.booking.departure?.startDate
+            ? new Date(result.booking.departure.startDate).toLocaleDateString(
+                "en-IN",
+              )
+            : "TBD",
+          endDate: result.booking.departure?.endDate
+            ? new Date(result.booking.departure.endDate).toLocaleDateString(
+                "en-IN",
+              )
+            : "TBD",
           numberOfPeople: result.booking.numberOfPeople,
           totalAmount: result.booking.totalAmount,
           bookingId: result.booking.id,
         },
-      }).catch(err => console.error('Failed to send confirmation email:', err));
+      }).catch((err) =>
+        console.error("Failed to send confirmation email:", err),
+      );
     }
 
     return result;
@@ -247,7 +258,7 @@ export class PaymentService {
    */
   static async processPaymentFailure(
     razorpayOrderId: string,
-    errorMessage: string
+    errorMessage: string,
   ) {
     const payment = await prisma.payment.findUnique({
       where: { transactionId: razorpayOrderId },
@@ -336,7 +347,7 @@ export class PaymentService {
       return updated;
     } catch (error) {
       throw new PaymentRequiredError(
-        "Failed to process refund. Please contact support."
+        "Failed to process refund. Please contact support.",
       );
     }
   }
@@ -383,8 +394,20 @@ function generateIdempotencyKey(bookingId: string): string {
  * Should be called from /api/webhooks/razorpay
  */
 export async function handleRazorpayWebhook(
-  event: any,
-  signature: string
+  event: {
+    event: string;
+    payload: {
+      payment: {
+        entity: {
+          id: string;
+          order_id: string;
+          signature?: string;
+          error_description?: string;
+        };
+      };
+    };
+  },
+  signature: string,
 ) {
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET!;
 
@@ -400,17 +423,21 @@ export async function handleRazorpayWebhook(
   // Handle different event types
   switch (event.event) {
     case "payment.authorized":
+      if (!event.payload.payment.entity.signature) {
+        throw new ValidationError("Missing payment signature");
+      }
+
       await PaymentService.processPaymentSuccess(
         event.payload.payment.entity.order_id,
         event.payload.payment.entity.id,
-        event.payload.payment.entity.signature
+        event.payload.payment.entity.signature,
       );
       break;
 
     case "payment.failed":
       await PaymentService.processPaymentFailure(
         event.payload.payment.entity.order_id,
-        event.payload.payment.entity.error_description
+        event.payload.payment.entity.error_description ?? "Payment failed",
       );
       break;
 

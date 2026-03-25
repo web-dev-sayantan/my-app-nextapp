@@ -3,63 +3,63 @@
  * User selects departure dates and passenger details
  */
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { FiArrowLeft, FiChevronRight, FiCheck } from 'react-icons/fi';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { FiArrowLeft, FiChevronRight, FiCheck } from "react-icons/fi";
 
 export default function BookingSummary() {
   const router = useRouter();
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  
-  const departureId = searchParams.get('departureId');
-  const trekName = searchParams.get('trekName');
-  const trekSlug = searchParams.get('trekSlug');
-  const startDate = searchParams.get('startDate');
-  const endDate = searchParams.get('endDate');
-  const pricePerPerson = searchParams.get('price');
-  const availableSeats = searchParams.get('seats');
+
+  const departureId = searchParams.get("departureId");
+  const trekName = searchParams.get("trekName");
+  const trekSlug = searchParams.get("trekSlug");
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
+  const pricePerPerson = searchParams.get("price");
+  const availableSeats = searchParams.get("seats");
 
   const [numberOfPeople, setNumberOfPeople] = useState(1);
-  const [contactName, setContactName] = useState('');
-  const [contactPhone, setContactPhone] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
+  const [contactName, setContactName] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Auto-fill contact details if user is logged in
   useEffect(() => {
     if (session?.user?.email) {
       setContactEmail(session.user.email);
-      setContactName((session.user as any)?.name || '');
+      setContactName(session.user.name || "");
     }
   }, [session]);
 
-  const totalPrice = (parseInt(pricePerPerson || '0') / 100) * numberOfPeople;
+  const totalPrice = (parseInt(pricePerPerson || "0") / 100) * numberOfPeople;
 
   const handleProceed = async () => {
     if (!contactName || !contactPhone || !contactEmail) {
-      setError('Please fill all contact details');
+      setError("Please fill all contact details");
       return;
     }
 
     if (!agreed) {
-      setError('Please agree to terms and conditions');
+      setError("Please agree to terms and conditions");
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           departureId,
           numberOfPeople,
@@ -72,15 +72,15 @@ export default function BookingSummary() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.error?.message || 'Failed to create booking');
+        throw new Error(data?.error?.message || "Failed to create booking");
       }
 
       // Redirect to payment page (Razorpay test/live)
       router.push(
-        `/booking/payment?bookingId=${data.data.id}&amount=${totalPrice * 100}`
+        `/booking/payment?bookingId=${data.data.id}&amount=${totalPrice * 100}`,
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Booking failed');
+      setError(err instanceof Error ? err.message : "Booking failed");
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,10 @@ export default function BookingSummary() {
       {/* Header */}
       <div className="border-b border-gray-800">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <Link href={`/treks/${trekSlug}`} className="flex items-center gap-2 text-blue-400 hover:text-blue-300">
+          <Link
+            href={`/treks/${trekSlug}`}
+            className="flex items-center gap-2 text-blue-400 hover:text-blue-300"
+          >
             <FiArrowLeft /> Back to Trek
           </Link>
         </div>
@@ -108,15 +111,19 @@ export default function BookingSummary() {
             {/* Trek Summary */}
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 mb-8">
               <h2 className="text-2xl font-bold mb-4">{trekName}</h2>
-              
+
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Departure Dates:</span>
-                  <span className="font-semibold">{startDate} to {endDate}</span>
+                  <span className="font-semibold">
+                    {startDate} to {endDate}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Price per Person:</span>
-                  <span className="font-semibold">₹{(parseInt(pricePerPerson || '0') / 100).toLocaleString()}</span>
+                  <span className="font-semibold">
+                    ₹{(parseInt(pricePerPerson || "0") / 100).toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
@@ -124,31 +131,42 @@ export default function BookingSummary() {
             {/* Participant Count */}
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 mb-8">
               <h3 className="text-xl font-bold mb-4">Number of Participants</h3>
-              
+
               <div className="flex items-center gap-4">
                 <button
-                  onClick={() => setNumberOfPeople(Math.max(1, numberOfPeople - 1))}
+                  onClick={() =>
+                    setNumberOfPeople(Math.max(1, numberOfPeople - 1))
+                  }
                   className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded"
                 >
                   −
                 </button>
-                
+
                 <input
                   type="number"
                   value={numberOfPeople}
-                  onChange={(e) => setNumberOfPeople(parseInt(e.target.value) || 1)}
+                  onChange={(e) =>
+                    setNumberOfPeople(parseInt(e.target.value) || 1)
+                  }
                   min="1"
-                  max={parseInt(availableSeats || '0')}
+                  max={parseInt(availableSeats || "0")}
                   className="bg-gray-700 text-white px-4 py-2 rounded text-center w-20"
                 />
-                
+
                 <button
-                  onClick={() => setNumberOfPeople(Math.min(parseInt(availableSeats || '15'), numberOfPeople + 1))}
+                  onClick={() =>
+                    setNumberOfPeople(
+                      Math.min(
+                        parseInt(availableSeats || "15"),
+                        numberOfPeople + 1,
+                      ),
+                    )
+                  }
                   className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded"
                 >
                   +
                 </button>
-                
+
                 <span className="text-gray-400 text-sm">
                   (Max: {availableSeats} available)
                 </span>
@@ -158,10 +176,12 @@ export default function BookingSummary() {
             {/* Contact Information */}
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">Contact Information</h3>
-              
+
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2">Full Name</label>
+                  <label className="block text-sm text-gray-400 mb-2">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     value={contactName}
@@ -172,7 +192,9 @@ export default function BookingSummary() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2">Phone Number</label>
+                  <label className="block text-sm text-gray-400 mb-2">
+                    Phone Number
+                  </label>
                   <input
                     type="tel"
                     value={contactPhone}
@@ -183,7 +205,9 @@ export default function BookingSummary() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-400 mb-2">Email Address</label>
+                  <label className="block text-sm text-gray-400 mb-2">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     value={contactEmail}
@@ -205,7 +229,9 @@ export default function BookingSummary() {
                   className="w-5 h-5 mt-1"
                 />
                 <span className="text-sm text-gray-400">
-                  I agree to the trek terms, conditions, and cancellation policy. I confirm that I am in good health and fit for trekking.
+                  I agree to the trek terms, conditions, and cancellation
+                  policy. I confirm that I am in good health and fit for
+                  trekking.
                 </span>
               </label>
             </div>
@@ -226,10 +252,15 @@ export default function BookingSummary() {
               <div className="space-y-3 mb-6 pb-6 border-b border-blue-700">
                 <div className="flex justify-between text-sm">
                   <span>Price per person</span>
-                  <span>₹{(parseInt(pricePerPerson || '0') / 100).toLocaleString()}</span>
+                  <span>
+                    ₹{(parseInt(pricePerPerson || "0") / 100).toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>×  {numberOfPeople} {numberOfPeople === 1 ? 'person' : 'people'}</span>
+                  <span>
+                    × {numberOfPeople}{" "}
+                    {numberOfPeople === 1 ? "person" : "people"}
+                  </span>
                 </div>
               </div>
 
@@ -237,7 +268,10 @@ export default function BookingSummary() {
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold">Total Amount</span>
                   <span className="text-3xl font-bold text-yellow-400">
-                    ₹{totalPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                    ₹
+                    {totalPrice.toLocaleString("en-IN", {
+                      maximumFractionDigits: 0,
+                    })}
                   </span>
                 </div>
               </div>
@@ -247,7 +281,7 @@ export default function BookingSummary() {
                 disabled={loading}
                 className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 text-black font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
               >
-                {loading ? 'Processing...' : 'Proceed to Payment'}
+                {loading ? "Processing..." : "Proceed to Payment"}
                 <FiChevronRight />
               </button>
 

@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
+import { getErrorMessage } from "@/lib/email";
 
 /**
  * Test endpoint to verify email sending
@@ -7,37 +8,39 @@ import { Resend } from 'resend';
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const to = searchParams.get('to');
+  const to = searchParams.get("to");
 
   if (!to) {
     return NextResponse.json(
       { error: 'Please provide a "to" query parameter' },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  
   // Check if Resend API key is configured
   if (!process.env.RESEND_API_KEY) {
-    return NextResponse.json({
-      success: false,
-      error: 'RESEND_API_KEY is not configured in environment variables',
-      envCheck: {
-        hasResendKey: false,
-        hasEmailFrom: !!process.env.EMAIL_FROM,
-      }
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: "RESEND_API_KEY is not configured in environment variables",
+        envCheck: {
+          hasResendKey: false,
+          hasEmailFrom: !!process.env.EMAIL_FROM,
+        },
+      },
+      { status: 500 },
+    );
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const fromEmail = process.env.EMAIL_FROM || 'Trail Makers <onboarding@resend.dev>';
+  const fromEmail =
+    process.env.EMAIL_FROM || "Trail Makers <onboarding@resend.dev>";
 
   try {
-
     const data = await resend.emails.send({
       from: fromEmail,
       to: to,
-      subject: 'Test Email from Trail Makers',
+      subject: "Test Email from Trail Makers",
       html: `
         <!DOCTYPE html>
         <html>
@@ -62,29 +65,30 @@ export async function GET(request: NextRequest) {
       `,
     });
 
- 
-
     return NextResponse.json({
       success: true,
-      message: 'Test email sent successfully!',
+      message: "Test email sent successfully!",
       data,
-      method: 'resend',
+      method: "resend",
       envCheck: {
         hasResendKey: true,
         hasEmailFrom: !!process.env.EMAIL_FROM,
-      }
+      },
     });
-  } catch (error: any) {
-    console.error('=== Email sending failed ===');
-    console.error('Error:', error);
+  } catch (error) {
+    console.error("=== Email sending failed ===");
+    console.error("Error:", error);
 
-    return NextResponse.json({
-      success: false,
-      error: error.message || 'Failed to send email',
-      envCheck: {
-        hasResendKey: !!process.env.RESEND_API_KEY,
-        hasEmailFrom: !!process.env.EMAIL_FROM,
-      }
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: getErrorMessage(error),
+        envCheck: {
+          hasResendKey: !!process.env.RESEND_API_KEY,
+          hasEmailFrom: !!process.env.EMAIL_FROM,
+        },
+      },
+      { status: 500 },
+    );
   }
 }

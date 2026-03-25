@@ -16,8 +16,12 @@ export default function Login() {
   // Auto-redirect based on session role
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
-      const userRole = (session.user as any)?.role;
-      if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN' || userRole === 'MODERATOR') {
+      const userRole = session.user.role;
+      if (
+        userRole === "ADMIN" ||
+        userRole === "SUPER_ADMIN" ||
+        userRole === "MODERATOR"
+      ) {
         router.push("/admin");
       } else {
         router.push("/dashboard");
@@ -37,12 +41,13 @@ export default function Login() {
         redirect: false,
       });
 
-
       if (!result?.ok) {
         // Provide a clearer message for credential failures
         const msg = result?.error
-          ? /credentials/i.test(result.error) ? 'Invalid email or password' : result.error
-          : 'Invalid email or password';
+          ? /credentials/i.test(result.error)
+            ? "Invalid email or password"
+            : result.error
+          : "Invalid email or password";
         setError(msg);
         return;
       }
@@ -64,9 +69,7 @@ export default function Login() {
         </h1>
 
         {error && (
-          <div className="bg-red-500 text-white p-3 rounded mb-4">
-            {error}
-          </div>
+          <div className="bg-red-500 text-white p-3 rounded mb-4">{error}</div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-4">
@@ -111,7 +114,10 @@ export default function Login() {
         </p>
 
         <p className="text-gray-400 text-center mt-2">
-          <Link href="/forgot-password" className="text-red-500 hover:text-red-400">
+          <Link
+            href="/forgot-password"
+            className="text-red-500 hover:text-red-400"
+          >
             Forgot Password?
           </Link>
         </p>

@@ -1,9 +1,19 @@
-import React from 'react'
+import React from "react";
 
-function Button({text, bgcolor, txtcolor }:any) {
-  return (
-    <button className={`${bgcolor} ${txtcolor} font-extrabold text-xs uppercase py-2 px-4 rounded-lg`}>{text}</button>
-  )
+interface ButtonProps {
+  text: string;
+  bgcolor: string;
+  txtcolor: string;
 }
 
-export default Button
+function Button({ text, bgcolor, txtcolor }: ButtonProps) {
+  return (
+    <button
+      className={`${bgcolor} ${txtcolor} font-extrabold text-xs uppercase py-2 px-4 rounded-lg`}
+    >
+      {text}
+    </button>
+  );
+}
+
+export default Button;

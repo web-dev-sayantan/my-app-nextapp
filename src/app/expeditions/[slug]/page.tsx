@@ -1,88 +1,156 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { isDatabaseConfigured } from "@/lib/databaseAvailability";
 
-async function getExpedition(slug: string) {
+const fallbackExpeditionImage =
+  "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
+
+interface ExpeditionSessionCard {
+  id: string;
+  startDate: Date;
+  seatsAvailable: number;
+}
+
+interface ExpeditionDetail {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  longDescription: string | null;
+  state: string;
+  basePrice: number;
+  difficulty: string;
+  duration: number;
+  maxAltitude: number | null;
+  distance: number | null;
+  bestSeason: string | null;
+  imageUrl: string | null;
+  thumbnailUrl: string | null;
+  itinerary: string;
+  inclusions: string[];
+  exclusions: string[];
+  requirements: string[];
+  sessions: ExpeditionSessionCard[];
+}
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export const revalidate = 3600;
+
+function formatDifficulty(difficulty: string) {
+  return difficulty.replace(/_/g, " ");
+}
+
+async function getExpedition(slug: string): Promise<ExpeditionDetail | null> {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
   try {
-    const response = await fetch(`/api/expeditions/${slug}`);
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data.expedition;
+    return await prisma.expedition.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        description: true,
+        longDescription: true,
+        state: true,
+        basePrice: true,
+        difficulty: true,
+        duration: true,
+        maxAltitude: true,
+        distance: true,
+        bestSeason: true,
+        imageUrl: true,
+        thumbnailUrl: true,
+        itinerary: true,
+        inclusions: true,
+        exclusions: true,
+        requirements: true,
+        sessions: {
+          where: {
+            startDate: { gte: new Date() },
+            isCancelled: false,
+          },
+          orderBy: { startDate: "asc" },
+          select: {
+            id: true,
+            startDate: true,
+            seatsAvailable: true,
+          },
+        },
+      },
+    });
   } catch (error) {
-    console.error("Failed to fetch expedition:", error);
+    console.warn("Skipping expedition detail during prerender:", error);
     return null;
   }
 }
 
-interface PagesProps {
-  params: Promise<{ slug: string }>;
-}
-
-export default function ExpeditionDetailPage({ params }: PagesProps) {
-  const { slug } = use(params);
-  const [expedition, setExpedition] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getExpedition(slug);
-      setExpedition(data);
-      setLoading(false);
-    };
-    fetchData();
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="text-gray-600 dark:text-gray-400 mt-4">
-            Loading expedition...
-          </p>
-        </div>
-      </div>
-    );
+export async function generateStaticParams() {
+  if (!isDatabaseConfigured()) {
+    return [];
   }
 
+  try {
+    const expeditions = await prisma.expedition.findMany({
+      select: { slug: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return expeditions.map((expedition) => ({ slug: expedition.slug }));
+  } catch (error) {
+    console.warn("Skipping expedition static params during build:", error);
+    return [];
+  }
+}
+
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
+  const expedition = await getExpedition(params.slug);
+
   if (!expedition) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Expedition Not Found
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            The expedition you're looking for doesn't exist.
-          </p>
-          <Link
-            href="/expeditions"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-          >
-            Back to Expeditions
-          </Link>
-        </div>
-      </div>
-    );
+    return { title: "Expedition Not Found | Trail Makers" };
+  }
+
+  return {
+    title: `${expedition.name} Expedition | Trail Makers`,
+    description: expedition.description,
+    openGraph: {
+      title: expedition.name,
+      description: expedition.description,
+      images: expedition.imageUrl ? [expedition.imageUrl] : [],
+    },
+  };
+}
+
+export default async function ExpeditionDetailPage(props: PageProps) {
+  const params = await props.params;
+  const expedition = await getExpedition(params.slug);
+
+  if (!expedition) {
+    notFound();
   }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
       <div className="relative h-96 bg-gray-200 dark:bg-gray-800 overflow-hidden">
-        <img
+        <Image
           src={
             expedition.imageUrl ||
             expedition.thumbnailUrl ||
-            "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg"
+            fallbackExpeditionImage
           }
           alt={expedition.name}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
-          }}
+          fill
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40 flex items-end">
           <div className="w-full p-8">
@@ -128,7 +196,7 @@ export default function ExpeditionDetailPage({ params }: PagesProps) {
                     Difficulty
                   </p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white capitalize">
-                    {expedition.difficulty.replace(/_/g, " ")}
+                    {formatDifficulty(expedition.difficulty)}
                   </p>
                 </div>
                 <div>
@@ -175,7 +243,7 @@ export default function ExpeditionDetailPage({ params }: PagesProps) {
                 <ul className="space-y-2">
                   {expedition.inclusions.map((item: string, idx: number) => (
                     <li
-                      key={idx}
+                      key={`${item}-${idx}`}
                       className="flex items-start text-gray-700 dark:text-gray-300"
                     >
                       <span className="text-green-600 dark:text-green-400 mr-3">
@@ -197,7 +265,7 @@ export default function ExpeditionDetailPage({ params }: PagesProps) {
                 <ul className="space-y-2">
                   {expedition.exclusions.map((item: string, idx: number) => (
                     <li
-                      key={idx}
+                      key={`${item}-${idx}`}
                       className="flex items-start text-gray-700 dark:text-gray-300"
                     >
                       <span className="text-red-600 dark:text-red-400 mr-3">
@@ -219,7 +287,7 @@ export default function ExpeditionDetailPage({ params }: PagesProps) {
                 <ul className="space-y-2">
                   {expedition.requirements.map((item: string, idx: number) => (
                     <li
-                      key={idx}
+                      key={`${item}-${idx}`}
                       className="flex items-start text-gray-700 dark:text-gray-300"
                     >
                       <span className="text-blue-600 dark:text-blue-400 mr-3">
@@ -256,15 +324,13 @@ export default function ExpeditionDetailPage({ params }: PagesProps) {
                     Available Dates
                   </h3>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {expedition.sessions.map((session: any) => (
+                    {expedition.sessions.map((session) => (
                       <div
                         key={session.id}
                         className="border border-gray-200 dark:border-gray-700 rounded p-3"
                       >
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                          {new Date(session.startDate).toLocaleDateString(
-                            "en-IN",
-                          )}
+                          {session.startDate.toLocaleDateString("en-IN")}
                         </p>
                         <p className="text-xs text-gray-600 dark:text-gray-400">
                           {session.seatsAvailable} seats available

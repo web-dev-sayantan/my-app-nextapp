@@ -46,7 +46,7 @@ export const createDepartureSchema = z.object({
     .datetime()
     .refine(
       (date) => new Date(date) > new Date(),
-      "Start date must be in the future"
+      "Start date must be in the future",
     ),
   endDate: z.string().datetime(),
   totalSeats: z.number().int().min(1).max(100),
@@ -80,7 +80,9 @@ export type CreatePaymentInput = z.infer<typeof createPaymentSchema>;
 // Query validation
 export const listTreksQuerySchema = z.object({
   state: z.string().optional(),
-  difficulty: z.string().optional(),
+  difficulty: z
+    .enum(["EASY", "EASY_MODERATE", "MODERATE", "HARD", "VERY_HARD"])
+    .optional(),
   minPrice: z.coerce.number().int().optional(),
   maxPrice: z.coerce.number().int().optional(),
   page: z.coerce.number().int().positive().default(1),

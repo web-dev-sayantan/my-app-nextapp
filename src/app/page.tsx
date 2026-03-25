@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +10,16 @@ import { WhatSetUsApart } from "@/components/whatSetUsApart";
 import { KnowBeforeYouGo } from "@/components/knowBeforeYouGo";
 import { TrekByRegionClient } from "@/components/trekByRegionClient";
 import articlesData from "@/data/articles.json";
+import { isDatabaseConfigured } from "@/lib/databaseAvailability";
+
+type ListedTrek = Awaited<
+  ReturnType<typeof TrekService.listTreks>
+>["treks"][number];
+type ListedDeparture = ListedTrek["departures"][number];
+type UpcomingDepartureItem = {
+  trek: ListedTrek;
+  departure: ListedDeparture;
+};
 
 function formatDifficulty(difficulty: string): string {
   const map: Record<string, string> = {
@@ -24,29 +34,38 @@ function formatDifficulty(difficulty: string): string {
 
 // Upcoming Adventures Table Component
 async function UpcomingAdventuresTable() {
-  // Wrapped in try/catch to prevent build failure when DB is unreachable
-  let sortedDepartures: any[] = [];
+  let sortedDepartures: UpcomingDepartureItem[] = [];
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
   try {
-    const { treks: allTreks } = await TrekService.listTreks({ page: 1, limit: 50 }, 10);
+    const { treks: allTreks } = await TrekService.listTreks(
+      { page: 1, limit: 50 },
+      10,
+    );
 
     // Flatten all departures from all treks and sort by earliest date
-    const allDepartures = allTreks.flatMap((trek: any) => 
-      (trek.departures || []).map((departure: any) => ({
+    const allDepartures = allTreks.flatMap((trek) =>
+      (trek.departures || []).map((departure) => ({
         trek,
         departure,
-      }))
+      })),
     );
 
     // Sort by start date ascending (earliest first) and take top 8
     sortedDepartures = allDepartures
-      .sort((a: any, b: any) => {
+      .sort((a, b) => {
         const dateA = new Date(a.departure.startDate).getTime();
         const dateB = new Date(b.departure.startDate).getTime();
         return dateA - dateB;
       })
       .slice(0, 8);
   } catch (error) {
-    console.warn("Skipping UpcomingAdventuresTable – DB unreachable during build:", error);
+    console.warn(
+      "Skipping UpcomingAdventuresTable – DB unreachable during build:",
+      error,
+    );
   }
 
   return (
@@ -56,7 +75,9 @@ async function UpcomingAdventuresTable() {
           <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 text-text-primary">
             Upcoming Adventures
           </h2>
-          <p className="text-text-secondary text-sm md:text-base">Explore our scheduled departures (earliest first)</p>
+          <p className="text-text-secondary text-sm md:text-base">
+            Explore our scheduled departures (earliest first)
+          </p>
         </div>
 
         {/* Desktop Table - Hidden on Mobile */}
@@ -83,15 +104,21 @@ async function UpcomingAdventuresTable() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border bg-bg-card">
-              {sortedDepartures.map((item: any, idx: number) => {
+              {sortedDepartures.map((item, idx) => {
                 const trek = item.trek;
                 const departure = item.departure;
                 const startDate = formatDate(new Date(departure.startDate));
                 const priceValue = departure.pricePerPerson || 0;
-                const formattedPrice = priceValue > 0 ? formatPrice(priceValue).replace('₹', '').trim() : 'Contact';
+                const formattedPrice =
+                  priceValue > 0
+                    ? formatPrice(priceValue).replace("₹", "").trim()
+                    : "Contact";
 
                 return (
-                  <tr key={`${trek.id}-${idx}`} className="hover:bg-bg-soft transition">
+                  <tr
+                    key={`${trek.id}-${idx}`}
+                    className="hover:bg-bg-soft transition"
+                  >
                     <td className="px-6 py-4 text-sm text-text-secondary">
                       {startDate}
                     </td>
@@ -132,12 +159,15 @@ async function UpcomingAdventuresTable() {
 
         {/* Mobile Cards - Visible only on Mobile */}
         <div className="block md:hidden space-y-3">
-          {sortedDepartures.map((item: any, idx: number) => {
+          {sortedDepartures.map((item, idx) => {
             const trek = item.trek;
             const departure = item.departure;
             const startDate = formatDate(new Date(departure.startDate));
             const priceValue = departure.pricePerPerson || 0;
-            const formattedPrice = priceValue > 0 ? formatPrice(priceValue).replace('₹', '').trim() : 'Contact';
+            const formattedPrice =
+              priceValue > 0
+                ? formatPrice(priceValue).replace("₹", "").trim()
+                : "Contact";
 
             return (
               <Link key={`${trek.id}-${idx}`} href={`/treks/${trek.slug}`}>
@@ -155,11 +185,15 @@ async function UpcomingAdventuresTable() {
                     </span>
                   </div>
                   <div className="text-right flex-shrink-0 ml-3">
-                    <p className="text-xs text-brand-burnt font-medium">{startDate}</p>
+                    <p className="text-xs text-brand-burnt font-medium">
+                      {startDate}
+                    </p>
                     <p className="text-sm font-bold text-primary mt-1">
                       {priceValue > 0 ? `₹${formattedPrice}` : formattedPrice}
                     </p>
-                    <p className="text-xs text-text-muted mt-1">{trek.duration} days</p>
+                    <p className="text-xs text-text-muted mt-1">
+                      {trek.duration} days
+                    </p>
                   </div>
                 </div>
               </Link>
@@ -182,28 +216,39 @@ async function UpcomingAdventuresTable() {
 
 // Trek by Region Section - Server Component with Arrow Navigation
 async function TrekByRegionSection() {
-  // Wrapped in try/catch to prevent build failure when DB is unreachable
   let regionStats: Record<string, { count: number; image?: string }> = {};
   let sortedRegions: string[] = [];
-  
+
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
   try {
-    const { treks: allTreks } = await TrekService.listTreks({ page: 1, limit: 100 }, 1);
+    const { treks: allTreks } = await TrekService.listTreks(
+      { page: 1, limit: 100 },
+      1,
+    );
 
     // Get unique states and count treks in each
     const stateImages: Record<string, string> = {
-      "Himachal Pradesh": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=800&fit=crop",
-      "Uttarakhand": "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=600&h=800&fit=crop",
-      "Jammu and Kashmir": "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600&h=800&fit=crop",
-      "Sikkim": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop",
-      "West Bengal": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&h=800&fit=crop",
+      "Himachal Pradesh":
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=800&fit=crop",
+      Uttarakhand:
+        "https://images.unsplash.com/photo-1464207687429-7505649dae38?w=600&h=800&fit=crop",
+      "Jammu and Kashmir":
+        "https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=600&h=800&fit=crop",
+      Sikkim:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop",
+      "West Bengal":
+        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&h=800&fit=crop",
     };
 
-    allTreks.forEach((trek: any) => {
+    allTreks.forEach((trek) => {
       const state = trek.state || "Other";
       if (!regionStats[state]) {
-        regionStats[state] = { 
-          count: 0, 
-          image: stateImages[state] || trek.thumbnailUrl 
+        regionStats[state] = {
+          count: 0,
+          image: stateImages[state] || trek.thumbnailUrl || undefined,
         };
       }
       regionStats[state].count++;
@@ -212,10 +257,15 @@ async function TrekByRegionSection() {
     // Sort regions alphabetically
     sortedRegions = Object.keys(regionStats).sort();
   } catch (error) {
-    console.warn("Skipping TrekByRegionSection – DB unreachable during build:", error);
+    console.warn(
+      "Skipping TrekByRegionSection – DB unreachable during build:",
+      error,
+    );
   }
 
-  return <TrekByRegionClient regions={sortedRegions} regionStats={regionStats} />;
+  return (
+    <TrekByRegionClient regions={sortedRegions} regionStats={regionStats} />
+  );
 }
 
 // Empty function - CTA removed, replaced with Know Before You Go

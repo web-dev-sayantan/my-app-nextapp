@@ -5,7 +5,15 @@ import { prisma } from "@/lib/prisma";
 import { trackFailedLogin, logAudit } from "@/lib/roleUtils";
 import bcrypt from "bcryptjs";
 import type { JWT } from "next-auth/jwt";
-import type { Session } from "next-auth";
+import type { Session, User } from "next-auth";
+
+type AuthenticatedUser = User & {
+  id: string;
+  username: string;
+  role: string;
+  isActive: boolean;
+  isLocked: boolean;
+};
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -17,52 +25,52 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // Validate input
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
-        // Resolve IP address from headers
-        const forwarded = req?.headers?.get?.('x-forwarded-for');
-        const ipAddress = forwarded ? forwarded.split(',')[0].trim() : 'unknown';
-        const userAgent = req?.headers?.get?.('user-agent') || 'unknown';
+        const normalizedEmail = credentials.email.toLowerCase();
+        const forwarded = req?.headers?.get?.("x-forwarded-for");
+        const ipAddress = forwarded
+          ? forwarded.split(",")[0].trim()
+          : "unknown";
+        const userAgent = req?.headers?.get?.("user-agent") || "unknown";
 
-        // Find user by email
-        const user = await (prisma as any).user.findUnique({
-          where: { email: credentials.email },
+        const user = await prisma.user.findUnique({
+          where: { email: normalizedEmail },
           select: {
             id: true,
             email: true,
             username: true,
             password: true,
+            role: true,
             isActive: true,
             isLocked: true,
             isDenied: true,
-            accountLockedUntil: true
-          }
+            accountLockedUntil: true,
+          },
         });
 
-        // If no user, track failed attempt and return null
         if (!user) {
-          await trackFailedLogin(credentials.email, ipAddress, userAgent);
+          await trackFailedLogin(normalizedEmail, ipAddress, userAgent);
           return null;
         }
 
-        // If access denied, return null
         if (user.isDenied) {
           return null;
         }
 
-        // If account locked and lock period still active, return null
         if (user.isLocked) {
-          if (user.accountLockedUntil && new Date(user.accountLockedUntil) > new Date()) {
+          if (
+            user.accountLockedUntil &&
+            new Date(user.accountLockedUntil) > new Date()
+          ) {
             return null;
           }
 
-          // Otherwise, clear stale lock
-          await (prisma as any).user.update({
+          await prisma.user.update({
             where: { id: user.id },
-            data: { isLocked: false, accountLockedUntil: null }
+            data: { isLocked: false, accountLockedUntil: null },
           });
         }
 
@@ -70,18 +78,36 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Verify password
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password,
+        );
         if (!isPasswordValid) {
-          await trackFailedLogin(credentials.email, ipAddress, userAgent);
+          await trackFailedLogin(normalizedEmail, ipAddress, userAgent);
           return null;
         }
 
-        // Update last login and log audit
-        await (prisma as any).user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
-        await logAudit('USER_LOGIN', 'USER', user.id, user.id, {}, { ipAddress, userAgent });
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date() },
+        });
+        await logAudit(
+          "USER_LOGIN",
+          "USER",
+          user.id,
+          user.id,
+          {},
+          { ipAddress, userAgent },
+        );
 
-        return { id: user.id, email: user.email, username: user.username, role: '', isActive: true, isLocked: false };
+        return {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          isActive: user.isActive,
+          isLocked: false,
+        } satisfies AuthenticatedUser;
       },
     }),
   ],
@@ -89,21 +115,31 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: any }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
+        token.role = user.role;
+        token.isActive = user.isActive;
+        token.isLocked = user.isLocked;
+        return token;
       }
 
-      if (token.id) {
-        const dbUser = await (prisma as any).user.findUnique({
+      if (
+        (!token.role ||
+          token.isActive === undefined ||
+          token.isLocked === undefined) &&
+        token.id
+      ) {
+        const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { role: true, isActive: true, isLocked: true }
+          select: { role: true, isActive: true, isLocked: true },
         });
+
         if (dbUser) {
-          (token as any).role = dbUser.role;
-          (token as any).isActive = dbUser.isActive;
-          (token as any).isLocked = dbUser.isLocked;
+          token.role = dbUser.role;
+          token.isActive = dbUser.isActive;
+          token.isLocked = dbUser.isLocked;
         }
       }
 
@@ -111,12 +147,13 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
-        (session.user as any).id = token.id as string;
-        (session.user as any).username = (token as any).username as string;
-        (session.user as any).role = (token as any).role as string;
-        (session.user as any).isActive = (token as any).isActive as boolean;
-        (session.user as any).isLocked = (token as any).isLocked as boolean;
+        session.user.id = token.id;
+        session.user.username = token.username;
+        session.user.role = token.role;
+        session.user.isActive = token.isActive;
+        session.user.isLocked = token.isLocked;
       }
+
       return session;
     },
   },

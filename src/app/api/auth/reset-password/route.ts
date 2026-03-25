@@ -1,11 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import crypto from 'crypto';
-import { sendPasswordResetEmail } from '@/lib/email';
-import bcrypt from 'bcryptjs';
-import { authRatelimit } from '@/lib/ratelimit';
-
-const prisma = new PrismaClient();
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { getErrorMessage, sendPasswordResetEmail } from "@/lib/email";
+import bcrypt from "bcryptjs";
+import { authRatelimit } from "@/lib/ratelimit";
+import { prisma } from "@/lib/prisma";
 
 /**
  * POST /api/auth/reset-password
@@ -14,12 +12,15 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'anonymous';
+    const ip =
+      request.headers.get("x-forwarded-for") ??
+      request.headers.get("x-real-ip") ??
+      "anonymous";
     const { success } = await authRatelimit.limit(ip);
     if (!success) {
       return NextResponse.json(
-        { success: false, error: 'Too many requests. Please try again later.' },
-        { status: 429 }
+        { success: false, error: "Too many requests. Please try again later." },
+        { status: 429 },
       );
     }
 
@@ -28,8 +29,8 @@ export async function POST(request: NextRequest) {
 
     if (!email) {
       return NextResponse.json(
-        { success: false, error: 'Email is required' },
-        { status: 400 }
+        { success: false, error: "Email is required" },
+        { status: 400 },
       );
     }
 
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Always return success to prevent email enumeration
     if (user) {
-      const resetToken = crypto.randomBytes(32).toString('hex');
+      const resetToken = crypto.randomBytes(32).toString("hex");
       const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
 
       await prisma.user.update({
@@ -51,25 +52,29 @@ export async function POST(request: NextRequest) {
       const result = await sendPasswordResetEmail({
         to: user.email,
         resetToken,
-        userName: user.firstName || user.username || 'User',
+        userName: user.firstName || user.username || "User",
       });
 
       if (!result.success) {
-        console.error('Failed to send password reset email:', (result as any).error || 'Unknown error');
+        console.error("Failed to send password reset email:", result.error);
       } else {
-        console.log('Password reset email sent successfully via:', result.method);
+        console.log(
+          "Password reset email sent successfully via:",
+          "method" in result ? result.method : "mock",
+        );
       }
     }
 
     return NextResponse.json({
       success: true,
-      message: 'If an account exists with this email, you will receive a password reset link shortly.',
+      message:
+        "If an account exists with this email, you will receive a password reset link shortly.",
     });
   } catch (error) {
-    console.error('Password reset request error:', error);
+    console.error("Password reset request error:", getErrorMessage(error));
     return NextResponse.json(
-      { success: false, error: 'Failed to process request' },
-      { status: 500 }
+      { success: false, error: "Failed to process request" },
+      { status: 500 },
     );
   }
 }
@@ -81,12 +86,15 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'anonymous';
+    const ip =
+      request.headers.get("x-forwarded-for") ??
+      request.headers.get("x-real-ip") ??
+      "anonymous";
     const { success } = await authRatelimit.limit(ip);
     if (!success) {
       return NextResponse.json(
-        { success: false, error: 'Too many requests. Please try again later.' },
-        { status: 429 }
+        { success: false, error: "Too many requests. Please try again later." },
+        { status: 429 },
       );
     }
 
@@ -95,16 +103,16 @@ export async function PUT(request: NextRequest) {
 
     if (!token || !newPassword) {
       return NextResponse.json(
-        { success: false, error: 'Token and new password are required' },
-        { status: 400 }
+        { success: false, error: "Token and new password are required" },
+        { status: 400 },
       );
     }
 
     // Fix #9 - stronger password policy
     if (newPassword.length < 12) {
       return NextResponse.json(
-        { success: false, error: 'Password must be at least 12 characters' },
-        { status: 400 }
+        { success: false, error: "Password must be at least 12 characters" },
+        { status: 400 },
       );
     }
 
@@ -117,8 +125,8 @@ export async function PUT(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'Invalid or expired reset token' },
-        { status: 400 }
+        { success: false, error: "Invalid or expired reset token" },
+        { status: 400 },
       );
     }
 
@@ -135,13 +143,14 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Password reset successfully. You can now login with your new password.',
+      message:
+        "Password reset successfully. You can now login with your new password.",
     });
   } catch (error) {
-    console.error('Password reset error:', error);
+    console.error("Password reset error:", getErrorMessage(error));
     return NextResponse.json(
-      { success: false, error: 'Failed to reset password' },
-      { status: 500 }
+      { success: false, error: "Failed to reset password" },
+      { status: 500 },
     );
   }
 }

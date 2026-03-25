@@ -1,17 +1,17 @@
 /**
  * Prisma Seed Script
  * Populates database with initial trek data
- * 
+ *
  * Run with: npx prisma db seed
  */
 
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient, type TrekDifficulty } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
   // Do NOT clear existing data - use upsert to avoid conflicts
-  
+
   console.log("Seeding database with trek data...");
 
   // Create or update treks
@@ -96,11 +96,7 @@ Day 4: Return to Manali`,
         "Transport from Manali",
         "Camping equipment",
       ],
-      exclusions: [
-        "Personal gear",
-        "Travel to Manali",
-        "Tips",
-      ],
+      exclusions: ["Personal gear", "Travel to Manali", "Tips"],
       requirements: [
         "Moderate fitness",
         "Proper hiking boots",
@@ -166,7 +162,8 @@ Day 7: Return trek and departure`,
     create: {
       slug: "hampta-pass-trek",
       name: "Hampta Pass Trek",
-      description: "A scenic crossover trek from Kullu to Lahaul with varied landscapes.",
+      description:
+        "A scenic crossover trek from Kullu to Lahaul with varied landscapes.",
       longDescription:
         "Hampta Pass offers dramatic contrasts — lush green valleys in Kullu and the barren high-altitude landscapes of Lahaul. It is a favourite for those seeking variety in a single trek.",
       state: "Himachal Pradesh",
@@ -187,7 +184,11 @@ Day 7: Return trek and departure`,
     Day 4: Cross Hampta Pass (≈14,000 ft) and descend into the Lahaul side to Chatru
     Day 5: Trek down to lower meadows and drive back towards Manali
     Day 6: Buffer / departure`,
-      inclusions: ["Tents or guesthouse stay", "Meals on trek", "Guide and porter services"],
+      inclusions: [
+        "Tents or guesthouse stay",
+        "Meals on trek",
+        "Guide and porter services",
+      ],
       exclusions: ["Travel to Manali", "Personal gear", "Insurance"],
       requirements: ["Moderate fitness", "Good trekking shoes", "Warm layers"],
     },
@@ -199,7 +200,8 @@ Day 7: Return trek and departure`,
     create: {
       slug: "pin-parvati-pass-trek",
       name: "Pin Parvati Pass Trek",
-      description: "A challenging, high-altitude pass connecting Parvati valley to Pin valley.",
+      description:
+        "A challenging, high-altitude pass connecting Parvati valley to Pin valley.",
       longDescription:
         "Pin Parvati is an advanced trek that rewards trekkers with remote landscapes, glacier crossings, and a sense of true wilderness.",
       state: "Himachal Pradesh",
@@ -221,9 +223,17 @@ Day 7: Return trek and departure`,
     Day 5: Final approach and crossing of the Pin Parvati Pass
     Day 6: Begin descent into Pin valley
     Day 7-10: Gradual descent and exit via Pin valley villages`,
-      inclusions: ["Camping and meals", "Experienced high-altitude guides", "Porters"],
+      inclusions: [
+        "Camping and meals",
+        "Experienced high-altitude guides",
+        "Porters",
+      ],
       exclusions: ["High-altitude personal gear", "Travel to start point"],
-      requirements: ["Excellent fitness", "Prior high-altitude experience", "Full trekking kit"],
+      requirements: [
+        "Excellent fitness",
+        "Prior high-altitude experience",
+        "Full trekking kit",
+      ],
     },
   });
 
@@ -233,7 +243,8 @@ Day 7: Return trek and departure`,
     create: {
       slug: "triund-trek",
       name: "Triund Trek",
-      description: "A short and popular trek near McLeodganj with panoramic views of Dhauladhar.",
+      description:
+        "A short and popular trek near McLeodganj with panoramic views of Dhauladhar.",
       longDescription:
         "Triund is ideal for beginners and offers spectacular sunrise/sunset views over the Dhauladhar range. Great for a quick getaway.",
       state: "Himachal Pradesh",
@@ -262,7 +273,8 @@ Day 7: Return trek and departure`,
     create: {
       slug: "prashar-lake-trek",
       name: "Prashar Lake Trek",
-      description: "A short trek to the serene Prashar Lake with a lone temple on an island.",
+      description:
+        "A short trek to the serene Prashar Lake with a lone temple on an island.",
       longDescription:
         "Prashar Lake is famous for its mirror-like waters and the three-storey pagoda temple. The trail is peaceful and photogenic.",
       state: "Himachal Pradesh",
@@ -292,7 +304,8 @@ Day 7: Return trek and departure`,
     create: {
       slug: "indrahara-pass-trek",
       name: "Indrahar Pass Trek",
-      description: "A challenging ridge trek from McLeodganj to Lahesh cave and beyond.",
+      description:
+        "A challenging ridge trek from McLeodganj to Lahesh cave and beyond.",
       longDescription:
         "Indrahar Pass is known for steep sections and superb high-altitude ridgelines offering breathtaking views.",
       state: "Himachal Pradesh",
@@ -323,7 +336,8 @@ Day 7: Return trek and departure`,
     create: {
       slug: "kheerganga-trek",
       name: "Kheerganga Trek",
-      description: "A short and popular trek in Parvati Valley, famous for hot springs.",
+      description:
+        "A short and popular trek in Parvati Valley, famous for hot springs.",
       longDescription:
         "Kheerganga is a compact trek that rewards trekkers with natural hot springs and panoramic valley views.",
       state: "Himachal Pradesh",
@@ -431,7 +445,7 @@ Day 7: Return trek and departure`,
     slug: string;
     name: string;
     state: string;
-    difficulty: string;
+    difficulty: TrekDifficulty;
     duration: number;
     distance: number;
     maxAltitude: number;
@@ -448,54 +462,417 @@ Day 7: Return trek and departure`,
   }
 
   const moreTreks: TrekInput[] = [
-    { slug: "roopkund-trek", name: "Roopkund Trek", state: "Uttarakhand", difficulty: "HARD", duration: 6, distance: 55, maxAltitude: 4700, bestSeason: "May-Oct", tags: ["high-altitude","glacier","lake"], itinerary: `Day 1: Drive to Lohajung and trek to Lohajung camp
+    {
+      slug: "roopkund-trek",
+      name: "Roopkund Trek",
+      state: "Uttarakhand",
+      difficulty: "HARD",
+      duration: 6,
+      distance: 55,
+      maxAltitude: 4700,
+      bestSeason: "May-Oct",
+      tags: ["high-altitude", "glacier", "lake"],
+      itinerary: `Day 1: Drive to Lohajung and trek to Lohajung camp
   Day 2: Trek to Wan/Patangini area
   Day 3: Approach to Didna/Patangini and alpine meadows
   Day 4: Trek across Bedni Bugyal towards Roopkund base
   Day 5: Visit Roopkund (the skeletal lake) and return to Wan
-  Day 6: Trek out and drive back to Rishikesh/exit point` },
-    { slug: "kedarkantha-trek", name: "Kedarkantha Trek", state: "Uttarakhand", difficulty: "EASY_MODERATE", duration: 4, distance: 20, maxAltitude: 3800, bestSeason: "Dec-May", tags: ["snow","family","4-days"], itinerary: `Day 1: Drive to Sankri and trek to Juda Ka Talab
+  Day 6: Trek out and drive back to Rishikesh/exit point`,
+    },
+    {
+      slug: "kedarkantha-trek",
+      name: "Kedarkantha Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY_MODERATE",
+      duration: 4,
+      distance: 20,
+      maxAltitude: 3800,
+      bestSeason: "Dec-May",
+      tags: ["snow", "family", "4-days"],
+      itinerary: `Day 1: Drive to Sankri and trek to Juda Ka Talab
   Day 2: Trek to Kedarkantha base / climb towards summit camp
   Day 3: Summit Kedarkantha early morning; descend to Juda Ka Talab
-  Day 4: Trek back to Sankri and depart` },
-    { slug: "kuari-pass-trek", name: "Kuari Pass Trek", state: "Uttarakhand", difficulty: "EASY_MODERATE", duration: 5, distance: 28, maxAltitude: 3800, bestSeason: "Mar-Jun, Sep-Nov", tags: ["meadows","views"], itinerary: `Day 1: Drive to Auli/Khullara and trek to Gorson Bugyal
+  Day 4: Trek back to Sankri and depart`,
+    },
+    {
+      slug: "kuari-pass-trek",
+      name: "Kuari Pass Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY_MODERATE",
+      duration: 5,
+      distance: 28,
+      maxAltitude: 3800,
+      bestSeason: "Mar-Jun, Sep-Nov",
+      tags: ["meadows", "views"],
+      itinerary: `Day 1: Drive to Auli/Khullara and trek to Gorson Bugyal
   Day 2: Trek across Gorson Bugyal towards Khulara/Kuari approach
   Day 3: Trek to Kuari Pass and enjoy panoramic views
   Day 4: Descend to Gorson and return route
-  Day 5: Drive back to base` },
-    { slug: "brahmtal-trek", name: "Brahmatal Trek", state: "Uttarakhand", difficulty: "MODERATE", duration: 4, distance: 25, maxAltitude: 4250, bestSeason: "Dec-May, Jun-Sep", tags: ["lake","snow","views"], itinerary: `Day 1: Drive to Lohajung and trek to Bekaltal
+  Day 5: Drive back to base`,
+    },
+    {
+      slug: "brahmtal-trek",
+      name: "Brahmatal Trek",
+      state: "Uttarakhand",
+      difficulty: "MODERATE",
+      duration: 4,
+      distance: 25,
+      maxAltitude: 4250,
+      bestSeason: "Dec-May, Jun-Sep",
+      tags: ["lake", "snow", "views"],
+      itinerary: `Day 1: Drive to Lohajung and trek to Bekaltal
   Day 2: Trek to Brahmatal; camp near the lake
   Day 3: Explore Brahmatal peaks and lakes; acclimatise
-  Day 4: Trek out to Lohajung and depart` },
-    { slug: "rupin-pass-trek", name: "Rupin Pass Trek", state: "Himachal Pradesh/Uttarakhand", difficulty: "HARD", duration: 8, distance: 90, maxAltitude: 4300, bestSeason: "May-Oct", tags: ["pass","glacier"], itinerary: `Day 1: Reach Dhaula\nDay 2: Trek to Sewa\nDay 3: Trek to Rupin waterfall\nDay 4: Cross Rupin Pass\nDay 5-8: Descend to Sangla and return` },
-    { slug: "dayara-bugyal-trek", name: "Dayara Bugyal Trek", state: "Uttarakhand", difficulty: "EASY", duration: 3, distance: 20, maxAltitude: 3600, bestSeason: "Apr-Jun, Sep-Nov", tags: ["meadows","photography"], itinerary: `Day 1: Drive to Raithal\nDay 2: Trek to Dayara Bugyal and camp\nDay 3: Return` },
-    { slug: "kashmir-great-lakes-trek", name: "Kashmir Great Lakes Trek", state: "Jammu & Kashmir", difficulty: "MODERATE", duration: 7, distance: 70, maxAltitude: 4300, bestSeason: "Jul-Sep", tags: ["lakes","scenic"], itinerary: `Day 1: Reach Aru\nDay 2-6: Trek across multiple alpine lakes\nDay 7: Exit via Sonamarg` },
-    { slug: "tarsar-marsar-trek", name: "Tarsar Marsar Trek", state: "Jammu & Kashmir", difficulty: "MODERATE", duration: 6, distance: 60, maxAltitude: 4100, bestSeason: "Jul-Sep", tags: ["lakes","alpine"], itinerary: `Day 1: Reach Aru\nDay 2: Trek to Lidwas\nDay 3: Tarsar/Marsar exploration\nDay 4-6: Return` },
-    { slug: "stok-kangri-trek", name: "Stok Kangri Trek", state: "Ladakh", difficulty: "VERY_HARD", duration: 9, distance: 60, maxAltitude: 6153, bestSeason: "Jul-Aug", tags: ["summit","high-altitude"], itinerary: `Day 1-3: Acclimatization in Leh\nDay 4-9: Approach and summit attempt of Stok Kangri` },
-    { slug: "markha-valley-trek", name: "Markha Valley Trek", state: "Ladakh", difficulty: "MODERATE", duration: 6, distance: 65, maxAltitude: 5050, bestSeason: "Jun-Sep", tags: ["valley","culture"], itinerary: `Day 1: Drive to Chilling and trek to Skiu\nDay 2-6: Trek through Markha valley and exit at Hemis` },
-    { slug: "chadar-trek", name: "Chadar Trek", state: "Ladakh (Zanskar)", difficulty: "VERY_HARD", duration: 9, distance: 50, maxAltitude: 3600, bestSeason: "Jan-Feb (winter)", tags: ["ice","river-walk"], itinerary: `Day 1: Reach Leh and drive to Chilling\nDay 2-9: Trek on frozen Zanskar river with camps` },
-    { slug: "nanda-devi-base-trek", name: "Nanda Devi Basecamp Trek", state: "Uttarakhand", difficulty: "HARD", duration: 6, distance: 60, maxAltitude: 3700, bestSeason: "May-Jun, Sep-Oct", tags: ["national-park","views"], itinerary: `Day 1: Drive to Lata\nDay 2-6: Trek inside Nanda Devi Biosphere Reserve and return` },
-    { slug: "har-ki-dun-trek", name: "Har Ki Dun Trek", state: "Uttarakhand", difficulty: "MODERATE", duration: 6, distance: 65, maxAltitude: 3568, bestSeason: "May-Oct", tags: ["valley","heritage"], itinerary: `Day 1: Drive to Sankri\nDay 2-6: Trek to Har Ki Dun valley and return` },
-    { slug: "valley-of-flowers-trek", name: "Valley of Flowers Trek", state: "Uttarakhand", difficulty: "EASY_MODERATE", duration: 4, distance: 24, maxAltitude: 3658, bestSeason: "Jul-Aug", tags: ["flowers","national-park"], itinerary: `Day 1: Drive to Govindghat and trek to Ghangaria\nDay 2: Valley of Flowers visit\nDay 3: Hemkund Sahib visit\nDay 4: Return` },
-    { slug: "pindari-glacier-trek", name: "Pindari Glacier Trek", state: "Uttarakhand", difficulty: "MODERATE", duration: 6, distance: 64, maxAltitude: 3600, bestSeason: "May-Oct", tags: ["glacier","views"], itinerary: `Day 1: Drive to Loharkhet\nDay 2-6: Trek to Pindari Glacier and return` },
-    { slug: "kafni-glacier-trek", name: "Kafni Glacier Trek", state: "Uttarakhand", difficulty: "MODERATE", duration: 7, distance: 70, maxAltitude: 3600, bestSeason: "May-Oct", tags: ["glacier","remote"], itinerary: `Multi-day trek through remote valleys to Kafni Glacier and back` },
-    { slug: "nag-tibba-trek", name: "Nag Tibba Trek", state: "Uttarakhand", difficulty: "EASY", duration: 2, distance: 10, maxAltitude: 3022, bestSeason: "Oct-Jun", tags: ["weekend","viewpoint"], itinerary: `Day 1: Drive to Pantwari and trek to Nag Tibba\nDay 2: Summit view and return` },
-    { slug: "goecha-la-trek", name: "Goecha La Trek", state: "Sikkim", difficulty: "MODERATE", duration: 7, distance: 70, maxAltitude: 4940, bestSeason: "Apr-Jun, Sep-Nov", tags: ["kanchenjunga-view","alpine"], itinerary: `Approach and trek into Dzongri/Goecha La region for Kanchenjunga views` },
-    { slug: "dzongri-trek", name: "Dzongri Trek", state: "Sikkim", difficulty: "EASY_MODERATE", duration: 5, distance: 40, maxAltitude: 4120, bestSeason: "Apr-Jun, Sep-Nov", tags: ["meadows","views"], itinerary: `Short trek to Dzongri and panoramic viewpoints near Kanchenjunga` },
-    { slug: "sandakphu-trek", name: "Sandakphu Trek", state: "West Bengal", difficulty: "MODERATE", duration: 4, distance: 45, maxAltitude: 3636, bestSeason: "Oct-May", tags: ["sunrise","views"], itinerary: `Classic route through Singalila ridge to Sandakphu with views of Everest and Kanchenjunga` },
-    { slug: "phalut-trek", name: "Phalut Trek", state: "West Bengal", difficulty: "MODERATE", duration: 4, distance: 40, maxAltitude: 3600, bestSeason: "Oct-May", tags: ["ridge","views"], itinerary: `Ridge trek from Sandakphu to Phalut with camping and sunrise views` },
-    { slug: "kareri-lake-trek", name: "Kareri Lake Trek", state: "Himachal Pradesh", difficulty: "EASY_MODERATE", duration: 3, distance: 18, maxAltitude: 2934, bestSeason: "May-Oct", tags: ["lake","short"], itinerary: `Road to Kareri and short trek to Kareri Lake with camps` },
-    { slug: "kedarnath-trek", name: "Kedarnath Trek", state: "Uttarakhand", difficulty: "EASY_MODERATE", duration: 2, distance: 22, maxAltitude: 3580, bestSeason: "May-Nov", tags: ["pilgrimage","short"], itinerary: `Trek/pony ride to Kedarnath shrine and return` },
-    { slug: "kinnaur-kailash-trek", name: "Kinnaur Kailash Trek", state: "Himachal Pradesh", difficulty: "HARD", duration: 7, distance: 70, maxAltitude: 4800, bestSeason: "Jun-Sep", tags: ["sacred","ridge"], itinerary: `Approach and trek in Kinnaur region near Kinnaur Kailash` },
-    { slug: "spiti-valley-trek", name: "Spiti Valley Trek", state: "Himachal Pradesh", difficulty: "MODERATE", duration: 6, distance: 80, maxAltitude: 4500, bestSeason: "Jun-Sep", tags: ["high-altitude","cold-desert"], itinerary: `Multiple-day trek across high-altitude Spiti landscapes` },
-    { slug: "chandrashila-trek", name: "Chandrashila Trek", state: "Uttarakhand", difficulty: "EASY", duration: 3, distance: 14, maxAltitude: 4000, bestSeason: "Oct-May", tags: ["sunrise","short"], itinerary: `Trek to Tungnath and on to Chandrashila summit for panoramic views` },
-    { slug: "shrikhand-mahadev-trek", name: "Shrikhand Mahadev Trek", state: "Himachal Pradesh", difficulty: "HARD", duration: 3, distance: 30, maxAltitude: 3800, bestSeason: "Jun-Sep", tags: ["sacred","steep"], itinerary: `Steep ascent to the Shrikhand Mahadev shrine and descent back` },
-    { slug: "gadsar-lake-trek", name: "Gadsar Lake Trek", state: "Jammu & Kashmir", difficulty: "MODERATE", duration: 6, distance: 60, maxAltitude: 3500, bestSeason: "Jul-Sep", tags: ["lakes","kashmir"], itinerary: `Classic Kashmir lakes route visiting Gadsar and Vishansar` },
-    { slug: "ranthan-kharak-trek", name: "Ranthan Kharak Trek", state: "Uttarakhand", difficulty: "MODERATE", duration: 5, distance: 40, maxAltitude: 3500, bestSeason: "Apr-Jun", tags: ["rhododendron","wildflowers"], itinerary: `Trail through rhododendron forests to high alpine meadows` },
-    { slug: "deoriatal-chandrashila-trek", name: "Deoriatal–Chandrashila Trek", state: "Uttarakhand", difficulty: "EASY_MODERATE", duration: 2, distance: 15, maxAltitude: 4000, bestSeason: "Mar-May, Sep-Nov", tags: ["lake","summit"], itinerary: `Short trek combining Deoriatal lake and Chandrashila summit` },
-    { slug: "great-himalayan-national-park-trek", name: "Great Himalayan National Park Trek", state: "Himachal Pradesh", difficulty: "MODERATE", duration: 5, distance: 60, maxAltitude: 3500, bestSeason: "May-Oct", tags: ["wildlife","park"], itinerary: `Multi-day trek through protected wilderness with guided routes` },
-    { slug: "serolsar-lake-trek", name: "Serolsar Lake Trek", state: "Himachal Pradesh", difficulty: "EASY", duration: 2, distance: 10, maxAltitude: 3120, bestSeason: "Apr-Nov", tags: ["lake","short"], itinerary: `Short trail to Serolsar Lake with scenic viewpoints` },
-    { slug: "chehni-kund-trek", name: "Chehni Kundo / local trek", state: "Himachal Pradesh", difficulty: "EASY", duration: 2, distance: 12, maxAltitude: 3000, bestSeason: "Apr-Nov", tags: ["local","short"], itinerary: `Local day/overnight trek through meadows and village trails` },
+  Day 4: Trek out to Lohajung and depart`,
+    },
+    {
+      slug: "rupin-pass-trek",
+      name: "Rupin Pass Trek",
+      state: "Himachal Pradesh/Uttarakhand",
+      difficulty: "HARD",
+      duration: 8,
+      distance: 90,
+      maxAltitude: 4300,
+      bestSeason: "May-Oct",
+      tags: ["pass", "glacier"],
+      itinerary: `Day 1: Reach Dhaula\nDay 2: Trek to Sewa\nDay 3: Trek to Rupin waterfall\nDay 4: Cross Rupin Pass\nDay 5-8: Descend to Sangla and return`,
+    },
+    {
+      slug: "dayara-bugyal-trek",
+      name: "Dayara Bugyal Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY",
+      duration: 3,
+      distance: 20,
+      maxAltitude: 3600,
+      bestSeason: "Apr-Jun, Sep-Nov",
+      tags: ["meadows", "photography"],
+      itinerary: `Day 1: Drive to Raithal\nDay 2: Trek to Dayara Bugyal and camp\nDay 3: Return`,
+    },
+    {
+      slug: "kashmir-great-lakes-trek",
+      name: "Kashmir Great Lakes Trek",
+      state: "Jammu & Kashmir",
+      difficulty: "MODERATE",
+      duration: 7,
+      distance: 70,
+      maxAltitude: 4300,
+      bestSeason: "Jul-Sep",
+      tags: ["lakes", "scenic"],
+      itinerary: `Day 1: Reach Aru\nDay 2-6: Trek across multiple alpine lakes\nDay 7: Exit via Sonamarg`,
+    },
+    {
+      slug: "tarsar-marsar-trek",
+      name: "Tarsar Marsar Trek",
+      state: "Jammu & Kashmir",
+      difficulty: "MODERATE",
+      duration: 6,
+      distance: 60,
+      maxAltitude: 4100,
+      bestSeason: "Jul-Sep",
+      tags: ["lakes", "alpine"],
+      itinerary: `Day 1: Reach Aru\nDay 2: Trek to Lidwas\nDay 3: Tarsar/Marsar exploration\nDay 4-6: Return`,
+    },
+    {
+      slug: "stok-kangri-trek",
+      name: "Stok Kangri Trek",
+      state: "Ladakh",
+      difficulty: "VERY_HARD",
+      duration: 9,
+      distance: 60,
+      maxAltitude: 6153,
+      bestSeason: "Jul-Aug",
+      tags: ["summit", "high-altitude"],
+      itinerary: `Day 1-3: Acclimatization in Leh\nDay 4-9: Approach and summit attempt of Stok Kangri`,
+    },
+    {
+      slug: "markha-valley-trek",
+      name: "Markha Valley Trek",
+      state: "Ladakh",
+      difficulty: "MODERATE",
+      duration: 6,
+      distance: 65,
+      maxAltitude: 5050,
+      bestSeason: "Jun-Sep",
+      tags: ["valley", "culture"],
+      itinerary: `Day 1: Drive to Chilling and trek to Skiu\nDay 2-6: Trek through Markha valley and exit at Hemis`,
+    },
+    {
+      slug: "chadar-trek",
+      name: "Chadar Trek",
+      state: "Ladakh (Zanskar)",
+      difficulty: "VERY_HARD",
+      duration: 9,
+      distance: 50,
+      maxAltitude: 3600,
+      bestSeason: "Jan-Feb (winter)",
+      tags: ["ice", "river-walk"],
+      itinerary: `Day 1: Reach Leh and drive to Chilling\nDay 2-9: Trek on frozen Zanskar river with camps`,
+    },
+    {
+      slug: "nanda-devi-base-trek",
+      name: "Nanda Devi Basecamp Trek",
+      state: "Uttarakhand",
+      difficulty: "HARD",
+      duration: 6,
+      distance: 60,
+      maxAltitude: 3700,
+      bestSeason: "May-Jun, Sep-Oct",
+      tags: ["national-park", "views"],
+      itinerary: `Day 1: Drive to Lata\nDay 2-6: Trek inside Nanda Devi Biosphere Reserve and return`,
+    },
+    {
+      slug: "har-ki-dun-trek",
+      name: "Har Ki Dun Trek",
+      state: "Uttarakhand",
+      difficulty: "MODERATE",
+      duration: 6,
+      distance: 65,
+      maxAltitude: 3568,
+      bestSeason: "May-Oct",
+      tags: ["valley", "heritage"],
+      itinerary: `Day 1: Drive to Sankri\nDay 2-6: Trek to Har Ki Dun valley and return`,
+    },
+    {
+      slug: "valley-of-flowers-trek",
+      name: "Valley of Flowers Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY_MODERATE",
+      duration: 4,
+      distance: 24,
+      maxAltitude: 3658,
+      bestSeason: "Jul-Aug",
+      tags: ["flowers", "national-park"],
+      itinerary: `Day 1: Drive to Govindghat and trek to Ghangaria\nDay 2: Valley of Flowers visit\nDay 3: Hemkund Sahib visit\nDay 4: Return`,
+    },
+    {
+      slug: "pindari-glacier-trek",
+      name: "Pindari Glacier Trek",
+      state: "Uttarakhand",
+      difficulty: "MODERATE",
+      duration: 6,
+      distance: 64,
+      maxAltitude: 3600,
+      bestSeason: "May-Oct",
+      tags: ["glacier", "views"],
+      itinerary: `Day 1: Drive to Loharkhet\nDay 2-6: Trek to Pindari Glacier and return`,
+    },
+    {
+      slug: "kafni-glacier-trek",
+      name: "Kafni Glacier Trek",
+      state: "Uttarakhand",
+      difficulty: "MODERATE",
+      duration: 7,
+      distance: 70,
+      maxAltitude: 3600,
+      bestSeason: "May-Oct",
+      tags: ["glacier", "remote"],
+      itinerary: `Multi-day trek through remote valleys to Kafni Glacier and back`,
+    },
+    {
+      slug: "nag-tibba-trek",
+      name: "Nag Tibba Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY",
+      duration: 2,
+      distance: 10,
+      maxAltitude: 3022,
+      bestSeason: "Oct-Jun",
+      tags: ["weekend", "viewpoint"],
+      itinerary: `Day 1: Drive to Pantwari and trek to Nag Tibba\nDay 2: Summit view and return`,
+    },
+    {
+      slug: "goecha-la-trek",
+      name: "Goecha La Trek",
+      state: "Sikkim",
+      difficulty: "MODERATE",
+      duration: 7,
+      distance: 70,
+      maxAltitude: 4940,
+      bestSeason: "Apr-Jun, Sep-Nov",
+      tags: ["kanchenjunga-view", "alpine"],
+      itinerary: `Approach and trek into Dzongri/Goecha La region for Kanchenjunga views`,
+    },
+    {
+      slug: "dzongri-trek",
+      name: "Dzongri Trek",
+      state: "Sikkim",
+      difficulty: "EASY_MODERATE",
+      duration: 5,
+      distance: 40,
+      maxAltitude: 4120,
+      bestSeason: "Apr-Jun, Sep-Nov",
+      tags: ["meadows", "views"],
+      itinerary: `Short trek to Dzongri and panoramic viewpoints near Kanchenjunga`,
+    },
+    {
+      slug: "sandakphu-trek",
+      name: "Sandakphu Trek",
+      state: "West Bengal",
+      difficulty: "MODERATE",
+      duration: 4,
+      distance: 45,
+      maxAltitude: 3636,
+      bestSeason: "Oct-May",
+      tags: ["sunrise", "views"],
+      itinerary: `Classic route through Singalila ridge to Sandakphu with views of Everest and Kanchenjunga`,
+    },
+    {
+      slug: "phalut-trek",
+      name: "Phalut Trek",
+      state: "West Bengal",
+      difficulty: "MODERATE",
+      duration: 4,
+      distance: 40,
+      maxAltitude: 3600,
+      bestSeason: "Oct-May",
+      tags: ["ridge", "views"],
+      itinerary: `Ridge trek from Sandakphu to Phalut with camping and sunrise views`,
+    },
+    {
+      slug: "kareri-lake-trek",
+      name: "Kareri Lake Trek",
+      state: "Himachal Pradesh",
+      difficulty: "EASY_MODERATE",
+      duration: 3,
+      distance: 18,
+      maxAltitude: 2934,
+      bestSeason: "May-Oct",
+      tags: ["lake", "short"],
+      itinerary: `Road to Kareri and short trek to Kareri Lake with camps`,
+    },
+    {
+      slug: "kedarnath-trek",
+      name: "Kedarnath Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY_MODERATE",
+      duration: 2,
+      distance: 22,
+      maxAltitude: 3580,
+      bestSeason: "May-Nov",
+      tags: ["pilgrimage", "short"],
+      itinerary: `Trek/pony ride to Kedarnath shrine and return`,
+    },
+    {
+      slug: "kinnaur-kailash-trek",
+      name: "Kinnaur Kailash Trek",
+      state: "Himachal Pradesh",
+      difficulty: "HARD",
+      duration: 7,
+      distance: 70,
+      maxAltitude: 4800,
+      bestSeason: "Jun-Sep",
+      tags: ["sacred", "ridge"],
+      itinerary: `Approach and trek in Kinnaur region near Kinnaur Kailash`,
+    },
+    {
+      slug: "spiti-valley-trek",
+      name: "Spiti Valley Trek",
+      state: "Himachal Pradesh",
+      difficulty: "MODERATE",
+      duration: 6,
+      distance: 80,
+      maxAltitude: 4500,
+      bestSeason: "Jun-Sep",
+      tags: ["high-altitude", "cold-desert"],
+      itinerary: `Multiple-day trek across high-altitude Spiti landscapes`,
+    },
+    {
+      slug: "chandrashila-trek",
+      name: "Chandrashila Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY",
+      duration: 3,
+      distance: 14,
+      maxAltitude: 4000,
+      bestSeason: "Oct-May",
+      tags: ["sunrise", "short"],
+      itinerary: `Trek to Tungnath and on to Chandrashila summit for panoramic views`,
+    },
+    {
+      slug: "shrikhand-mahadev-trek",
+      name: "Shrikhand Mahadev Trek",
+      state: "Himachal Pradesh",
+      difficulty: "HARD",
+      duration: 3,
+      distance: 30,
+      maxAltitude: 3800,
+      bestSeason: "Jun-Sep",
+      tags: ["sacred", "steep"],
+      itinerary: `Steep ascent to the Shrikhand Mahadev shrine and descent back`,
+    },
+    {
+      slug: "gadsar-lake-trek",
+      name: "Gadsar Lake Trek",
+      state: "Jammu & Kashmir",
+      difficulty: "MODERATE",
+      duration: 6,
+      distance: 60,
+      maxAltitude: 3500,
+      bestSeason: "Jul-Sep",
+      tags: ["lakes", "kashmir"],
+      itinerary: `Classic Kashmir lakes route visiting Gadsar and Vishansar`,
+    },
+    {
+      slug: "ranthan-kharak-trek",
+      name: "Ranthan Kharak Trek",
+      state: "Uttarakhand",
+      difficulty: "MODERATE",
+      duration: 5,
+      distance: 40,
+      maxAltitude: 3500,
+      bestSeason: "Apr-Jun",
+      tags: ["rhododendron", "wildflowers"],
+      itinerary: `Trail through rhododendron forests to high alpine meadows`,
+    },
+    {
+      slug: "deoriatal-chandrashila-trek",
+      name: "Deoriatal–Chandrashila Trek",
+      state: "Uttarakhand",
+      difficulty: "EASY_MODERATE",
+      duration: 2,
+      distance: 15,
+      maxAltitude: 4000,
+      bestSeason: "Mar-May, Sep-Nov",
+      tags: ["lake", "summit"],
+      itinerary: `Short trek combining Deoriatal lake and Chandrashila summit`,
+    },
+    {
+      slug: "great-himalayan-national-park-trek",
+      name: "Great Himalayan National Park Trek",
+      state: "Himachal Pradesh",
+      difficulty: "MODERATE",
+      duration: 5,
+      distance: 60,
+      maxAltitude: 3500,
+      bestSeason: "May-Oct",
+      tags: ["wildlife", "park"],
+      itinerary: `Multi-day trek through protected wilderness with guided routes`,
+    },
+    {
+      slug: "serolsar-lake-trek",
+      name: "Serolsar Lake Trek",
+      state: "Himachal Pradesh",
+      difficulty: "EASY",
+      duration: 2,
+      distance: 10,
+      maxAltitude: 3120,
+      bestSeason: "Apr-Nov",
+      tags: ["lake", "short"],
+      itinerary: `Short trail to Serolsar Lake with scenic viewpoints`,
+    },
+    {
+      slug: "chehni-kund-trek",
+      name: "Chehni Kundo / local trek",
+      state: "Himachal Pradesh",
+      difficulty: "EASY",
+      duration: 2,
+      distance: 12,
+      maxAltitude: 3000,
+      bestSeason: "Apr-Nov",
+      tags: ["local", "short"],
+      itinerary: `Local day/overnight trek through meadows and village trails`,
+    },
   ];
 
   for (const t of moreTreks) {
@@ -506,7 +883,7 @@ Day 7: Return trek and departure`,
           name: t.name,
           state: t.state,
           basePrice: 0,
-          difficulty: (t.difficulty as any) || "MODERATE",
+          difficulty: t.difficulty || "MODERATE",
           duration: t.duration || 3,
           distance: t.distance || 0,
           maxAltitude: t.maxAltitude || null,
@@ -518,10 +895,12 @@ Day 7: Return trek and departure`,
           slug: t.slug,
           name: t.name,
           description: t.description || `${t.name} offered in ${t.state}`,
-          longDescription: t.longDescription || `${t.name} is a well-known trek in ${t.state}.`,
+          longDescription:
+            t.longDescription ||
+            `${t.name} is a well-known trek in ${t.state}.`,
           state: t.state,
           basePrice: 0,
-          difficulty: (t.difficulty as any) || "MODERATE",
+          difficulty: t.difficulty || "MODERATE",
           duration: t.duration || 3,
           distance: t.distance || 0,
           maxAltitude: t.maxAltitude || null,
@@ -536,7 +915,10 @@ Day 7: Return trek and departure`,
         },
       });
     } catch (e) {
-      console.warn(`Skipping creation of ${t.slug}:`, (e as Error).message || e);
+      console.warn(
+        `Skipping creation of ${t.slug}:`,
+        (e as Error).message || e,
+      );
     }
   }
 
@@ -566,29 +948,47 @@ Day 4: Rest/photography day at the lake
 Day 5: Begin return trek to base
 Day 6: Complete descent and depart`,
     },
-    { slug: "hampta-pass-trek", itinerary: `Day 1: Drive Manali → Jobra/Chatru, short acclimatisation walk and camp
+    {
+      slug: "hampta-pass-trek",
+      itinerary: `Day 1: Drive Manali → Jobra/Chatru, short acclimatisation walk and camp
 Day 2: Trek to Balu Ka Ghera (meadows) and camp
 Day 3: Approach Hampta pass area and prepare for crossing
 Day 4: Cross Hampta Pass and descend into Lahaul (Chatru)
 Day 5: Trek down and drive back towards Manali
-Day 6: Buffer / departure` },
-    { slug: "pin-parvati-pass-trek", itinerary: `Day 1: Reach Barshaini and trek to Pulga
+Day 6: Buffer / departure`,
+    },
+    {
+      slug: "pin-parvati-pass-trek",
+      itinerary: `Day 1: Reach Barshaini and trek to Pulga
 Day 2: Trek to Mantalai
 Day 3: Trek to Thakur Kuan / approach
 Day 4: Approach glacier sections and high camp
 Day 5: Cross Pin Parvati Pass and descend into Pin Valley
-Day 6-9: Exit through Pin Valley villages` },
-    { slug: "triund-trek", itinerary: `Day 1: Drive to McLeodganj, trek to Triund and camp
-Day 2: Sunrise at the Dhauladhar ridge; descend to McLeodganj` },
-    { slug: "prashar-lake-trek", itinerary: `Day 1: Reach Mandi and drive to trailhead; camp nearby
+Day 6-9: Exit through Pin Valley villages`,
+    },
+    {
+      slug: "triund-trek",
+      itinerary: `Day 1: Drive to McLeodganj, trek to Triund and camp
+Day 2: Sunrise at the Dhauladhar ridge; descend to McLeodganj`,
+    },
+    {
+      slug: "prashar-lake-trek",
+      itinerary: `Day 1: Reach Mandi and drive to trailhead; camp nearby
 Day 2: Trek to Prashar Lake, visit island temple and camp
-Day 3: Return to Mandi and depart` },
-    { slug: "indrahara-pass-trek", itinerary: `Day 1: Trek McLeodganj → Triund (overnight)
+Day 3: Return to Mandi and depart`,
+    },
+    {
+      slug: "indrahara-pass-trek",
+      itinerary: `Day 1: Trek McLeodganj → Triund (overnight)
 Day 2: Triund → Lahesh Caves (camp)
 Day 3: Summit Indrahar (ridge) and camp or begin descent
-Day 4: Descend and return to McLeodganj` },
-    { slug: "kheerganga-trek", itinerary: `Day 1: Drive to Barshaini and trek to Kheerganga; soak in hot springs and camp
-Day 2: Return trek to Barshaini and depart` },
+Day 4: Descend and return to McLeodganj`,
+    },
+    {
+      slug: "kheerganga-trek",
+      itinerary: `Day 1: Drive to Barshaini and trek to Kheerganga; soak in hot springs and camp
+Day 2: Return trek to Barshaini and depart`,
+    },
   ];
 
   for (const u of itineraryUpdates) {

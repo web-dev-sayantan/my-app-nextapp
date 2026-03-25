@@ -1,23 +1,23 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const expeditions = await (prisma as any).expedition.findMany({
+    const expeditions = await prisma.expedition.findMany({
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: "desc",
+      },
     });
 
     return NextResponse.json({
       success: true,
-      expeditions
+      expeditions,
     });
   } catch (error) {
-    console.error('Error fetching expeditions:', error);
+    console.error("Error fetching expeditions:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch expeditions' },
-      { status: 500 }
+      { error: "Failed to fetch expeditions" },
+      { status: 500 },
     );
   }
 }

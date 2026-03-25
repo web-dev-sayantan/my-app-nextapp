@@ -17,10 +17,40 @@ import {
   FiX,
   FiAlertCircle,
   FiPackage,
-  FiHeart,
-  FiMenu,
 } from "react-icons/fi";
 import { GiMountainClimbing, GiBed, GiSunrise } from "react-icons/gi";
+
+type TrekDeparture = {
+  id: string;
+  startDate: string | Date;
+  endDate: string | Date;
+  seatsAvailable: number;
+  totalSeats: number;
+  pricePerPerson: number;
+};
+
+type TrekPageData = {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  longDescription: string | null;
+  imageUrl: string | null;
+  difficulty: string;
+  duration: number;
+  state: string;
+  bestSeason: string | null;
+  itinerary: string;
+  inclusions: string[];
+  exclusions: string[];
+  departures: TrekDeparture[];
+};
+
+type ItineraryDayData = {
+  title: string;
+  content: string;
+  index: number;
+};
 
 // Compact date selection card for sticky booking
 function CompactDateCard({
@@ -28,26 +58,21 @@ function CompactDateCard({
   isSelected,
   onSelect,
 }: {
-  departure: {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-    seatsAvailable: number;
-    totalSeats: number;
-    pricePerPerson: number;
-  };
+  departure: TrekDeparture;
   isSelected: boolean;
-  onSelect: (departure: any) => void;
+  onSelect: (departure: TrekDeparture) => void;
 }) {
   const startDate = new Date(departure.startDate);
   const endDate = new Date(departure.endDate);
 
   return (
-    <label className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition ${
-      isSelected
-        ? "border-blue-400 bg-blue-950/30"
-        : "border-gray-700 hover:border-blue-400"
-    } ${departure.seatsAvailable === 0 ? "opacity-50 cursor-not-allowed" : ""}`}>
+    <label
+      className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition ${
+        isSelected
+          ? "border-blue-400 bg-blue-950/30"
+          : "border-gray-700 hover:border-blue-400"
+      } ${departure.seatsAvailable === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
       <input
         type="radio"
         checked={isSelected}
@@ -56,8 +81,12 @@ function CompactDateCard({
         className="w-4 h-4 cursor-pointer accent-blue-400"
       />
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-gray-300 truncate">{formatDate(startDate)}</p>
-        <p className="text-xs text-gray-500">{departure.seatsAvailable} seats</p>
+        <p className="text-sm text-gray-300 truncate">
+          {formatDate(startDate)}
+        </p>
+        <p className="text-xs text-gray-500">
+          {departure.seatsAvailable} seats
+        </p>
       </div>
     </label>
   );
@@ -69,17 +98,10 @@ function DepartureCard({
   isSelected,
   onSelect,
 }: {
-  departure: {
-    id: string;
-    startDate: Date;
-    endDate: Date;
-    seatsAvailable: number;
-    totalSeats: number;
-    pricePerPerson: number;
-  };
+  departure: TrekDeparture;
   trekName: string;
   isSelected: boolean;
-  onSelect: (departure: any, trekName: string) => void;
+  onSelect: (departure: TrekDeparture, trekName: string) => void;
 }) {
   const availabilityPercent = (
     ((departure.totalSeats - departure.seatsAvailable) / departure.totalSeats) *
@@ -126,7 +148,9 @@ function DepartureCard({
                 <FiUsers className="w-4 h-4 inline mr-1" />
                 {departure.seatsAvailable} seats available
               </span>
-              <span className="text-xs text-gray-500">{availabilityPercent}% full</span>
+              <span className="text-xs text-gray-500">
+                {availabilityPercent}% full
+              </span>
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2">
               <div
@@ -146,7 +170,7 @@ function DepartureCard({
 }
 
 // Expandable itinerary day component
-function ItineraryDay({ day, content, index }: { day: string; content: string; index: number }) {
+function ItineraryDay({ day, content }: { day: string; content: string }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border border-gray-700 rounded-lg overflow-hidden">
@@ -171,6 +195,9 @@ function ItineraryDay({ day, content, index }: { day: string; content: string; i
 // Image carousel component
 function ImageCarousel({ images, title }: { images: string[]; title: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [failedIndexes, setFailedIndexes] = useState<Record<number, boolean>>(
+    {},
+  );
   const defaultImages = [
     "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=500&fit=crop",
     "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=500&fit=crop",
@@ -178,29 +205,39 @@ function ImageCarousel({ images, title }: { images: string[]; title: string }) {
   ];
 
   const displayImages = images && images.length > 0 ? images : defaultImages;
+  const imageSrc = failedIndexes[currentIndex]
+    ? defaultImages[currentIndex % defaultImages.length]
+    : displayImages[currentIndex];
 
   return (
     <div className="relative rounded-lg overflow-hidden bg-gray-900 h-64">
       <Image
-        src={displayImages[currentIndex]}
+        src={imageSrc}
         alt={`${title} - Image ${currentIndex + 1}`}
         fill
         className="object-cover"
-        onError={(e) => {
-          (e.target as any).src = defaultImages[currentIndex % defaultImages.length];
+        onError={() => {
+          setFailedIndexes((current) => ({
+            ...current,
+            [currentIndex]: true,
+          }));
         }}
       />
       <div className="absolute inset-0 flex items-center justify-between px-4">
         <button
           onClick={() =>
-            setCurrentIndex((currentIndex - 1 + displayImages.length) % displayImages.length)
+            setCurrentIndex(
+              (currentIndex - 1 + displayImages.length) % displayImages.length,
+            )
           }
           className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition"
         >
           <FiChevronRight className="w-5 h-5 transform rotate-180" />
         </button>
         <button
-          onClick={() => setCurrentIndex((currentIndex + 1) % displayImages.length)}
+          onClick={() =>
+            setCurrentIndex((currentIndex + 1) % displayImages.length)
+          }
           className="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition"
         >
           <FiChevronRight className="w-5 h-5" />
@@ -221,14 +258,15 @@ function ImageCarousel({ images, title }: { images: string[]; title: string }) {
   );
 }
 
-export default function TrekPageClient({ trek }: { trek: any }) {
+export default function TrekPageClient({ trek }: { trek: TrekPageData }) {
   const router = useRouter();
-  const { data: session, status } = useSession();
-  const [selectedDeparture, setSelectedDeparture] = useState<string | null>(null);
-  const [showMobileBooking, setShowMobileBooking] = useState(false);
+  const { status } = useSession();
+  const [selectedDeparture, setSelectedDeparture] = useState<string | null>(
+    null,
+  );
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const handleDateSelect = (departure: any) => {
+  const handleDateSelect = (departure: TrekDeparture) => {
     const startDate = new Date(departure.startDate);
     const endDate = new Date(departure.endDate);
 
@@ -254,7 +292,7 @@ export default function TrekPageClient({ trek }: { trek: any }) {
   };
 
   // Parse itinerary into days
-  const itineraryDays = trek.itinerary
+  const itineraryDays: ItineraryDayData[] = trek.itinerary
     ? trek.itinerary
         .split(/(?=Day\s+\d+)/i)
         .filter((day: string) => day.trim())
@@ -266,6 +304,11 @@ export default function TrekPageClient({ trek }: { trek: any }) {
         })
     : [];
 
+  const selectedDepartureRecord = selectedDeparture
+    ? (trek.departures.find(
+        (departure) => departure.id === selectedDeparture,
+      ) ?? null)
+    : null;
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -305,7 +348,9 @@ export default function TrekPageClient({ trek }: { trek: any }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
             <h1 className="text-5xl md:text-6xl font-bold mb-4">{trek.name}</h1>
-            <p className="text-lg text-gray-300 max-w-2xl">{trek.description}</p>
+            <p className="text-lg text-gray-300 max-w-2xl">
+              {trek.description}
+            </p>
           </div>
         </div>
       </section>
@@ -317,22 +362,30 @@ export default function TrekPageClient({ trek }: { trek: any }) {
             <div className="flex flex-col items-center text-center">
               <GiMountainClimbing className="w-6 h-6 text-blue-400 mb-2" />
               <p className="text-xs text-gray-400">Difficulty</p>
-              <p className="text-sm font-semibold text-gray-100 truncate">{trek.difficulty}</p>
+              <p className="text-sm font-semibold text-gray-100 truncate">
+                {trek.difficulty}
+              </p>
             </div>
             <div className="flex flex-col items-center text-center">
               <FiClock className="w-6 h-6 text-blue-400 mb-2" />
               <p className="text-xs text-gray-400">Duration</p>
-              <p className="text-sm font-semibold text-gray-100">{trek.duration} Days</p>
+              <p className="text-sm font-semibold text-gray-100">
+                {trek.duration} Days
+              </p>
             </div>
             <div className="flex flex-col items-center text-center">
               <FiMapPin className="w-6 h-6 text-blue-400 mb-2" />
               <p className="text-xs text-gray-400">Location</p>
-              <p className="text-sm font-semibold text-gray-100 truncate">{trek.state}</p>
+              <p className="text-sm font-semibold text-gray-100 truncate">
+                {trek.state}
+              </p>
             </div>
             <div className="flex flex-col items-center text-center">
               <GiSunrise className="w-6 h-6 text-blue-400 mb-2" />
               <p className="text-xs text-gray-400">Best Months</p>
-              <p className="text-sm font-semibold text-gray-100">{trek.bestSeason || "N/A"}</p>
+              <p className="text-sm font-semibold text-gray-100">
+                {trek.bestSeason || "N/A"}
+              </p>
             </div>
             <div className="flex flex-col items-center text-center">
               <FiUsers className="w-6 h-6 text-blue-400 mb-2" />
@@ -363,9 +416,13 @@ export default function TrekPageClient({ trek }: { trek: any }) {
             {/* 3. BRIEF DESCRIPTION */}
             <section>
               <h2 className="text-3xl font-bold mb-4">About This Trek</h2>
-              <p className="text-gray-300 leading-relaxed text-lg mb-4">{trek.description}</p>
+              <p className="text-gray-300 leading-relaxed text-lg mb-4">
+                {trek.description}
+              </p>
               {trek.longDescription && (
-                <p className="text-gray-300 leading-relaxed">{trek.longDescription}</p>
+                <p className="text-gray-300 leading-relaxed">
+                  {trek.longDescription}
+                </p>
               )}
             </section>
 
@@ -374,7 +431,9 @@ export default function TrekPageClient({ trek }: { trek: any }) {
               <div className="flex items-start gap-4">
                 <FiAlertCircle className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-1" />
                 <div>
-                  <h3 className="text-xl font-bold text-yellow-200 mb-3">Safety Standards</h3>
+                  <h3 className="text-xl font-bold text-yellow-200 mb-3">
+                    Safety Standards
+                  </h3>
                   <ul className="text-gray-200 space-y-2 text-sm">
                     <li className="flex items-start gap-2">
                       <FiCheck className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
@@ -408,12 +467,11 @@ export default function TrekPageClient({ trek }: { trek: any }) {
               <h3 className="text-2xl font-bold mb-6">Detailed Itinerary</h3>
               <div className="space-y-3">
                 {itineraryDays.length > 0 ? (
-                  itineraryDays.map((day: any, idx: number) => (
+                  itineraryDays.map((day, idx) => (
                     <ItineraryDay
                       key={idx}
                       day={day.title}
                       content={day.content}
-                      index={idx}
                     />
                   ))
                 ) : (
@@ -433,7 +491,9 @@ export default function TrekPageClient({ trek }: { trek: any }) {
               <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-semibold text-gray-100 mb-3">Essential Gear</h4>
+                    <h4 className="font-semibold text-gray-100 mb-3">
+                      Essential Gear
+                    </h4>
                     <ul className="space-y-2 text-sm text-gray-300">
                       <li className="flex items-start gap-2">
                         <span className="text-blue-400 mt-1">→</span>
@@ -454,7 +514,9 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-100 mb-3">Personal Items</h4>
+                    <h4 className="font-semibold text-gray-100 mb-3">
+                      Personal Items
+                    </h4>
                     <ul className="space-y-2 text-sm text-gray-300">
                       <li className="flex items-start gap-2">
                         <span className="text-blue-400 mt-1">→</span>
@@ -500,7 +562,10 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                     desc: "Research the trek, watch videos, and mentally prepare for challenges.",
                   },
                 ].map((step, idx) => (
-                  <div key={idx} className="border border-gray-800 rounded-lg p-4">
+                  <div
+                    key={idx}
+                    className="border border-gray-800 rounded-lg p-4"
+                  >
                     <h4 className="font-semibold text-gray-100 mb-2 flex items-center gap-2">
                       <span className="bg-blue-400 text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
                         {idx + 1}
@@ -515,7 +580,9 @@ export default function TrekPageClient({ trek }: { trek: any }) {
 
             {/* 9. TREK IN EACH SEASON */}
             <section>
-              <h3 className="text-2xl font-bold mb-6">Trek in Different Seasons</h3>
+              <h3 className="text-2xl font-bold mb-6">
+                Trek in Different Seasons
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   {
@@ -545,10 +612,15 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                   >
                     <div className="flex items-start gap-3 mb-3">
                       <span className="text-3xl">{season.icon}</span>
-                      <h4 className="font-semibold text-gray-100">{season.season}</h4>
+                      <h4 className="font-semibold text-gray-100">
+                        {season.season}
+                      </h4>
                     </div>
                     <p className="text-gray-300 text-sm mb-3">{season.desc}</p>
-                    <Link href="/blog" className="text-blue-400 hover:text-blue-300 text-sm">
+                    <Link
+                      href="/blog"
+                      className="text-blue-400 hover:text-blue-300 text-sm"
+                    >
                       Read full article →
                     </Link>
                   </div>
@@ -558,12 +630,23 @@ export default function TrekPageClient({ trek }: { trek: any }) {
 
             {/* 10. FAQ SECTION */}
             <section>
-              <h3 className="text-2xl font-bold mb-6">Frequently Asked Questions</h3>
+              <h3 className="text-2xl font-bold mb-6">
+                Frequently Asked Questions
+              </h3>
               <div className="space-y-3">
                 {[
-                  { q: "What is the fitness level required?", a: "Details coming soon" },
-                  { q: "Is altitude sickness a concern?", a: "Details coming soon" },
-                  { q: "Can beginners join this trek?", a: "Details coming soon" },
+                  {
+                    q: "What is the fitness level required?",
+                    a: "Details coming soon",
+                  },
+                  {
+                    q: "Is altitude sickness a concern?",
+                    a: "Details coming soon",
+                  },
+                  {
+                    q: "Can beginners join this trek?",
+                    a: "Details coming soon",
+                  },
                 ].map((faq, idx) => (
                   <details
                     key={idx}
@@ -590,14 +673,19 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                 </h3>
                 <ul className="space-y-2">
                   {trek.inclusions && trek.inclusions.length > 0 ? (
-                    trek.inclusions.map((item: any, idx: number) => (
-                      <li key={idx} className="flex items-start gap-3 text-gray-300">
+                    trek.inclusions.map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-start gap-3 text-gray-300"
+                      >
                         <span className="text-green-400 mt-1">✓</span>
                         <span className="text-sm">{item}</span>
                       </li>
                     ))
                   ) : (
-                    <li className="text-gray-400 text-sm">Standard inclusions apply</li>
+                    <li className="text-gray-400 text-sm">
+                      Standard inclusions apply
+                    </li>
                   )}
                 </ul>
               </div>
@@ -608,14 +696,19 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                 </h3>
                 <ul className="space-y-2">
                   {trek.exclusions && trek.exclusions.length > 0 ? (
-                    trek.exclusions.map((item: any, idx: number) => (
-                      <li key={idx} className="flex items-start gap-3 text-gray-300">
+                    trek.exclusions.map((item, idx) => (
+                      <li
+                        key={idx}
+                        className="flex items-start gap-3 text-gray-300"
+                      >
                         <span className="text-red-400 mt-1">✕</span>
                         <span className="text-sm">{item}</span>
                       </li>
                     ))
                   ) : (
-                    <li className="text-gray-400 text-sm">Standard exclusions apply</li>
+                    <li className="text-gray-400 text-sm">
+                      Standard exclusions apply
+                    </li>
                   )}
                 </ul>
               </div>
@@ -629,23 +722,29 @@ export default function TrekPageClient({ trek }: { trek: any }) {
               {trek.departures && trek.departures.length > 0 ? (
                 <div className="space-y-4">
                   {/* Selected Date Display */}
-                  {selectedDeparture && trek.departures.find((d: any) => d.id === selectedDeparture) && (
+                  {selectedDepartureRecord && (
                     <div className="bg-blue-950/40 border border-blue-400 rounded-lg p-4">
-                      <p className="text-xs text-gray-400 mb-1">Selected Date</p>
+                      <p className="text-xs text-gray-400 mb-1">
+                        Selected Date
+                      </p>
                       <p className="text-lg font-bold text-blue-400 mb-2">
-                        ₹{formatPrice(trek.departures.find((d: any) => d.id === selectedDeparture)?.pricePerPerson)}
+                        ₹{formatPrice(selectedDepartureRecord.pricePerPerson)}
                       </p>
                       <p className="text-sm text-gray-300">
-                        {formatDate(trek.departures.find((d: any) => d.id === selectedDeparture)?.startDate)}
+                        {formatDate(
+                          new Date(selectedDepartureRecord.startDate),
+                        )}
                       </p>
                     </div>
                   )}
 
                   {/* Date Selection */}
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 mb-3">CHOOSE DATE</p>
+                    <p className="text-xs font-semibold text-gray-400 mb-3">
+                      CHOOSE DATE
+                    </p>
                     <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {trek.departures.map((departure: any) => (
+                      {trek.departures.map((departure) => (
                         <CompactDateCard
                           key={departure.id}
                           departure={departure}
@@ -659,8 +758,8 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                   {/* Book Button */}
                   <button
                     onClick={() => {
-                      const dep = trek.departures.find((d: any) => d.id === selectedDeparture);
-                      if (dep) handleDateSelect(dep);
+                      if (selectedDepartureRecord)
+                        handleDateSelect(selectedDepartureRecord);
                     }}
                     disabled={!selectedDeparture}
                     className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition mt-4"
@@ -670,7 +769,9 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                 </div>
               ) : (
                 <div className="text-center py-6">
-                  <p className="text-gray-200 mb-4 font-semibold">Price on Request</p>
+                  <p className="text-gray-200 mb-4 font-semibold">
+                    Price on Request
+                  </p>
                   <Link
                     href="/contact"
                     className="block bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-center font-semibold transition"
@@ -690,14 +791,14 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                   onClick={() => setShowDatePicker(!showDatePicker)}
                   className="flex-1 bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition"
                 >
-                  {selectedDeparture && trek.departures.find((d: any) => d.id === selectedDeparture)
-                    ? formatDate(trek.departures.find((d: any) => d.id === selectedDeparture)?.startDate)
+                  {selectedDepartureRecord
+                    ? formatDate(new Date(selectedDepartureRecord.startDate))
                     : "Select Date"}
                 </button>
                 <button
                   onClick={() => {
-                    const dep = trek.departures.find((d: any) => d.id === selectedDeparture);
-                    if (dep) handleDateSelect(dep);
+                    if (selectedDepartureRecord)
+                      handleDateSelect(selectedDepartureRecord);
                   }}
                   disabled={!selectedDeparture}
                   className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed text-white px-3 py-2 rounded-lg text-sm font-semibold transition"
@@ -729,7 +830,7 @@ export default function TrekPageClient({ trek }: { trek: any }) {
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {trek.departures && trek.departures.length > 0 ? (
-                  trek.departures.map((departure: any) => (
+                  trek.departures.map((departure) => (
                     <DepartureCard
                       key={departure.id}
                       departure={departure}
@@ -744,7 +845,9 @@ export default function TrekPageClient({ trek }: { trek: any }) {
                   ))
                 ) : (
                   <div className="text-center py-12">
-                    <p className="text-gray-200 mb-4">No scheduled departures</p>
+                    <p className="text-gray-200 mb-4">
+                      No scheduled departures
+                    </p>
                     <Link
                       href="/contact"
                       className="block bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg text-center font-semibold transition"

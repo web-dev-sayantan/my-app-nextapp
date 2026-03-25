@@ -6,6 +6,7 @@
 import { prisma } from "@/lib/prisma";
 import { NotFoundError } from "@/lib/errors";
 import { CreateTrekInput, ListTreksQuery } from "@/lib/validations";
+import type { Prisma } from "@prisma/client";
 
 export class TrekService {
   /**
@@ -104,7 +105,7 @@ export class TrekService {
 
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Prisma.TrekWhereInput = {};
 
     if (state) {
       where.state = { mode: "insensitive", equals: state };
@@ -212,13 +213,13 @@ export class TrekService {
           {
             name: {
               contains: searchQuery,
-              mode: 'insensitive',
+              mode: "insensitive",
             },
           },
           {
             description: {
               contains: searchQuery,
-              mode: 'insensitive',
+              mode: "insensitive",
             },
           },
         ],
@@ -248,7 +249,7 @@ export class TrekService {
       orderBy: { state: "asc" },
     });
 
-    return states.map((s: any) => s.state);
+    return states.map((state) => state.state);
   }
 
   /**

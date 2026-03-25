@@ -63,7 +63,7 @@ declare module "razorpay" {
   }
 
   class Razorpay {
-    static orders: any;
+    static orders: Orders;
     constructor(options: RazorpayOptions);
     orders: Orders;
     payments: Payments;

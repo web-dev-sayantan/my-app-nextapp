@@ -1,43 +1,44 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-export async function GET(request: Request, props: { params: Promise<{ slug: string }> }) {
+export async function GET(
+  request: Request,
+  props: { params: Promise<{ slug: string }> },
+) {
   const params = await props.params;
   try {
-    const course = await (prisma as any).course.findUnique({
+    const course = await prisma.course.findUnique({
       where: {
-        slug: params.slug
+        slug: params.slug,
       },
       include: {
         sessions: {
           where: {
             startDate: {
-              gte: new Date()
-            }
+              gte: new Date(),
+            },
+            isCancelled: false,
           },
           orderBy: {
-            startDate: 'asc'
-          }
-        }
-      }
+            startDate: "asc",
+          },
+        },
+      },
     });
 
     if (!course) {
-      return NextResponse.json(
-        { error: 'Course not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
     }
 
     return NextResponse.json({
       success: true,
-      course
+      course,
     });
   } catch (error) {
-    console.error('Error fetching course:', error);
+    console.error("Error fetching course:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch course' },
-      { status: 500 }
+      { error: "Failed to fetch course" },
+      { status: 500 },
     );
   }
 }

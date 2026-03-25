@@ -9,18 +9,19 @@ interface TrekCardProps {
   id: string;
   name: string;
   slug: string;
-  thumbnail: string;
+  thumbnail?: string | null;
   state: string;
   difficulty: string;
   duration: number;
-  distance: number;
+  distance: number | null;
   description: string;
   departuresCount: number;
   earliestDate?: string;
 }
 
 const TrekCardSmall = ({ trek }: { trek: TrekCardProps }) => {
-  const defaultImage = "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
+  const defaultImage =
+    "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
   const [imgSrc, setImgSrc] = useState<string>(trek.thumbnail || defaultImage);
 
   const difficultyColors: Record<string, string> = {
@@ -32,11 +33,11 @@ const TrekCardSmall = ({ trek }: { trek: TrekCardProps }) => {
 
   const stateAbbr: Record<string, string> = {
     "Himachal Pradesh": "HP",
-    "Uttarakhand": "UK",
+    Uttarakhand: "UK",
     "West Bengal": "WB",
-    "Sikkim": "SK",
+    Sikkim: "SK",
     "Arunachal Pradesh": "AP",
-    "Ladakh": "LA",
+    Ladakh: "LA",
     "Jammu & Kashmir": "JK",
     "Jammu and Kashmir": "JK",
   };
@@ -81,21 +82,35 @@ const TrekCardSmall = ({ trek }: { trek: TrekCardProps }) => {
           </h3>
 
           {/* Description */}
-          <p className="text-xs text-gray-400 mb-2 line-clamp-1">{trek.description}</p>
+          <p className="text-xs text-gray-400 mb-2 line-clamp-1">
+            {trek.description}
+          </p>
 
           {/* Stats Grid - Smaller */}
           <div className="grid grid-cols-3 gap-2 mb-3">
             <div className="text-center">
-              <p className="text-[9px] text-gray-500 uppercase font-semibold">Duration</p>
-              <p className="text-xs font-bold text-blue-400">{trek.duration}d</p>
+              <p className="text-[9px] text-gray-500 uppercase font-semibold">
+                Duration
+              </p>
+              <p className="text-xs font-bold text-blue-400">
+                {trek.duration}d
+              </p>
             </div>
             <div className="text-center">
-              <p className="text-[9px] text-gray-500 uppercase font-semibold">Distance</p>
-              <p className="text-xs font-bold text-blue-400">{trek.distance}km</p>
+              <p className="text-[9px] text-gray-500 uppercase font-semibold">
+                Distance
+              </p>
+              <p className="text-xs font-bold text-blue-400">
+                {trek.distance ? `${trek.distance}km` : "N/A"}
+              </p>
             </div>
             <div className="text-center">
-              <p className="text-[9px] text-gray-500 uppercase font-semibold">Departures</p>
-              <p className="text-xs font-bold text-blue-400">{trek.departuresCount}</p>
+              <p className="text-[9px] text-gray-500 uppercase font-semibold">
+                Departures
+              </p>
+              <p className="text-xs font-bold text-blue-400">
+                {trek.departuresCount}
+              </p>
             </div>
           </div>
 
@@ -113,7 +128,9 @@ interface AllTreksPageProps {
   initialTreks: TrekCardProps[];
 }
 
-export default function AllTreksPageClient({ initialTreks }: AllTreksPageProps) {
+export default function AllTreksPageClient({
+  initialTreks,
+}: AllTreksPageProps) {
   const [sortBy, setSortBy] = useState<string>("popular");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -124,7 +141,9 @@ export default function AllTreksPageClient({ initialTreks }: AllTreksPageProps) 
 
     switch (sortBy) {
       case "popular":
-        sorted = treksCopy.sort((a, b) => b.departuresCount - a.departuresCount);
+        sorted = treksCopy.sort(
+          (a, b) => b.departuresCount - a.departuresCount,
+        );
         break;
 
       case "name":
@@ -135,8 +154,12 @@ export default function AllTreksPageClient({ initialTreks }: AllTreksPageProps) 
         const difficultyRank = { easy: 1, moderate: 2, hard: 3, expert: 4 };
         sorted = treksCopy.sort(
           (a, b) =>
-            (difficultyRank[a.difficulty.toLowerCase() as keyof typeof difficultyRank] || 0) -
-            (difficultyRank[b.difficulty.toLowerCase() as keyof typeof difficultyRank] || 0)
+            (difficultyRank[
+              a.difficulty.toLowerCase() as keyof typeof difficultyRank
+            ] || 0) -
+            (difficultyRank[
+              b.difficulty.toLowerCase() as keyof typeof difficultyRank
+            ] || 0),
         );
         break;
 
@@ -149,13 +172,16 @@ export default function AllTreksPageClient({ initialTreks }: AllTreksPageProps) 
         break;
 
       case "distance":
-        sorted = treksCopy.sort((a, b) => a.distance - b.distance);
+        sorted = treksCopy.sort(
+          (a, b) => (a.distance ?? 0) - (b.distance ?? 0),
+        );
         break;
 
       case "earliest":
         sorted = treksCopy.sort(
           (a, b) =>
-            new Date(a.earliestDate || "2099-12-31").getTime() - new Date(b.earliestDate || "2099-12-31").getTime()
+            new Date(a.earliestDate || "2099-12-31").getTime() -
+            new Date(b.earliestDate || "2099-12-31").getTime(),
         );
         break;
 
@@ -187,14 +213,17 @@ export default function AllTreksPageClient({ initialTreks }: AllTreksPageProps) 
       <div className="px-6 md:px-12 lg:px-20 pt-12 pb-8">
         <h1 className="text-5xl md:text-7xl font-bold mb-4">All Treks</h1>
         <p className="text-gray-400 text-lg max-w-3xl">
-          Explore our complete collection of treks, expeditions, and adventures across India's most stunning landscapes.
+          Explore our complete collection of treks, expeditions, and adventures
+          across India's most stunning landscapes.
         </p>
       </div>
 
       {/* Sort Bar */}
       <div className="px-6 md:px-12 lg:px-20 pb-8 flex items-center justify-between border-b border-gray-700 flex-wrap gap-4">
         <p className="text-gray-400 text-sm">
-          Showing <span className="text-white font-semibold">{sortedTreks.length}</span> treks
+          Showing{" "}
+          <span className="text-white font-semibold">{sortedTreks.length}</span>{" "}
+          treks
         </p>
 
         {/* Sort Controls */}
@@ -205,8 +234,13 @@ export default function AllTreksPageClient({ initialTreks }: AllTreksPageProps) 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex items-center gap-2 bg-gray-900 border border-gray-700 hover:border-blue-600 px-3 py-2 rounded-lg transition text-sm font-semibold whitespace-nowrap"
             >
-              Sort: <span className="text-blue-400">{sortOptions.find((o) => o.value === sortBy)?.label}</span>
-              <FiChevronDown className={`w-4 h-4 transition ${isDropdownOpen ? "rotate-180" : ""}`} />
+              Sort:{" "}
+              <span className="text-blue-400">
+                {sortOptions.find((o) => o.value === sortBy)?.label}
+              </span>
+              <FiChevronDown
+                className={`w-4 h-4 transition ${isDropdownOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
             {/* Dropdown Menu */}

@@ -1,27 +1,24 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { requireApiRole } from "@/lib/apiAuth";
 
 export async function GET(req: Request) {
   try {
-    const session = await getServerSession();
-    const role = (session as any)?.user?.role;
-    if (!session || !['ADMIN','MODERATOR'].includes(role)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    const { response } = await requireApiRole("MODERATOR");
+    if (response) {
+      return response;
     }
 
-    // Return recent failed attempts grouped by email and count
-    const recent = await (prisma as any).failedLoginAttempt.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: 200
+    const recent = await prisma.failedLoginAttempt.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200,
     });
 
     return NextResponse.json({ success: true, attempts: recent });
   } catch (error) {
-    console.error('Failed to fetch login attempts', error);
-    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
+    console.error("Failed to fetch login attempts", error);
+    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
   }
 }

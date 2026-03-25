@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# The Trail Makers Next App
 
-## Getting Started
+Production-focused Next.js 16 application for trekking discovery, bookings, expeditions, courses, FAQs, and role-based admin operations.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- React 19
+- Prisma with PostgreSQL
+- NextAuth credentials authentication
+- Tailwind CSS
+- Sentry monitoring
+
+## Core Commands
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run build
+npm run db:generate
+npm run db:push
+npm run db:seed
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Required Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+DATABASE_URL=
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+NEXT_PUBLIC_SITE_URL=
+RESEND_API_KEY=
+EMAIL_FROM=
+SENTRY_DSN=
+SENTRY_ORG=
+SENTRY_PROJECT=
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+`NEXT_PUBLIC_SITE_URL` should point to the canonical deployment URL and is used for metadata generation.
 
-## Learn More
+## Database Workflow
 
-To learn more about Next.js, take a look at the following resources:
+1. Generate the Prisma client with `npm run db:generate`.
+2. Apply the current schema with `npm run db:push`.
+3. Seed base content with `npm run db:seed`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The canonical seed entrypoint is Prisma's configured seed command, which runs `prisma/seed.ts`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Application Areas
 
-## Deploy on Vercel
+- Public marketing and catalog routes under `src/app`
+- Booking, payment, and profile flows under `src/app/booking` and `src/app/profile`
+- Admin APIs and dashboards under `src/app/admin` and `src/app/api/admin`
+- Shared business logic under `src/lib/services`
+- Auth and RBAC logic under `src/lib/auth.ts`, `src/lib/roleUtils.ts`, and `src/proxy.ts`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Architectural Conventions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Prefer server-rendered route pages for catalog and content sections.
+- Use client components only for interactive islands.
+- Route protection lives in `src/proxy.ts` for this Next 16 branch.
+- Use the shared Prisma singleton from `src/lib/prisma.ts`.
+- Use `next/image` for application images.
+- Add `loading.tsx` and `error.tsx` boundaries for routes with significant server work.
+
+## Validation
+
+Before merging substantial changes, run:
+
+```bash
+npm run lint
+npm run build
+```
+
+## Notes
+
+- The build is resilient when `DATABASE_URL` is missing by catching database access for static generation paths and falling back to empty collections where needed.
+- Sentry is configured through `next.config.mjs` and the `sentry.*.config.ts` files.

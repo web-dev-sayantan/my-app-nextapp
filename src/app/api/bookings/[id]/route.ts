@@ -9,7 +9,58 @@ import { authOptions } from "@/lib/auth";
 import { BookingService } from "@/lib/services/bookingService";
 import { createErrorResponse, UnauthorizedError } from "@/lib/errors";
 
-export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+type BookingResponseSource = {
+  id: string;
+  departureId: string;
+  numberOfPeople: number;
+  totalAmount: number;
+  status: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  createdAt: Date;
+  payment: {
+    status: string;
+  } | null;
+  departure: {
+    startDate: Date;
+    endDate: Date;
+    pricePerPerson: number;
+    trek: {
+      name: string;
+      description: string;
+      difficulty: string;
+      duration: number;
+    };
+  };
+};
+
+function buildBookingResponse(booking: BookingResponseSource) {
+  return {
+    ...booking,
+    paymentStatus: booking.payment?.status ?? "PENDING",
+    contact: {
+      name: booking.contactName,
+      email: booking.contactEmail,
+      phone: booking.contactPhone,
+    },
+    participants: [] as Array<{
+      name: string;
+      age: number;
+      gender: string;
+      emergency: string;
+    }>,
+    trek: {
+      ...booking.departure.trek,
+      duration: `${booking.departure.trek.duration} days`,
+    },
+  };
+}
+
+export async function GET(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> },
+) {
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
@@ -19,23 +70,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
     }
 
     const booking = await BookingService.getBooking(params.id, userId);
-
-    // Shape for confirmation page: contact object, trek.duration as string
-    const b = booking as any;
-    const data = {
-      ...b,
-      contact: {
-        name: b.contactName,
-        email: b.contactEmail,
-        phone: b.contactPhone,
-      },
-      trek: b.departure?.trek
-        ? {
-            ...b.departure.trek,
-            duration: `${b.departure.trek.duration} days`,
-          }
-        : null,
-    };
+    const data = buildBookingResponse(booking as BookingResponseSource);
 
     return NextResponse.json({
       success: true,
@@ -43,14 +78,16 @@ export async function GET(request: NextRequest, props: { params: Promise<{ id: s
     });
   } catch (error) {
     const errorResponse = createErrorResponse(error);
-    return NextResponse.json(
-      errorResponse,
-      { status: error instanceof UnauthorizedError ? 401 : 400 }
-    );
+    return NextResponse.json(errorResponse, {
+      status: error instanceof UnauthorizedError ? 401 : 400,
+    });
   }
 }
 
-export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> },
+) {
   const params = await props.params;
   try {
     const session = await getServerSession(authOptions);
@@ -80,13 +117,12 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
           code: "INVALID_ACTION",
         },
       },
-      { status: 400 }
+      { status: 400 },
     );
   } catch (error) {
     const errorResponse = createErrorResponse(error);
-    return NextResponse.json(
-      errorResponse,
-      { status: error instanceof UnauthorizedError ? 401 : 400 }
-    );
+    return NextResponse.json(errorResponse, {
+      status: error instanceof UnauthorizedError ? 401 : 400,
+    });
   }
 }

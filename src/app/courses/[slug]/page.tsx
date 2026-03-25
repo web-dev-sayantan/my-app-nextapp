@@ -1,88 +1,148 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
-import { use, useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { isDatabaseConfigured } from "@/lib/databaseAvailability";
 
-async function getCourse(slug: string) {
+const fallbackCourseImage =
+  "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
+
+interface CourseSessionCard {
+  id: string;
+  startDate: Date;
+  seatsAvailable: number;
+}
+
+interface CourseDetail {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
+  longDescription: string | null;
+  location: string;
+  price: number;
+  duration: number;
+  difficulty: string;
+  imageUrl: string | null;
+  thumbnailUrl: string | null;
+  curriculum: string;
+  inclusions: string[];
+  exclusions: string[];
+  requirements: string[];
+  instructor: string | null;
+  sessions: CourseSessionCard[];
+}
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export const revalidate = 3600;
+
+function formatDifficulty(difficulty: string) {
+  return difficulty.replace(/_/g, " ");
+}
+
+async function getCourse(slug: string): Promise<CourseDetail | null> {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
   try {
-    const response = await fetch(`/api/courses/${slug}`);
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data.course;
+    return await prisma.course.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        slug: true,
+        name: true,
+        description: true,
+        longDescription: true,
+        location: true,
+        price: true,
+        duration: true,
+        difficulty: true,
+        imageUrl: true,
+        thumbnailUrl: true,
+        curriculum: true,
+        inclusions: true,
+        exclusions: true,
+        requirements: true,
+        instructor: true,
+        sessions: {
+          where: {
+            startDate: { gte: new Date() },
+            isCancelled: false,
+          },
+          orderBy: { startDate: "asc" },
+          select: {
+            id: true,
+            startDate: true,
+            seatsAvailable: true,
+          },
+        },
+      },
+    });
   } catch (error) {
-    console.error("Failed to fetch course:", error);
+    console.warn("Skipping course detail during prerender:", error);
     return null;
   }
 }
 
-interface PagesProps {
-  params: Promise<{ slug: string }>;
-}
-
-export default function CourseDetailPage({ params }: PagesProps) {
-  const { slug } = use(params);
-  const [course, setCourse] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getCourse(slug);
-      setCourse(data);
-      setLoading(false);
-    };
-    fetchData();
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-          <p className="text-gray-600 dark:text-gray-400 mt-4">
-            Loading course...
-          </p>
-        </div>
-      </div>
-    );
+export async function generateStaticParams() {
+  if (!isDatabaseConfigured()) {
+    return [];
   }
 
+  try {
+    const courses = await prisma.course.findMany({
+      select: { slug: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return courses.map((course) => ({ slug: course.slug }));
+  } catch (error) {
+    console.warn("Skipping course static params during build:", error);
+    return [];
+  }
+}
+
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
+  const course = await getCourse(params.slug);
+
   if (!course) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Course Not Found
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            The course you're looking for doesn't exist.
-          </p>
-          <Link
-            href="/courses"
-            className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-          >
-            Back to Courses
-          </Link>
-        </div>
-      </div>
-    );
+    return { title: "Course Not Found | Trail Makers" };
+  }
+
+  return {
+    title: `${course.name} Course | Trail Makers`,
+    description: course.description,
+    openGraph: {
+      title: course.name,
+      description: course.description,
+      images: course.imageUrl ? [course.imageUrl] : [],
+    },
+  };
+}
+
+export default async function CourseDetailPage(props: PageProps) {
+  const params = await props.params;
+  const course = await getCourse(params.slug);
+
+  if (!course) {
+    notFound();
   }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Hero Section */}
       <div className="relative h-96 bg-gray-200 dark:bg-gray-800 overflow-hidden">
-        <img
-          src={
-            course.imageUrl ||
-            course.thumbnailUrl ||
-            "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg"
-          }
+        <Image
+          src={course.imageUrl || course.thumbnailUrl || fallbackCourseImage}
           alt={course.name}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
-          }}
+          fill
+          sizes="100vw"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-black/40 flex items-end">
           <div className="w-full p-8">
@@ -120,7 +180,7 @@ export default function CourseDetailPage({ params }: PagesProps) {
                     Difficulty
                   </p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white capitalize">
-                    {course.difficulty.replace(/_/g, " ")}
+                    {formatDifficulty(course.difficulty)}
                   </p>
                 </div>
                 <div>
@@ -175,7 +235,7 @@ export default function CourseDetailPage({ params }: PagesProps) {
                 <ul className="space-y-2">
                   {course.inclusions.map((item: string, idx: number) => (
                     <li
-                      key={idx}
+                      key={`${item}-${idx}`}
                       className="flex items-start text-gray-700 dark:text-gray-300"
                     >
                       <span className="text-green-600 dark:text-green-400 mr-3">
@@ -197,7 +257,7 @@ export default function CourseDetailPage({ params }: PagesProps) {
                 <ul className="space-y-2">
                   {course.exclusions.map((item: string, idx: number) => (
                     <li
-                      key={idx}
+                      key={`${item}-${idx}`}
                       className="flex items-start text-gray-700 dark:text-gray-300"
                     >
                       <span className="text-red-600 dark:text-red-400 mr-3">
@@ -219,7 +279,7 @@ export default function CourseDetailPage({ params }: PagesProps) {
                 <ul className="space-y-2">
                   {course.requirements.map((item: string, idx: number) => (
                     <li
-                      key={idx}
+                      key={`${item}-${idx}`}
                       className="flex items-start text-gray-700 dark:text-gray-300"
                     >
                       <span className="text-blue-600 dark:text-blue-400 mr-3">
@@ -258,15 +318,13 @@ export default function CourseDetailPage({ params }: PagesProps) {
                     Available Batches
                   </h3>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {course.sessions.map((session: any) => (
+                    {course.sessions.map((session) => (
                       <div
                         key={session.id}
                         className="border border-gray-200 dark:border-gray-700 rounded p-3"
                       >
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                          {new Date(session.startDate).toLocaleDateString(
-                            "en-IN",
-                          )}
+                          {session.startDate.toLocaleDateString("en-IN")}
                         </p>
                         <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                           {session.seatsAvailable} spots left

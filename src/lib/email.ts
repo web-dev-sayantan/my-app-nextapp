@@ -1,24 +1,33 @@
-import nodemailer from 'nodemailer';
-import { Resend } from 'resend';
+import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+export type SendEmailResult =
+  | { success: true; data: unknown; method: "resend" | "smtp" }
+  | { success: true; mock: true }
+  | { success: false; error: string };
+
+export function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Unknown error";
+}
 
 // Create nodemailer transporter for SMTP
 const createSMTPTransporter = () => {
-  const port = parseInt(process.env.SMTP_PORT || '587');
+  const port = parseInt(process.env.SMTP_PORT || "587");
   const isSecure = port === 465; // SSL for port 465, STARTTLS for 587
-  
+
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
     port: port,
     secure: isSecure, // true for 465 (SSL), false for 587 (STARTTLS)
     requireTLS: !isSecure, // Force TLS for port 587
     auth: {
-      user: process.env.SMTP_USER || '',
-      pass: process.env.SMTP_PASS || '',
+      user: process.env.SMTP_USER || "",
+      pass: process.env.SMTP_PASS || "",
     },
     connectionTimeout: 30000,
     greetingTimeout: 30000,
   });
-  
+
   return transporter;
 };
 
@@ -27,7 +36,8 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const FROM_EMAIL = process.env.EMAIL_FROM || 'Trail Makers <hello@trailmakers.in>';
+const FROM_EMAIL =
+  process.env.EMAIL_FROM || "Trail Makers <hello@trailmakers.in>";
 
 /**
  * Send an email using Resend (primary) or SMTP (fallback)
@@ -40,7 +50,7 @@ export async function sendEmail({
   to: string;
   subject: string;
   html: string;
-}) {
+}): Promise<SendEmailResult> {
   // Try Resend first (primary)
   if (resend) {
     try {
@@ -51,10 +61,10 @@ export async function sendEmail({
         html,
       });
 
-      console.log('Email sent via Resend:', data);
-      return { success: true, data, method: 'resend' };
+      console.log("Email sent via Resend:", data);
+      return { success: true, data, method: "resend" };
     } catch (error) {
-      console.error('Resend send error:', error);
+      console.error("Resend send error:", error);
       // Fall through to SMTP
     }
   }
@@ -63,7 +73,7 @@ export async function sendEmail({
   if (process.env.SMTP_HOST && process.env.SMTP_PASS) {
     try {
       const transporter = createSMTPTransporter();
-      
+
       const info = await transporter.sendMail({
         from: FROM_EMAIL,
         to,
@@ -71,15 +81,15 @@ export async function sendEmail({
         html,
       });
 
-      console.log('Email sent via SMTP:', info.messageId);
-      return { success: true, data: info, method: 'smtp' };
-    } catch (error: any) {
-      console.error('SMTP send error:', error.message);
+      console.log("Email sent via SMTP:", info.messageId);
+      return { success: true, data: info, method: "smtp" };
+    } catch (error) {
+      console.error("SMTP send error:", getErrorMessage(error));
     }
   }
 
   // Mock mode for development
-  console.log('Email (mock):', { to, subject, html });
+  console.log("Email (mock):", { to, subject, html });
   return { success: true, mock: true };
 }
 
@@ -96,7 +106,7 @@ export async function sendPasswordResetEmail({
   userName: string;
 }) {
   const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`;
-  
+
   const html = `
 <!DOCTYPE html>
 <html>
@@ -111,7 +121,7 @@ export async function sendPasswordResetEmail({
       <h1 style="color: #fff; margin: 0;">Trail Makers</h1>
     </div>
     
-    <h2 style="color: #fff;">Hello ${userName || 'there'},</h2>
+    <h2 style="color: #fff;">Hello ${userName || "there"},</h2>
     
     <p style="color: #aaa; line-height: 1.6;">
       We received a request to reset your password. Click the button below to create a new password:
@@ -141,7 +151,7 @@ export async function sendPasswordResetEmail({
 
   return sendEmail({
     to,
-    subject: 'Reset Your Trail Makers Password',
+    subject: "Reset Your Trail Makers Password",
     html,
   });
 }
@@ -185,7 +195,7 @@ export async function sendBookingConfirmationEmail({
       </div>
     </div>
     
-    <h2 style="color: #fff;">Hello ${userName || 'there'},</h2>
+    <h2 style="color: #fff;">Hello ${userName || "there"},</h2>
     
     <p style="color: #aaa; line-height: 1.6;">
       Thank you for booking with Trail Makers! Your adventure is confirmed.
@@ -211,7 +221,7 @@ export async function sendBookingConfirmationEmail({
       
       <div style="margin: 15px 0;">
         <span style="color: #666;">Total Amount:</span>
-        <span style="color: #22c55e; margin-left: 10px; font-weight: 600;">₹${(bookingDetails.totalAmount / 100).toLocaleString('en-IN')}</span>
+        <span style="color: #22c55e; margin-left: 10px; font-weight: 600;">₹${(bookingDetails.totalAmount / 100).toLocaleString("en-IN")}</span>
       </div>
       
       <div style="margin: 15px 0;">

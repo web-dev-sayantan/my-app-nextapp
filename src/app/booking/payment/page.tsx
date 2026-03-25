@@ -3,34 +3,64 @@
  * Razorpay payment integration
  */
 
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import { FiArrowLeft, FiCheckCircle } from "react-icons/fi";
+
+type RazorpaySuccessResponse = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayCheckoutOptions = {
+  key: string | undefined;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  handler: (response: RazorpaySuccessResponse) => Promise<void>;
+  prefill: {
+    email: string;
+    contact: string;
+  };
+  theme: {
+    color: string;
+  };
+  modal: {
+    ondismiss: () => void;
+  };
+};
+
+type RazorpayInstance = {
+  open: () => void;
+};
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: RazorpayCheckoutOptions) => RazorpayInstance;
   }
 }
 
 export default function PaymentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
-  const bookingId = searchParams.get('bookingId');
-  const amount = searchParams.get('amount');
-  
+
+  const bookingId = searchParams.get("bookingId");
+  const amount = searchParams.get("amount");
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
     // Load Razorpay script
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
     document.body.appendChild(script);
 
@@ -41,7 +71,7 @@ export default function PaymentPage() {
 
   const handlePayment = async () => {
     if (!bookingId || !amount) {
-      setError('Invalid booking details');
+      setError("Invalid booking details");
       return;
     }
 
@@ -50,9 +80,9 @@ export default function PaymentPage() {
 
     try {
       // Create Razorpay order
-      const orderResponse = await fetch('/api/payments/razorpay', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const orderResponse = await fetch("/api/payments/razorpay", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bookingId,
           amount: parseInt(amount),
@@ -60,7 +90,7 @@ export default function PaymentPage() {
       });
 
       if (!orderResponse.ok) {
-        throw new Error('Failed to create payment order');
+        throw new Error("Failed to create payment order");
       }
 
       const orderData = await orderResponse.json();
@@ -70,17 +100,17 @@ export default function PaymentPage() {
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: parseInt(amount),
-        currency: 'INR',
-        name: 'The Trail Makers',
-        description: 'Trek Booking Payment',
+        currency: "INR",
+        name: "The Trail Makers",
+        description: "Trek Booking Payment",
         order_id: orderId,
-        handler: async (response: any) => {
+        handler: async (response: RazorpaySuccessResponse) => {
           try {
             // Verify payment
-            const verifyResponse = await fetch('/api/payments/verify', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              credentials: 'include',
+            const verifyResponse = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
               body: JSON.stringify({
                 razorpayOrderId: response.razorpay_order_id,
                 razorpayPaymentId: response.razorpay_payment_id,
@@ -90,24 +120,26 @@ export default function PaymentPage() {
             });
 
             if (!verifyResponse.ok) {
-              throw new Error('Payment verification failed');
+              throw new Error("Payment verification failed");
             }
 
             // Redirect to success page
             router.push(`/booking/confirmation?bookingId=${bookingId}`);
           } catch (err) {
             // Redirect to a failure page with a short error message
-            const msg = err instanceof Error ? err.message : 'payment_failed';
-            router.push(`/booking/failure?bookingId=${bookingId}&error=${encodeURIComponent(msg)}`);
+            const msg = err instanceof Error ? err.message : "payment_failed";
+            router.push(
+              `/booking/failure?bookingId=${bookingId}&error=${encodeURIComponent(msg)}`,
+            );
             setProcessing(false);
           }
         },
         prefill: {
-          email: '',
-          contact: '',
+          email: "",
+          contact: "",
         },
         theme: {
-          color: '#3b82f6',
+          color: "#3b82f6",
         },
         modal: {
           ondismiss: () => {
@@ -120,7 +152,7 @@ export default function PaymentPage() {
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Payment failed');
+      setError(err instanceof Error ? err.message : "Payment failed");
       setProcessing(false);
     } finally {
       setLoading(false);
@@ -165,7 +197,7 @@ export default function PaymentPage() {
             {/* Payment Methods */}
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6 mb-8">
               <h2 className="text-2xl font-bold mb-6">Payment Method</h2>
-              
+
               <div className="space-y-3">
                 <label className="flex items-center p-4 border-2 border-blue-500 rounded-lg bg-blue-900/20 cursor-pointer">
                   <input
@@ -185,7 +217,8 @@ export default function PaymentPage() {
                     className="w-4 h-4"
                   />
                   <span className="ml-3 font-semibold text-gray-400">
-                    UPI/Wallet <span className="text-xs text-gray-500">(Coming soon)</span>
+                    UPI/Wallet{" "}
+                    <span className="text-xs text-gray-500">(Coming soon)</span>
                   </span>
                 </label>
               </div>
@@ -198,10 +231,18 @@ export default function PaymentPage() {
                 Test Mode - Use Test Card
               </h3>
               <div className="space-y-2 text-sm">
-                <p><strong>Card Number:</strong> 4111 1111 1111 1111</p>
-                <p><strong>Expiry:</strong> Any future date (MM/YY)</p>
-                <p><strong>CVV:</strong> Any 3 digits</p>
-                <p><strong>OTP:</strong> 123456</p>
+                <p>
+                  <strong>Card Number:</strong> 4111 1111 1111 1111
+                </p>
+                <p>
+                  <strong>Expiry:</strong> Any future date (MM/YY)
+                </p>
+                <p>
+                  <strong>CVV:</strong> Any 3 digits
+                </p>
+                <p>
+                  <strong>OTP:</strong> 123456
+                </p>
               </div>
             </div>
 
@@ -221,11 +262,15 @@ export default function PaymentPage() {
               <div className="space-y-4 mb-6 pb-6 border-b border-blue-700">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-300">Booking ID</span>
-                  <span className="font-mono text-xs">{bookingId.slice(-8)}</span>
+                  <span className="font-mono text-xs">
+                    {bookingId.slice(-8)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-300">Amount</span>
-                  <span className="font-bold">₹{(parseInt(amount) / 100).toLocaleString()}</span>
+                  <span className="font-bold">
+                    ₹{(parseInt(amount) / 100).toLocaleString()}
+                  </span>
                 </div>
               </div>
 
@@ -235,7 +280,7 @@ export default function PaymentPage() {
                 className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 text-black font-bold py-3 rounded-lg transition"
               >
                 {processing
-                  ? 'Processing...'
+                  ? "Processing..."
                   : `Pay ₹${(parseInt(amount) / 100).toLocaleString()}`}
               </button>
 

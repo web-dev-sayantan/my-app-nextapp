@@ -1,16 +1,42 @@
 "use client";
 
 import { useState } from "react";
-import { FiX, FiCalendar, FiMapPin, FiUsers, FiCreditCard } from "react-icons/fi";
+import {
+  FiX,
+  FiCalendar,
+  FiMapPin,
+  FiUsers,
+  FiCreditCard,
+} from "react-icons/fi";
+
+export interface BookingDetails {
+  id: string;
+  numberOfPeople: number;
+  totalAmount: number;
+  departure: {
+    startDate: Date;
+    endDate: Date;
+    trek: {
+      name: string;
+      state: string;
+    };
+  };
+}
 
 interface BookingDetailsModalProps {
-  booking: any;
+  booking: BookingDetails;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetailsModalProps) {
-  const [activeTab, setActiveTab] = useState<"details" | "travellers" | "form">("details");
+export function BookingDetailsModal({
+  booking,
+  isOpen,
+  onClose,
+}: BookingDetailsModalProps) {
+  const [activeTab, setActiveTab] = useState<"details" | "travellers" | "form">(
+    "details",
+  );
   const [formData, setFormData] = useState({
     treksDone: "",
     medicalConditions: "",
@@ -27,7 +53,7 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
 
   const trek = booking.departure?.trek;
   const departure = booking.departure;
-  
+
   if (!trek || !departure) {
     return null;
   }
@@ -108,15 +134,21 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                 <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <FiCalendar className="w-5 h-5 text-blue-400" />
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase">Trek Dates</h3>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase">
+                      Trek Dates
+                    </h3>
                   </div>
-                  <p className="text-white font-semibold">{startDate} to {endDate}</p>
+                  <p className="text-white font-semibold">
+                    {startDate} to {endDate}
+                  </p>
                 </div>
 
                 <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <FiMapPin className="w-5 h-5 text-blue-400" />
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase">Location</h3>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase">
+                      Location
+                    </h3>
                   </div>
                   <p className="text-white font-semibold">{trek.state}</p>
                 </div>
@@ -124,35 +156,63 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                 <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <FiUsers className="w-5 h-5 text-blue-400" />
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase">Participants</h3>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase">
+                      Participants
+                    </h3>
                   </div>
-                  <p className="text-white font-semibold">{booking.numberOfPeople} Person{booking.numberOfPeople !== 1 ? "s" : ""}</p>
+                  <p className="text-white font-semibold">
+                    {booking.numberOfPeople} Person
+                    {booking.numberOfPeople !== 1 ? "s" : ""}
+                  </p>
                 </div>
 
                 <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <FiCreditCard className="w-5 h-5 text-blue-400" />
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase">Total Amount</h3>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase">
+                      Total Amount
+                    </h3>
                   </div>
-                  <p className="text-white font-semibold">₹{(booking.totalAmount / 100).toLocaleString("en-IN")}</p>
+                  <p className="text-white font-semibold">
+                    ₹{(booking.totalAmount / 100).toLocaleString("en-IN")}
+                  </p>
                 </div>
               </div>
 
               {/* How to Prepare Section */}
               <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-8">
-                <h3 className="text-2xl font-bold text-white mb-6">How to Prepare for Your Trek</h3>
+                <h3 className="text-2xl font-bold text-white mb-6">
+                  How to Prepare for Your Trek
+                </h3>
                 <div className="space-y-6">
                   <div>
-                    <h4 className="text-blue-300 font-semibold mb-2">Physical Fitness</h4>
-                    <p className="text-gray-300">Start preparing 4-6 weeks before your trek. Include cardio exercises, strength training, and daily walks to build endurance.</p>
+                    <h4 className="text-blue-300 font-semibold mb-2">
+                      Physical Fitness
+                    </h4>
+                    <p className="text-gray-300">
+                      Start preparing 4-6 weeks before your trek. Include cardio
+                      exercises, strength training, and daily walks to build
+                      endurance.
+                    </p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 font-semibold mb-2">Essential Gear</h4>
-                    <p className="text-gray-300">Trek shoes, warm clothing, backpack (45L), sleeping bag, trekking poles, and personal toiletries.</p>
+                    <h4 className="text-blue-300 font-semibold mb-2">
+                      Essential Gear
+                    </h4>
+                    <p className="text-gray-300">
+                      Trek shoes, warm clothing, backpack (45L), sleeping bag,
+                      trekking poles, and personal toiletries.
+                    </p>
                   </div>
                   <div>
-                    <h4 className="text-blue-300 font-semibold mb-2">Health Precautions</h4>
-                    <p className="text-gray-300">Get a medical checkup, consider vaccinations, carry prescribed medicines, and stay hydrated throughout the trek.</p>
+                    <h4 className="text-blue-300 font-semibold mb-2">
+                      Health Precautions
+                    </h4>
+                    <p className="text-gray-300">
+                      Get a medical checkup, consider vaccinations, carry
+                      prescribed medicines, and stay hydrated throughout the
+                      trek.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -163,41 +223,58 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
           {activeTab === "travellers" && (
             <div className="space-y-6">
               <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-6 mb-6">
-                <h3 className="text-lg font-semibold text-green-300 mb-2">Primary Guest (Booking Owner)</h3>
-                <p className="text-gray-300">You will be the primary guest and main contact for this booking.</p>
+                <h3 className="text-lg font-semibold text-green-300 mb-2">
+                  Primary Guest (Booking Owner)
+                </h3>
+                <p className="text-gray-300">
+                  You will be the primary guest and main contact for this
+                  booking.
+                </p>
               </div>
 
               {booking.numberOfPeople > 1 && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white">Other Participants</h3>
-                  <p className="text-gray-400 text-sm">Add details for {booking.numberOfPeople - 1} more person{booking.numberOfPeople - 1 !== 1 ? "s" : ""}:</p>
-                  {Array.from({ length: booking.numberOfPeople - 1 }).map((_, idx) => (
-                    <div key={idx} className="bg-gray-800/30 border border-gray-700 rounded-lg p-6 space-y-4">
-                      <h4 className="font-semibold text-white">Participant {idx + 2}</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input
-                          type="text"
-                          placeholder="Full Name"
-                          className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
-                        />
-                        <input
-                          type="email"
-                          placeholder="Email Address"
-                          className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
-                        />
-                        <input
-                          type="tel"
-                          placeholder="Phone Number"
-                          className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
-                        />
-                        <input
-                          type="date"
-                          placeholder="Birth Date"
-                          className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
-                        />
+                  <h3 className="text-lg font-semibold text-white">
+                    Other Participants
+                  </h3>
+                  <p className="text-gray-400 text-sm">
+                    Add details for {booking.numberOfPeople - 1} more person
+                    {booking.numberOfPeople - 1 !== 1 ? "s" : ""}:
+                  </p>
+                  {Array.from({ length: booking.numberOfPeople - 1 }).map(
+                    (_, idx) => (
+                      <div
+                        key={idx}
+                        className="bg-gray-800/30 border border-gray-700 rounded-lg p-6 space-y-4"
+                      >
+                        <h4 className="font-semibold text-white">
+                          Participant {idx + 2}
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <input
+                            type="text"
+                            placeholder="Full Name"
+                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                          />
+                          <input
+                            type="email"
+                            placeholder="Email Address"
+                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                          />
+                          <input
+                            type="tel"
+                            placeholder="Phone Number"
+                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                          />
+                          <input
+                            type="date"
+                            placeholder="Birth Date"
+                            className="bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               )}
             </div>
@@ -207,8 +284,13 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
           {activeTab === "form" && (
             <form onSubmit={handleFormSubmit} className="space-y-6">
               <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-6 mb-6">
-                <h3 className="text-yellow-300 font-semibold mb-2">Personal Information</h3>
-                <p className="text-gray-300 text-sm">Help us understand your trekking experience and health requirements</p>
+                <h3 className="text-yellow-300 font-semibold mb-2">
+                  Personal Information
+                </h3>
+                <p className="text-gray-300 text-sm">
+                  Help us understand your trekking experience and health
+                  requirements
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -218,7 +300,9 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                   </label>
                   <select
                     value={formData.bloodGroup}
-                    onChange={(e) => setFormData({ ...formData, bloodGroup: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, bloodGroup: e.target.value })
+                    }
                     className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"
                   >
                     <option value="">Select Blood Group</option>
@@ -240,7 +324,9 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                   <input
                     type="date"
                     value={formData.birthDate}
-                    onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, birthDate: e.target.value })
+                    }
                     className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"
                   />
                 </div>
@@ -251,7 +337,9 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                   </label>
                   <textarea
                     value={formData.treksDone}
-                    onChange={(e) => setFormData({ ...formData, treksDone: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, treksDone: e.target.value })
+                    }
                     placeholder="List any previous trekking experience..."
                     className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500 h-24"
                   />
@@ -263,7 +351,12 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                   </label>
                   <textarea
                     value={formData.medicalConditions}
-                    onChange={(e) => setFormData({ ...formData, medicalConditions: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        medicalConditions: e.target.value,
+                      })
+                    }
                     placeholder="Any medical conditions we should know about..."
                     className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500 h-24"
                   />
@@ -275,7 +368,12 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                   </label>
                   <select
                     value={formData.foodPreference}
-                    onChange={(e) => setFormData({ ...formData, foodPreference: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        foodPreference: e.target.value,
+                      })
+                    }
                     className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white"
                   >
                     <option value="">Select Food Preference</option>
@@ -292,7 +390,9 @@ export function BookingDetailsModal({ booking, isOpen, onClose }: BookingDetails
                   <input
                     type="text"
                     value={formData.allergies}
-                    onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, allergies: e.target.value })
+                    }
                     placeholder="List any food or other allergies..."
                     className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white placeholder-gray-500"
                   />
