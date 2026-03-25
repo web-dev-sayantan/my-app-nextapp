@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, formatDate } from "@/lib/utils";
@@ -258,9 +257,14 @@ function ImageCarousel({ images, title }: { images: string[]; title: string }) {
   );
 }
 
-export default function TrekPageClient({ trek }: { trek: TrekPageData }) {
+export default function TrekPageClient({
+  trek,
+  isAuthenticated,
+}: {
+  trek: TrekPageData;
+  isAuthenticated: boolean;
+}) {
   const router = useRouter();
-  const { status } = useSession();
   const [selectedDeparture, setSelectedDeparture] = useState<string | null>(
     null,
   );
@@ -282,7 +286,7 @@ export default function TrekPageClient({ trek }: { trek: TrekPageData }) {
 
     const bookingUrl = `/booking/summary?${params.toString()}`;
 
-    if (status !== "authenticated") {
+    if (!isAuthenticated) {
       const loginUrl = `/login?next=${encodeURIComponent(bookingUrl)}`;
       router.push(loginUrl);
       return;

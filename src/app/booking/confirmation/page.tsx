@@ -1,14 +1,10 @@
-/**
- * Booking Confirmation Page
- * Shows successful booking confirmation
- */
-
-'use client';
-
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { FiCheckCircle, FiDownload, FiMail, FiPhone } from 'react-icons/fi';
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { FiCheckCircle, FiMail, FiPhone } from "react-icons/fi";
+import { authOptions } from "@/lib/auth";
+import { BookingService } from "@/lib/services/bookingService";
+import PrintReceiptButton from "./print-receipt-button";
 
 interface BookingDetails {
   id: string;
@@ -43,56 +39,83 @@ interface BookingDetails {
   createdAt: string;
 }
 
-export default function ConfirmationPage() {
-  const searchParams = useSearchParams();
-  const bookingId = searchParams.get('bookingId');
-  
-  const [booking, setBooking] = useState<BookingDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+type ConfirmationPageProps = {
+  searchParams: Promise<{
+    bookingId?: string;
+  }>;
+};
 
-  useEffect(() => {
-    if (!bookingId) {
-      setError('No booking found');
-      setLoading(false);
-      return;
-    }
+async function getBookingDetails(
+  bookingId: string,
+): Promise<BookingDetails | null> {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
 
-    // Fetch booking details
-    const fetchBooking = async () => {
-      try {
-        const response = await fetch(`/api/bookings/${bookingId}`, { credentials: 'include' });
-        if (!response.ok) {
-          throw new Error('Failed to fetch booking details');
-        }
-        const data = await response.json();
-        setBooking(data.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load booking');
-      } finally {
-        setLoading(false);
-      }
+  if (!userId) {
+    redirect("/login");
+  }
+
+  try {
+    const booking = await BookingService.getBooking(bookingId, userId);
+
+    return {
+      id: booking.id,
+      trekId: booking.departure.trek.id,
+      departureId: booking.departureId,
+      numberOfPeople: booking.numberOfPeople,
+      totalAmount: booking.totalAmount,
+      paymentStatus: booking.payment?.status ?? "PENDING",
+      status: booking.status,
+      trek: {
+        name: booking.departure.trek.name,
+        description: booking.departure.trek.description,
+        difficulty: booking.departure.trek.difficulty,
+        duration: `${booking.departure.trek.duration} days`,
+      },
+      departure: {
+        startDate: booking.departure.startDate.toISOString(),
+        endDate: booking.departure.endDate.toISOString(),
+        pricePerPerson: booking.departure.pricePerPerson,
+      },
+      contact: {
+        name: booking.contactName,
+        email: booking.contactEmail,
+        phone: booking.contactPhone,
+      },
+      participants: [],
+      createdAt: booking.createdAt.toISOString(),
     };
+  } catch {
+    return null;
+  }
+}
 
-    fetchBooking();
-  }, [bookingId]);
+export default async function ConfirmationPage({
+  searchParams,
+}: ConfirmationPageProps) {
+  const params = await searchParams;
+  const bookingId = params.bookingId;
 
-  if (loading) {
+  if (!bookingId) {
     return (
       <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-          <p>Loading booking details...</p>
+          <p className="text-red-400 mb-4">No booking found</p>
+          <Link href="/all" className="text-blue-400 hover:text-blue-300">
+            Back to Treks
+          </Link>
         </div>
       </div>
     );
   }
 
-  if (error || !booking) {
+  const booking = await getBookingDetails(bookingId);
+
+  if (!booking) {
     return (
       <div className="min-h-screen bg-linear-to-b from-gray-900 to-black text-white flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-400 mb-4">{error}</p>
+          <p className="text-red-400 mb-4">Failed to load booking</p>
           <Link href="/all" className="text-blue-400 hover:text-blue-300">
             Back to Treks
           </Link>
@@ -129,19 +152,24 @@ export default function ConfirmationPage() {
                 {bookingId}
               </div>
               <p className="text-sm text-gray-400">
-                Save this reference number for your records and any future correspondence.
+                Save this reference number for your records and any future
+                correspondence.
               </p>
             </div>
 
             {/* Trek Details */}
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
               <h2 className="text-2xl font-bold mb-6">Trek Details</h2>
-              
+
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-3xl font-bold mb-2">{booking.trek.name}</h3>
-                  <p className="text-gray-400 mb-4">{booking.trek.description}</p>
-                  
+                  <h3 className="text-3xl font-bold mb-2">
+                    {booking.trek.name}
+                  </h3>
+                  <p className="text-gray-400 mb-4">
+                    {booking.trek.description}
+                  </p>
+
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <span className="text-gray-400 text-sm">Difficulty</span>
@@ -156,7 +184,9 @@ export default function ConfirmationPage() {
                       </p>
                     </div>
                     <div>
-                      <span className="text-gray-400 text-sm">Participants</span>
+                      <span className="text-gray-400 text-sm">
+                        Participants
+                      </span>
                       <p className="text-lg font-semibold text-blue-400">
                         {booking.numberOfPeople}
                       </p>
@@ -171,11 +201,11 @@ export default function ConfirmationPage() {
                     <div>
                       <span className="text-gray-400 text-sm">Start Date</span>
                       <p className="text-lg font-semibold">
-                        {startDate.toLocaleDateString('en-IN', {
-                          weekday: 'short',
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
+                        {startDate.toLocaleDateString("en-IN", {
+                          weekday: "short",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
                         })}
                       </p>
                     </div>
@@ -183,11 +213,11 @@ export default function ConfirmationPage() {
                     <div>
                       <span className="text-gray-400 text-sm">End Date</span>
                       <p className="text-lg font-semibold">
-                        {endDate.toLocaleDateString('en-IN', {
-                          weekday: 'short',
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
+                        {endDate.toLocaleDateString("en-IN", {
+                          weekday: "short",
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
                         })}
                       </p>
                     </div>
@@ -200,10 +230,13 @@ export default function ConfirmationPage() {
             {booking.participants && booking.participants.length > 0 && (
               <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
                 <h2 className="text-2xl font-bold mb-6">Participant Details</h2>
-                
+
                 <div className="space-y-4">
                   {booking.participants.map((participant, idx) => (
-                    <div key={idx} className="bg-gray-900 rounded-lg p-4 border border-gray-700">
+                    <div
+                      key={idx}
+                      className="bg-gray-900 rounded-lg p-4 border border-gray-700"
+                    >
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
                           <span className="text-gray-400 text-sm">Name</span>
@@ -211,15 +244,21 @@ export default function ConfirmationPage() {
                         </div>
                         <div>
                           <span className="text-gray-400 text-sm">Age</span>
-                          <p className="font-semibold">{participant.age} years</p>
+                          <p className="font-semibold">
+                            {participant.age} years
+                          </p>
                         </div>
                         <div>
                           <span className="text-gray-400 text-sm">Gender</span>
                           <p className="font-semibold">{participant.gender}</p>
                         </div>
                         <div>
-                          <span className="text-gray-400 text-sm">Emergency Contact</span>
-                          <p className="font-semibold text-sm">{participant.emergency}</p>
+                          <span className="text-gray-400 text-sm">
+                            Emergency Contact
+                          </span>
+                          <p className="font-semibold text-sm">
+                            {participant.emergency}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -231,7 +270,7 @@ export default function ConfirmationPage() {
             {/* Contact Information */}
             <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-6">
               <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center gap-4 p-4 bg-gray-900 rounded-lg">
                   <div className="text-2xl">👤</div>
@@ -245,7 +284,9 @@ export default function ConfirmationPage() {
                   <FiMail className="text-2xl text-blue-400" />
                   <div>
                     <span className="text-gray-400 text-sm">Email</span>
-                    <p className="font-semibold break-all">{booking.contact.email}</p>
+                    <p className="font-semibold break-all">
+                      {booking.contact.email}
+                    </p>
                   </div>
                 </div>
 
@@ -262,7 +303,7 @@ export default function ConfirmationPage() {
             {/* Next Steps */}
             <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-6">
               <h2 className="text-2xl font-bold mb-4">Next Steps</h2>
-              
+
               <ol className="space-y-3">
                 <li className="flex gap-4">
                   <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
@@ -270,37 +311,47 @@ export default function ConfirmationPage() {
                   </span>
                   <div>
                     <p className="font-semibold">Confirmation Email</p>
-                    <p className="text-sm text-gray-400">Check your email for booking confirmation and payment receipt</p>
+                    <p className="text-sm text-gray-400">
+                      Check your email for booking confirmation and payment
+                      receipt
+                    </p>
                   </div>
                 </li>
-                
+
                 <li className="flex gap-4">
                   <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
                     2
                   </span>
                   <div>
                     <p className="font-semibold">Pre-Trek Briefing</p>
-                    <p className="text-sm text-gray-400">We'll contact you 5 days before the trek with detailed instructions</p>
+                    <p className="text-sm text-gray-400">
+                      We'll contact you 5 days before the trek with detailed
+                      instructions
+                    </p>
                   </div>
                 </li>
-                
+
                 <li className="flex gap-4">
                   <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
                     3
                   </span>
                   <div>
                     <p className="font-semibold">Meet at Trailhead</p>
-                    <p className="text-sm text-gray-400">Arrive 15 minutes early on the start date</p>
+                    <p className="text-sm text-gray-400">
+                      Arrive 15 minutes early on the start date
+                    </p>
                   </div>
                 </li>
-                
+
                 <li className="flex gap-4">
                   <span className="shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center font-bold">
                     4
                   </span>
                   <div>
                     <p className="font-semibold">Enjoy Your Trek!</p>
-                    <p className="text-sm text-gray-400">Experience the mountains and create unforgettable memories</p>
+                    <p className="text-sm text-gray-400">
+                      Experience the mountains and create unforgettable memories
+                    </p>
                   </div>
                 </li>
               </ol>
@@ -322,7 +373,9 @@ export default function ConfirmationPage() {
 
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-200">Participants</span>
-                  <span className="font-semibold">{booking.numberOfPeople}</span>
+                  <span className="font-semibold">
+                    {booking.numberOfPeople}
+                  </span>
                 </div>
 
                 <div className="flex justify-between text-sm">
@@ -354,12 +407,7 @@ export default function ConfirmationPage() {
                 </div>
               </div>
 
-              <button
-                onClick={() => window.print()}
-                className="w-full mt-6 flex items-center justify-center gap-2 bg-white text-green-900 font-bold py-2 rounded-lg hover:bg-gray-100 transition"
-              >
-                <FiDownload /> Download Receipt
-              </button>
+              <PrintReceiptButton />
 
               <Link
                 href="/all"
