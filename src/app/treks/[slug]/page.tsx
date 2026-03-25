@@ -5,7 +5,8 @@
 
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { TrekService } from "@/lib/services/trekService";
+import { cache } from "react";
+import { getTrekBySlug, listTreks } from "@/lib/services/trekService";
 import { authOptions } from "@/lib/auth";
 import TrekPageClient from "./trek-page-client";
 import { isDatabaseConfigured } from "@/lib/databaseAvailability";
@@ -18,13 +19,15 @@ interface PageProps {
 
 export const revalidate = 3600;
 
+const getCachedTrek = cache(async (slug: string) => getTrekBySlug(slug));
+
 export async function generateStaticParams() {
   if (!isDatabaseConfigured()) {
     return [];
   }
 
   try {
-    const { treks } = await TrekService.listTreks({ page: 1, limit: 50 });
+    const { treks } = await listTreks({ page: 1, limit: 50 });
     return treks.map((trek) => ({ slug: trek.slug }));
   } catch (error) {
     console.warn(
@@ -42,7 +45,7 @@ export async function generateMetadata(props: PageProps) {
   }
 
   try {
-    const trek = await TrekService.getTrekBySlug(params.slug);
+    const trek = await getCachedTrek(params.slug);
     return {
       title: `${trek.name} Trek | Trail Makers`,
       description: trek.description,
@@ -63,7 +66,7 @@ export default async function TrekPage(props: PageProps) {
     notFound();
   }
 
-  const trek = await TrekService.getTrekBySlug(params.slug).catch(() => null);
+  const trek = await getCachedTrek(params.slug).catch(() => null);
 
   if (!trek) {
     notFound();

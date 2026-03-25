@@ -5,11 +5,15 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { TrekService } from "@/lib/services/trekService";
+import {
+  createTrek,
+  getTrekBySlug,
+  listTreks,
+} from "@/lib/services/trekService";
 import { listTreksQuerySchema } from "@/lib/validations";
 import { createErrorResponse, NotFoundError } from "@/lib/errors";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth"; 
+import { authOptions } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     // If slug is provided, get single trek
     if (slug) {
-      const trek = await TrekService.getTrekBySlug(slug);
+      const trek = await getTrekBySlug(slug);
       return NextResponse.json({ success: true, data: trek });
     }
 
@@ -33,9 +37,7 @@ export async function GET(request: NextRequest) {
       maxPrice: searchParams.get("maxPrice")
         ? parseInt(searchParams.get("maxPrice")!)
         : undefined,
-      page: searchParams.get("page")
-        ? parseInt(searchParams.get("page")!)
-        : 1,
+      page: searchParams.get("page") ? parseInt(searchParams.get("page")!) : 1,
       limit: searchParams.get("limit")
         ? parseInt(searchParams.get("limit")!)
         : 10,
@@ -44,7 +46,7 @@ export async function GET(request: NextRequest) {
     // Validate query params
     const validatedQuery = listTreksQuerySchema.parse(query);
 
-    const result = await TrekService.listTreks(validatedQuery);
+    const result = await listTreks(validatedQuery);
 
     return NextResponse.json({
       success: true,
@@ -53,10 +55,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     const errorResponse = createErrorResponse(error);
-    return NextResponse.json(
-      errorResponse,
-      { status: error instanceof Error ? 400 : 500 }
-    );
+    return NextResponse.json(errorResponse, {
+      status: error instanceof Error ? 400 : 500,
+    });
   }
 }
 
@@ -64,21 +65,17 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "ADMIN") {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-}
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     const body = await request.json();
-    const trek = await TrekService.createTrek(body);
+    const trek = await createTrek(body);
 
-    return NextResponse.json(
-      { success: true, data: trek },
-      { status: 201 }
-    );
+    return NextResponse.json({ success: true, data: trek }, { status: 201 });
   } catch (error) {
     const errorResponse = createErrorResponse(error);
-    return NextResponse.json(
-      errorResponse,
-      { status: error instanceof Error ? 400 : 500 }
-    );
+    return NextResponse.json(errorResponse, {
+      status: error instanceof Error ? 400 : 500,
+    });
   }
 }

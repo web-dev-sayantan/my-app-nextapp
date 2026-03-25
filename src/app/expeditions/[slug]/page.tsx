@@ -1,39 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { isDatabaseConfigured } from "@/lib/databaseAvailability";
+import { getExpeditionBySlug } from "@/lib/services/expeditionService";
 
 const fallbackExpeditionImage =
   "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
-
-interface ExpeditionSessionCard {
-  id: string;
-  startDate: Date;
-  seatsAvailable: number;
-}
-
-interface ExpeditionDetail {
-  id: string;
-  slug: string;
-  name: string;
-  description: string;
-  longDescription: string | null;
-  state: string;
-  basePrice: number;
-  difficulty: string;
-  duration: number;
-  maxAltitude: number | null;
-  distance: number | null;
-  bestSeason: string | null;
-  imageUrl: string | null;
-  thumbnailUrl: string | null;
-  itinerary: string;
-  inclusions: string[];
-  exclusions: string[];
-  requirements: string[];
-  sessions: ExpeditionSessionCard[];
-}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -45,52 +19,9 @@ function formatDifficulty(difficulty: string) {
   return difficulty.replace(/_/g, " ");
 }
 
-async function getExpedition(slug: string): Promise<ExpeditionDetail | null> {
-  if (!isDatabaseConfigured()) {
-    return null;
-  }
-
-  try {
-    return await prisma.expedition.findUnique({
-      where: { slug },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        longDescription: true,
-        state: true,
-        basePrice: true,
-        difficulty: true,
-        duration: true,
-        maxAltitude: true,
-        distance: true,
-        bestSeason: true,
-        imageUrl: true,
-        thumbnailUrl: true,
-        itinerary: true,
-        inclusions: true,
-        exclusions: true,
-        requirements: true,
-        sessions: {
-          where: {
-            startDate: { gte: new Date() },
-            isCancelled: false,
-          },
-          orderBy: { startDate: "asc" },
-          select: {
-            id: true,
-            startDate: true,
-            seatsAvailable: true,
-          },
-        },
-      },
-    });
-  } catch (error) {
-    console.warn("Skipping expedition detail during prerender:", error);
-    return null;
-  }
-}
+const getCachedExpedition = cache(async (slug: string) =>
+  getExpeditionBySlug(slug),
+);
 
 export async function generateStaticParams() {
   if (!isDatabaseConfigured()) {
@@ -112,7 +43,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps) {
   const params = await props.params;
-  const expedition = await getExpedition(params.slug);
+  const expedition = await getCachedExpedition(params.slug).catch(() => null);
 
   if (!expedition) {
     return { title: "Expedition Not Found | Trail Makers" };
@@ -131,7 +62,7 @@ export async function generateMetadata(props: PageProps) {
 
 export default async function ExpeditionDetailPage(props: PageProps) {
   const params = await props.params;
-  const expedition = await getExpedition(params.slug);
+  const expedition = await getCachedExpedition(params.slug).catch(() => null);
 
   if (!expedition) {
     notFound();

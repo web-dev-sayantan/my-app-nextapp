@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { BookingService } from "@/lib/services/bookingService";
+import { cancelBooking, getBooking } from "@/lib/services/bookingService";
 import { createErrorResponse, UnauthorizedError } from "@/lib/errors";
 
 type BookingResponseSource = {
@@ -69,7 +69,7 @@ export async function GET(
       throw new UnauthorizedError();
     }
 
-    const booking = await BookingService.getBooking(params.id, userId);
+    const booking = await getBooking(params.id, userId);
     const data = buildBookingResponse(booking as BookingResponseSource);
 
     return NextResponse.json({
@@ -100,7 +100,7 @@ export async function PATCH(
     const action = body.action;
 
     if (action === "cancel") {
-      const cancelled = await BookingService.cancelBooking(params.id, userId);
+      const cancelled = await cancelBooking(params.id, userId);
 
       return NextResponse.json({
         success: true,

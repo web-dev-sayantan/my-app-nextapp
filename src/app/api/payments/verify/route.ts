@@ -1,20 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { PaymentService } from "@/lib/services/paymentService";
+import { processPaymentSuccess } from "@/lib/services/paymentService";
 import { AppError, createErrorResponse } from "@/lib/errors";
 
 export async function POST(request: NextRequest) {
   try {
-    const {
-      razorpayOrderId,
-      razorpayPaymentId,
-      razorpaySignature,
-    } = await request.json();
+    const { razorpayOrderId, razorpayPaymentId, razorpaySignature } =
+      await request.json();
 
     if (!razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
       return NextResponse.json(
         { error: "Missing payment details" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,15 +25,15 @@ export async function POST(request: NextRequest) {
     if (expectedSignature !== razorpaySignature) {
       return NextResponse.json(
         { error: "Invalid payment signature" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Process payment success (finds Payment by transactionId = razorpayOrderId)
-    const result = await PaymentService.processPaymentSuccess(
+    const result = await processPaymentSuccess(
       razorpayOrderId,
       razorpayPaymentId,
-      razorpaySignature
+      razorpaySignature,
     );
 
     return NextResponse.json(
@@ -45,7 +42,7 @@ export async function POST(request: NextRequest) {
         message: "Payment verified and processed successfully",
         data: result,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Payment verification failed:", error);
@@ -57,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
     return NextResponse.json(
       { error: "Payment verification failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

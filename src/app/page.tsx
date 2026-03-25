@@ -2,7 +2,7 @@ export const revalidate = 3600;
 
 import Image from "next/image";
 import Link from "next/link";
-import { TrekService } from "@/lib/services/trekService";
+import { listTreks } from "@/lib/services/trekService";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { FiMapPin, FiArrowRight } from "react-icons/fi";
 import { HeroCarousel } from "@/components/heroCarousel";
@@ -12,9 +12,7 @@ import { TrekByRegionClient } from "@/components/trekByRegionClient";
 import articlesData from "@/data/articles.json";
 import { isDatabaseConfigured } from "@/lib/databaseAvailability";
 
-type ListedTrek = Awaited<
-  ReturnType<typeof TrekService.listTreks>
->["treks"][number];
+type ListedTrek = Awaited<ReturnType<typeof listTreks>>["treks"][number];
 type ListedDeparture = ListedTrek["departures"][number];
 type UpcomingDepartureItem = {
   trek: ListedTrek;
@@ -40,10 +38,7 @@ async function UpcomingAdventuresTable() {
   }
 
   try {
-    const { treks: allTreks } = await TrekService.listTreks(
-      { page: 1, limit: 50 },
-      10,
-    );
+    const { treks: allTreks } = await listTreks({ page: 1, limit: 50 }, 10);
 
     // Flatten all departures from all treks and sort by earliest date
     const allDepartures = allTreks.flatMap((trek) =>
@@ -224,10 +219,7 @@ async function TrekByRegionSection() {
   }
 
   try {
-    const { treks: allTreks } = await TrekService.listTreks(
-      { page: 1, limit: 100 },
-      1,
-    );
+    const { treks: allTreks } = await listTreks({ page: 1, limit: 100 }, 1);
 
     // Get unique states and count treks in each
     const stateImages: Record<string, string> = {

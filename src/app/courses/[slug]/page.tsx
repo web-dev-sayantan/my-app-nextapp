@@ -1,37 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { isDatabaseConfigured } from "@/lib/databaseAvailability";
+import { getCourseBySlug } from "@/lib/services/courseService";
 
 const fallbackCourseImage =
   "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
-
-interface CourseSessionCard {
-  id: string;
-  startDate: Date;
-  seatsAvailable: number;
-}
-
-interface CourseDetail {
-  id: string;
-  slug: string;
-  name: string;
-  description: string;
-  longDescription: string | null;
-  location: string;
-  price: number;
-  duration: number;
-  difficulty: string;
-  imageUrl: string | null;
-  thumbnailUrl: string | null;
-  curriculum: string;
-  inclusions: string[];
-  exclusions: string[];
-  requirements: string[];
-  instructor: string | null;
-  sessions: CourseSessionCard[];
-}
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -43,50 +19,7 @@ function formatDifficulty(difficulty: string) {
   return difficulty.replace(/_/g, " ");
 }
 
-async function getCourse(slug: string): Promise<CourseDetail | null> {
-  if (!isDatabaseConfigured()) {
-    return null;
-  }
-
-  try {
-    return await prisma.course.findUnique({
-      where: { slug },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        longDescription: true,
-        location: true,
-        price: true,
-        duration: true,
-        difficulty: true,
-        imageUrl: true,
-        thumbnailUrl: true,
-        curriculum: true,
-        inclusions: true,
-        exclusions: true,
-        requirements: true,
-        instructor: true,
-        sessions: {
-          where: {
-            startDate: { gte: new Date() },
-            isCancelled: false,
-          },
-          orderBy: { startDate: "asc" },
-          select: {
-            id: true,
-            startDate: true,
-            seatsAvailable: true,
-          },
-        },
-      },
-    });
-  } catch (error) {
-    console.warn("Skipping course detail during prerender:", error);
-    return null;
-  }
-}
+const getCachedCourse = cache(async (slug: string) => getCourseBySlug(slug));
 
 export async function generateStaticParams() {
   if (!isDatabaseConfigured()) {
@@ -108,7 +41,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps) {
   const params = await props.params;
-  const course = await getCourse(params.slug);
+  const course = await getCachedCourse(params.slug).catch(() => null);
 
   if (!course) {
     return { title: "Course Not Found | Trail Makers" };
@@ -127,7 +60,7 @@ export async function generateMetadata(props: PageProps) {
 
 export default async function CourseDetailPage(props: PageProps) {
   const params = await props.params;
-  const course = await getCourse(params.slug);
+  const course = await getCachedCourse(params.slug).catch(() => null);
 
   if (!course) {
     notFound();

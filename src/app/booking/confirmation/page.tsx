@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { FiCheckCircle, FiMail, FiPhone } from "react-icons/fi";
 import { authOptions } from "@/lib/auth";
-import { BookingService } from "@/lib/services/bookingService";
+import { getBooking } from "@/lib/services/bookingService";
 import PrintReceiptButton from "./print-receipt-button";
 
 interface BookingDetails {
@@ -56,7 +56,7 @@ async function getBookingDetails(
   }
 
   try {
-    const booking = await BookingService.getBooking(bookingId, userId);
+    const booking = await getBooking(bookingId, userId);
 
     return {
       id: booking.id,

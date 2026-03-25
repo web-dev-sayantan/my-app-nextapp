@@ -1,12 +1,10 @@
-import { TrekService } from "@/lib/services/trekService";
+import { listTreks } from "@/lib/services/trekService";
 import AllTreksPageClient from "@/components/allTreksClient";
 import { isDatabaseConfigured } from "@/lib/databaseAvailability";
 
 export const revalidate = 60;
 
-type ListedTrek = Awaited<
-  ReturnType<typeof TrekService.listTreks>
->["treks"][number];
+type ListedTrek = Awaited<ReturnType<typeof listTreks>>["treks"][number];
 type AllTreksPageItem = {
   id: string;
   name: string;
@@ -28,7 +26,7 @@ export default async function All() {
   }
 
   try {
-    const { treks } = await TrekService.listTreks({ page: 1, limit: 100 }, 50);
+    const { treks } = await listTreks({ page: 1, limit: 100 }, 50);
 
     // Transform treks data into format needed by client component
     trekData = treks.map((trek: ListedTrek) => {
