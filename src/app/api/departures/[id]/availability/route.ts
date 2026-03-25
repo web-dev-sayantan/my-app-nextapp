@@ -7,10 +7,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { BookingService } from "@/lib/services/bookingService";
 import { createErrorResponse } from "@/lib/errors";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const availability = await BookingService.checkAvailability(params.id);
 

@@ -3,12 +3,10 @@ import { checkUserRole, logAudit } from '@/lib/roleUtils';
 import { prisma } from '@/lib/prisma';
 
 // POST: Toggle deny access (Super Admin only)
-export async function POST(
-  request: Request,
-  { params }: { params: { userId: string } }
-) {
+export async function POST(request: Request, props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   const { authorized, user: adminUser } = await checkUserRole('ADMIN');
-  
+
   if (!authorized || !adminUser) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }

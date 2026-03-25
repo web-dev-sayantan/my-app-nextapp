@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import { use, useEffect, useState } from 'react';
+import Link from "next/link";
+import { use, useEffect, useState } from "react";
 
 async function getCourse(slug: string) {
   try {
@@ -9,7 +10,7 @@ async function getCourse(slug: string) {
     const data = await response.json();
     return data.course;
   } catch (error) {
-    console.error('Failed to fetch course:', error);
+    console.error("Failed to fetch course:", error);
     return null;
   }
 }
@@ -37,7 +38,9 @@ export default function CourseDetailPage({ params }: PagesProps) {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-          <p className="text-gray-600 dark:text-gray-400 mt-4">Loading course...</p>
+          <p className="text-gray-600 dark:text-gray-400 mt-4">
+            Loading course...
+          </p>
         </div>
       </div>
     );
@@ -47,14 +50,18 @@ export default function CourseDetailPage({ params }: PagesProps) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Course Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">The course you're looking for doesn't exist.</p>
-          <a
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            Course Not Found
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            The course you're looking for doesn't exist.
+          </p>
+          <Link
             href="/courses"
             className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
           >
             Back to Courses
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -65,17 +72,26 @@ export default function CourseDetailPage({ params }: PagesProps) {
       {/* Hero Section */}
       <div className="relative h-96 bg-gray-200 dark:bg-gray-800 overflow-hidden">
         <img
-          src={course.imageUrl || course.thumbnailUrl || 'https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg'}
+          src={
+            course.imageUrl ||
+            course.thumbnailUrl ||
+            "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg"
+          }
           alt={course.name}
           className="w-full h-full object-cover"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg';
+            (e.target as HTMLImageElement).src =
+              "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
           }}
         />
         <div className="absolute inset-0 bg-black/40 flex items-end">
           <div className="w-full p-8">
-            <h1 className="text-4xl font-bold text-white mb-2">{course.name}</h1>
-            <p className="text-white text-lg opacity-90">{course.description}</p>
+            <h1 className="text-4xl font-bold text-white mb-2">
+              {course.name}
+            </h1>
+            <p className="text-white text-lg opacity-90">
+              {course.description}
+            </p>
           </div>
         </div>
       </div>
@@ -87,26 +103,40 @@ export default function CourseDetailPage({ params }: PagesProps) {
           <div className="lg:col-span-2">
             {/* Key Stats */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Course Details</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Course Details
+              </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Duration</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{course.duration} days</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Difficulty</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white capitalize">
-                    {course.difficulty.replace(/_/g, ' ')}
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    Duration
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {course.duration} days
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Location</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">{course.location}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    Difficulty
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white capitalize">
+                    {course.difficulty.replace(/_/g, " ")}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Price</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    Location
+                  </p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                    {course.location}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    Price
+                  </p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                    ₹{(course.price / 100).toLocaleString('en-IN')}
+                    ₹{(course.price / 100).toLocaleString("en-IN")}
                   </p>
                 </div>
               </div>
@@ -115,15 +145,21 @@ export default function CourseDetailPage({ params }: PagesProps) {
             {/* Description */}
             {course.longDescription && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About This Course</h2>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{course.longDescription}</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  About This Course
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {course.longDescription}
+                </p>
               </div>
             )}
 
             {/* Curriculum */}
             {course.curriculum && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Curriculum</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Curriculum
+                </h2>
                 <div className="space-y-3 whitespace-pre-wrap text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
                   {course.curriculum}
                 </div>
@@ -133,11 +169,18 @@ export default function CourseDetailPage({ params }: PagesProps) {
             {/* Inclusions */}
             {course.inclusions && course.inclusions.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">What's Included</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  What's Included
+                </h2>
                 <ul className="space-y-2">
                   {course.inclusions.map((item: string, idx: number) => (
-                    <li key={idx} className="flex items-start text-gray-700 dark:text-gray-300">
-                      <span className="text-green-600 dark:text-green-400 mr-3">✓</span>
+                    <li
+                      key={idx}
+                      className="flex items-start text-gray-700 dark:text-gray-300"
+                    >
+                      <span className="text-green-600 dark:text-green-400 mr-3">
+                        ✓
+                      </span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -148,11 +191,18 @@ export default function CourseDetailPage({ params }: PagesProps) {
             {/* Exclusions */}
             {course.exclusions && course.exclusions.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">What's Not Included</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  What's Not Included
+                </h2>
                 <ul className="space-y-2">
                   {course.exclusions.map((item: string, idx: number) => (
-                    <li key={idx} className="flex items-start text-gray-700 dark:text-gray-300">
-                      <span className="text-red-600 dark:text-red-400 mr-3">✗</span>
+                    <li
+                      key={idx}
+                      className="flex items-start text-gray-700 dark:text-gray-300"
+                    >
+                      <span className="text-red-600 dark:text-red-400 mr-3">
+                        ✗
+                      </span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -163,11 +213,18 @@ export default function CourseDetailPage({ params }: PagesProps) {
             {/* Requirements */}
             {course.requirements && course.requirements.length > 0 && (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Requirements</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Requirements
+                </h2>
                 <ul className="space-y-2">
                   {course.requirements.map((item: string, idx: number) => (
-                    <li key={idx} className="flex items-start text-gray-700 dark:text-gray-300">
-                      <span className="text-blue-600 dark:text-blue-400 mr-3">•</span>
+                    <li
+                      key={idx}
+                      className="flex items-start text-gray-700 dark:text-gray-300"
+                    >
+                      <span className="text-blue-600 dark:text-blue-400 mr-3">
+                        •
+                      </span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -181,9 +238,11 @@ export default function CourseDetailPage({ params }: PagesProps) {
             {/* Price and Booking */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-4">
               <div className="mb-6">
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">Course Price</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                  Course Price
+                </p>
                 <p className="text-4xl font-bold text-gray-900 dark:text-white">
-                  ₹{(course.price / 100).toLocaleString('en-IN')}
+                  ₹{(course.price / 100).toLocaleString("en-IN")}
                 </p>
                 {course.instructor && (
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
@@ -195,12 +254,19 @@ export default function CourseDetailPage({ params }: PagesProps) {
               {/* Available Sessions */}
               {course.sessions && course.sessions.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-3">Available Batches</h3>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-3">
+                    Available Batches
+                  </h3>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {course.sessions.map((session: any) => (
-                      <div key={session.id} className="border border-gray-200 dark:border-gray-700 rounded p-3">
+                      <div
+                        key={session.id}
+                        className="border border-gray-200 dark:border-gray-700 rounded p-3"
+                      >
                         <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                          {new Date(session.startDate).toLocaleDateString('en-IN')}
+                          {new Date(session.startDate).toLocaleDateString(
+                            "en-IN",
+                          )}
                         </p>
                         <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                           {session.seatsAvailable} spots left
@@ -215,17 +281,21 @@ export default function CourseDetailPage({ params }: PagesProps) {
                 Register Now
               </button>
 
-              <a
+              <Link
                 href="/courses"
                 className="w-full inline-block text-center text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-semibold py-2"
               >
                 ← Back to Courses
-              </a>
+              </Link>
 
               {/* Additional Info */}
               <div className="mt-6 pb-0 border-t border-gray-200 dark:border-gray-700 pt-6">
-                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">📍 <strong>Location:</strong> {course.location}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">⏱️ <strong>Duration:</strong> {course.duration} days</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                  📍 <strong>Location:</strong> {course.location}
+                </p>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  ⏱️ <strong>Duration:</strong> {course.duration} days
+                </p>
               </div>
             </div>
           </div>

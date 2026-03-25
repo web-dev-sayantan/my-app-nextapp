@@ -2,12 +2,10 @@ import { NextResponse } from 'next/server';
 import { checkUserRole, unlockUserAccount } from '@/lib/roleUtils';
 
 // UNLOCK a locked user account (admin only)
-export async function POST(
-  request: Request,
-  { params }: { params: { userId: string } }
-) {
+export async function POST(request: Request, props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   const { authorized, user: adminUser } = await checkUserRole('ADMIN');
-  
+
   if (!authorized) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }

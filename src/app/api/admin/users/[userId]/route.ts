@@ -3,12 +3,10 @@ import { checkUserRole, logAudit, unlockUserAccount } from '@/lib/roleUtils';
 import { prisma } from '@/lib/prisma';
 
 // GET a specific user
-export async function GET(
-  request: Request,
-  { params }: { params: { userId: string } }
-) {
+export async function GET(request: Request, props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   const { authorized } = await checkUserRole('ADMIN');
-  
+
   if (!authorized) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
@@ -49,12 +47,10 @@ export async function GET(
 }
 
 // UPDATE user (admin only)
-export async function PATCH(
-  request: Request,
-  { params }: { params: { userId: string } }
-) {
+export async function PATCH(request: Request, props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   const { authorized, user: adminUser } = await checkUserRole('ADMIN');
-  
+
   if (!authorized) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
@@ -130,12 +126,10 @@ export async function PATCH(
 }
 
 // DELETE user (admin only)
-export async function DELETE(
-  request: Request,
-  { params }: { params: { userId: string } }
-) {
+export async function DELETE(request: Request, props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   const { authorized, user: adminUser } = await checkUserRole('ADMIN');
-  
+
   if (!authorized) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }

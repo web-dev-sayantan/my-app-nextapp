@@ -8,9 +8,9 @@ import { TrekService } from "@/lib/services/trekService";
 import TrekPageClient from "./trek-page-client";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export const revalidate = 3600;
@@ -25,7 +25,8 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata(props: PageProps) {
+  const params = await props.params;
   try {
     const trek = await TrekService.getTrekBySlug(params.slug);
     return {
@@ -38,7 +39,8 @@ export async function generateMetadata({ params }: PageProps) {
   }
 }
 
-export default async function TrekPage({ params }: PageProps) {
+export default async function TrekPage(props: PageProps) {
+  const params = await props.params;
   try {
     const trek = await TrekService.getTrekBySlug(params.slug);
     return <TrekPageClient trek={trek} />;

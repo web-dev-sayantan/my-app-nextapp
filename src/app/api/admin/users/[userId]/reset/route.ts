@@ -5,7 +5,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { Resend } from 'resend';
 
-export async function POST(req: Request, { params }: { params: { userId: string } }) {
+export async function POST(req: Request, props: { params: Promise<{ userId: string }> }) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions as any);
     if (!session || !( (session as any).user?.role === 'ADMIN' || (session as any).user?.role === 'SUPER_ADMIN' )) {
