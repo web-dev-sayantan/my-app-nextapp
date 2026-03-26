@@ -1,6 +1,7 @@
-import { listTreks } from "@/lib/services/trekService";
+import { getAvailableStates, listTreks } from "@/lib/services/trekService";
 import AllTreksPageClient from "@/components/allTreksClient";
 import { isDatabaseConfigured } from "@/lib/databaseAvailability";
+import { listTreksQuerySchema } from "@/lib/validations";
 
 export const revalidate = 60;
 
@@ -19,14 +20,54 @@ type AllTreksPageItem = {
   earliestDate: string;
 };
 
-export default async function All() {
+type AllPageProps = {
+  searchParams: Promise<{
+    sort?: string;
+    order?: string;
+    state?: string;
+  }>;
+};
+
+export default async function All({ searchParams }: AllPageProps) {
   let trekData: AllTreksPageItem[] = [];
+  let availableStates: string[] = [];
+
+  const params = await searchParams;
+  const parsedQuery = listTreksQuerySchema.safeParse({
+    state: params.state || undefined,
+    sortBy: params.sort || "popular",
+    sortOrder: params.order || "desc",
+    page: 1,
+    limit: 100,
+  });
+  const validatedQuery = parsedQuery.success
+    ? parsedQuery.data
+    : {
+        sortBy: "popular" as const,
+        sortOrder: "desc" as const,
+        page: 1,
+        limit: 100,
+      };
+
   if (!isDatabaseConfigured()) {
-    return <AllTreksPageClient initialTreks={trekData} />;
+    return (
+      <AllTreksPageClient
+        initialTreks={trekData}
+        availableStates={availableStates}
+        currentSort={validatedQuery.sortBy || "popular"}
+        currentOrder={validatedQuery.sortOrder || "desc"}
+        currentState={validatedQuery.state}
+      />
+    );
   }
 
   try {
-    const { treks } = await listTreks({ page: 1, limit: 100 }, 50);
+    const [{ treks }, states] = await Promise.all([
+      listTreks(validatedQuery, 50),
+      getAvailableStates(),
+    ]);
+
+    availableStates = states;
 
     // Transform treks data into format needed by client component
     trekData = treks.map((trek: ListedTrek) => {
@@ -45,7 +86,7 @@ export default async function All() {
         duration: trek.duration,
         distance: trek.distance,
         description: trek.description,
-        departuresCount: trek.departures?.length || 0,
+        departuresCount: trek._count?.departures || 0,
         earliestDate: earliestDate
           ? new Date(earliestDate).toISOString()
           : "2099-12-31",
@@ -58,5 +99,13 @@ export default async function All() {
     );
   }
 
-  return <AllTreksPageClient initialTreks={trekData} />;
+  return (
+    <AllTreksPageClient
+      initialTreks={trekData}
+      availableStates={availableStates}
+      currentSort={validatedQuery.sortBy || "popular"}
+      currentOrder={validatedQuery.sortOrder || "desc"}
+      currentState={validatedQuery.state}
+    />
+  );
 }

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getAdminDashboardOverview } from "@/lib/adminDashboard";
+import { getAdminDashboardOverview } from "@/lib/services/adminDashboardService";
 import AdminDashboardClient from "./dashboard-client";
 export const dynamic = "force-dynamic";
 

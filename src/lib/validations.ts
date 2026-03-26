@@ -5,6 +5,18 @@
 
 import { z } from "zod";
 
+export const trekListSortBySchema = z.enum([
+  "popular",
+  "name",
+  "difficulty",
+  "duration",
+  "state",
+  "distance",
+  "earliest",
+]);
+
+export const trekListSortOrderSchema = z.enum(["asc", "desc"]);
+
 // Trek validation
 export const createTrekSchema = z.object({
   slug: z
@@ -83,6 +95,8 @@ export const listTreksQuerySchema = z.object({
   difficulty: z
     .enum(["EASY", "EASY_MODERATE", "MODERATE", "HARD", "VERY_HARD"])
     .optional(),
+  sortBy: trekListSortBySchema.optional(),
+  sortOrder: trekListSortOrderSchema.optional(),
   minPrice: z.coerce.number().int().optional(),
   maxPrice: z.coerce.number().int().optional(),
   page: z.coerce.number().int().positive().default(1),

@@ -1,9 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FiChevronDown } from "react-icons/fi";
+
+type SortOptionValue =
+  | "popular"
+  | "name"
+  | "difficulty"
+  | "duration"
+  | "state"
+  | "distance"
+  | "earliest";
 
 interface TrekCardProps {
   id: string;
@@ -19,16 +29,39 @@ interface TrekCardProps {
   earliestDate?: string;
 }
 
+const sortOptions: { value: SortOptionValue; label: string }[] = [
+  { value: "popular", label: "Most Departures" },
+  { value: "name", label: "Trek Name" },
+  { value: "difficulty", label: "Difficulty" },
+  { value: "duration", label: "Duration" },
+  { value: "state", label: "State/Region" },
+  { value: "distance", label: "Distance" },
+  { value: "earliest", label: "Earliest Departure" },
+];
+
+function formatDifficulty(difficulty: string) {
+  const difficultyLabels: Record<string, string> = {
+    EASY: "Easy",
+    EASY_MODERATE: "Easy-Moderate",
+    MODERATE: "Moderate",
+    HARD: "Hard",
+    VERY_HARD: "Very Hard",
+  };
+
+  return difficultyLabels[difficulty] || difficulty.replace(/_/g, " ");
+}
+
 const TrekCardSmall = ({ trek }: { trek: TrekCardProps }) => {
   const defaultImage =
     "https://res.cloudinary.com/thetrail/image/upload/v1714107209/default_trek_image.jpg";
   const [imgSrc, setImgSrc] = useState<string>(trek.thumbnail || defaultImage);
 
   const difficultyColors: Record<string, string> = {
-    easy: "bg-green-600/80",
-    moderate: "bg-yellow-600/80",
-    hard: "bg-orange-600/80",
-    expert: "bg-red-600/80",
+    EASY: "bg-green-600/80",
+    EASY_MODERATE: "bg-lime-600/80",
+    MODERATE: "bg-yellow-600/80",
+    HARD: "bg-orange-600/80",
+    VERY_HARD: "bg-red-600/80",
   };
 
   const stateAbbr: Record<string, string> = {
@@ -68,9 +101,9 @@ const TrekCardSmall = ({ trek }: { trek: TrekCardProps }) => {
 
           {/* Difficulty Badge */}
           <div
-            className={`absolute bottom-2 left-2 ${difficultyColors[trek.difficulty.toLowerCase()] || "bg-gray-600/80"} px-2 py-0.5 rounded-full text-[10px] font-semibold text-white capitalize`}
+            className={`absolute bottom-2 left-2 ${difficultyColors[trek.difficulty] || "bg-gray-600/80"} px-2 py-0.5 rounded-full text-[10px] font-semibold text-white`}
           >
-            {trek.difficulty}
+            {formatDifficulty(trek.difficulty)}
           </div>
         </div>
 
@@ -126,86 +159,47 @@ const TrekCardSmall = ({ trek }: { trek: TrekCardProps }) => {
 
 interface AllTreksPageProps {
   initialTreks: TrekCardProps[];
+  availableStates: string[];
+  currentSort: SortOptionValue;
+  currentOrder: "asc" | "desc";
+  currentState?: string;
 }
 
 export default function AllTreksPageClient({
   initialTreks,
+  availableStates,
+  currentSort,
+  currentOrder,
+  currentState,
 }: AllTreksPageProps) {
-  const [sortBy, setSortBy] = useState<string>("popular");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  const sortedTreks = useMemo(() => {
-    const treksCopy = [...initialTreks];
-    let sorted;
+  const navigateWithParams = (overrides: {
+    sort?: SortOptionValue;
+    order?: "asc" | "desc";
+    state?: string | null;
+  }) => {
+    const params = new URLSearchParams();
+    const nextSort = overrides.sort ?? currentSort;
+    const nextOrder = overrides.order ?? currentOrder;
+    const nextState =
+      overrides.state === undefined ? currentState : overrides.state;
 
-    switch (sortBy) {
-      case "popular":
-        sorted = treksCopy.sort(
-          (a, b) => b.departuresCount - a.departuresCount,
-        );
-        break;
+    params.set("sort", nextSort);
+    params.set("order", nextOrder);
 
-      case "name":
-        sorted = treksCopy.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-
-      case "difficulty":
-        const difficultyRank = { easy: 1, moderate: 2, hard: 3, expert: 4 };
-        sorted = treksCopy.sort(
-          (a, b) =>
-            (difficultyRank[
-              a.difficulty.toLowerCase() as keyof typeof difficultyRank
-            ] || 0) -
-            (difficultyRank[
-              b.difficulty.toLowerCase() as keyof typeof difficultyRank
-            ] || 0),
-        );
-        break;
-
-      case "duration":
-        sorted = treksCopy.sort((a, b) => a.duration - b.duration);
-        break;
-
-      case "state":
-        sorted = treksCopy.sort((a, b) => a.state.localeCompare(b.state));
-        break;
-
-      case "distance":
-        sorted = treksCopy.sort(
-          (a, b) => (a.distance ?? 0) - (b.distance ?? 0),
-        );
-        break;
-
-      case "earliest":
-        sorted = treksCopy.sort(
-          (a, b) =>
-            new Date(a.earliestDate || "2099-12-31").getTime() -
-            new Date(b.earliestDate || "2099-12-31").getTime(),
-        );
-        break;
-
-      default:
-        sorted = treksCopy;
+    if (nextState) {
+      params.set("state", nextState);
     }
 
-    // Apply sort order (ascending or descending)
-    if (sortOrder === "asc") {
-      return sorted;
-    } else {
-      return sorted.reverse();
-    }
-  }, [sortBy, sortOrder, initialTreks]);
+    const queryString = params.toString();
 
-  const sortOptions = [
-    { value: "popular", label: "Most Departures" },
-    { value: "name", label: "Trek Name" },
-    { value: "difficulty", label: "Difficulty" },
-    { value: "duration", label: "Duration" },
-    { value: "state", label: "State/Region" },
-    { value: "distance", label: "Distance" },
-    { value: "earliest", label: "Earliest Departure" },
-  ];
+    startTransition(() => {
+      router.push(queryString ? `/all?${queryString}` : "/all");
+    });
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -222,21 +216,43 @@ export default function AllTreksPageClient({
       <div className="px-6 md:px-12 lg:px-20 pb-8 flex items-center justify-between border-b border-gray-700 flex-wrap gap-4">
         <p className="text-gray-400 text-sm">
           Showing{" "}
-          <span className="text-white font-semibold">{sortedTreks.length}</span>{" "}
+          <span className="text-white font-semibold">
+            {initialTreks.length}
+          </span>{" "}
           treks
         </p>
 
         {/* Sort Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap justify-end">
+          <label className="flex items-center gap-2 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300">
+            <span className="font-semibold text-white">State</span>
+            <select
+              value={currentState || ""}
+              onChange={(event) =>
+                navigateWithParams({ state: event.target.value || null })
+              }
+              className="bg-transparent text-sm text-gray-200 outline-none"
+              disabled={isPending}
+            >
+              <option value="">All States</option>
+              {availableStates.map((state) => (
+                <option key={state} value={state} className="text-black">
+                  {state}
+                </option>
+              ))}
+            </select>
+          </label>
+
           {/* Sort Dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              disabled={isPending}
               className="flex items-center gap-2 bg-gray-900 border border-gray-700 hover:border-blue-600 px-3 py-2 rounded-lg transition text-sm font-semibold whitespace-nowrap"
             >
               Sort:{" "}
               <span className="text-blue-400">
-                {sortOptions.find((o) => o.value === sortBy)?.label}
+                {sortOptions.find((o) => o.value === currentSort)?.label}
               </span>
               <FiChevronDown
                 className={`w-4 h-4 transition ${isDropdownOpen ? "rotate-180" : ""}`}
@@ -250,11 +266,11 @@ export default function AllTreksPageClient({
                   <button
                     key={option.value}
                     onClick={() => {
-                      setSortBy(option.value);
+                      navigateWithParams({ sort: option.value });
                       setIsDropdownOpen(false);
                     }}
                     className={`block w-full text-left px-4 py-2 text-sm transition ${
-                      sortBy === option.value
+                      currentSort === option.value
                         ? "bg-blue-600/20 text-blue-400 font-semibold"
                         : "text-gray-300 hover:bg-gray-800 hover:text-white"
                     } first:rounded-t-lg last:rounded-b-lg`}
@@ -269,9 +285,10 @@ export default function AllTreksPageClient({
           {/* Ascending/Descending Toggle */}
           <div className="flex bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
             <button
-              onClick={() => setSortOrder("asc")}
+              onClick={() => navigateWithParams({ order: "asc" })}
+              disabled={isPending}
               className={`px-3 py-2 text-sm font-semibold transition ${
-                sortOrder === "asc"
+                currentOrder === "asc"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-900 text-gray-400 hover:text-white"
               }`}
@@ -280,9 +297,10 @@ export default function AllTreksPageClient({
               ↑ ASC
             </button>
             <button
-              onClick={() => setSortOrder("desc")}
+              onClick={() => navigateWithParams({ order: "desc" })}
+              disabled={isPending}
               className={`px-3 py-2 text-sm font-semibold transition ${
-                sortOrder === "desc"
+                currentOrder === "desc"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-900 text-gray-400 hover:text-white"
               }`}
@@ -291,19 +309,31 @@ export default function AllTreksPageClient({
               ↓ DESC
             </button>
           </div>
+
+          {currentState && (
+            <button
+              onClick={() => navigateWithParams({ state: null })}
+              disabled={isPending}
+              className="rounded-lg border border-gray-700 px-3 py-2 text-sm font-semibold text-gray-300 transition hover:border-gray-500 hover:text-white"
+            >
+              Clear State
+            </button>
+          )}
         </div>
       </div>
 
       {/* Trek Cards Grid */}
-      <div className="px-6 md:px-12 lg:px-20 py-12">
+      <div
+        className={`px-6 md:px-12 lg:px-20 py-12 transition-opacity ${isPending ? "opacity-70" : "opacity-100"}`}
+      >
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          {sortedTreks.map((trek) => (
+          {initialTreks.map((trek) => (
             <TrekCardSmall key={trek.id} trek={trek} />
           ))}
         </div>
 
         {/* Empty State */}
-        {sortedTreks.length === 0 && (
+        {initialTreks.length === 0 && (
           <div className="text-center py-20">
             <p className="text-gray-400 text-lg">No treks found</p>
           </div>

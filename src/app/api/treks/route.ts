@@ -31,6 +31,8 @@ export async function GET(request: NextRequest) {
     const query = {
       state: searchParams.get("state") || undefined,
       difficulty: searchParams.get("difficulty") || undefined,
+      sortBy: searchParams.get("sort") || undefined,
+      sortOrder: searchParams.get("order") || undefined,
       minPrice: searchParams.get("minPrice")
         ? parseInt(searchParams.get("minPrice")!)
         : undefined,

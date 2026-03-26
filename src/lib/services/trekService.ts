@@ -8,6 +8,95 @@ import { NotFoundError } from "@/lib/errors";
 import { CreateTrekInput, ListTreksQuery } from "@/lib/validations";
 import type { Prisma } from "@prisma/client";
 
+const trekListSelect = {
+  id: true,
+  slug: true,
+  name: true,
+  description: true,
+  state: true,
+  basePrice: true,
+  difficulty: true,
+  duration: true,
+  distance: true,
+  thumbnailUrl: true,
+  tags: true,
+  _count: {
+    select: {
+      departures: true,
+    },
+  },
+} satisfies Prisma.TrekSelect;
+
+const difficultyRank: Record<string, number> = {
+  EASY: 1,
+  EASY_MODERATE: 2,
+  MODERATE: 3,
+  HARD: 4,
+  VERY_HARD: 5,
+};
+
+type ListedTrek = Prisma.TrekGetPayload<{
+  select: typeof trekListSelect & {
+    departures: {
+      where: { isCancelled: false };
+      select: {
+        id: true;
+        seatsAvailable: true;
+        totalSeats: true;
+        startDate: true;
+        endDate: true;
+        pricePerPerson: true;
+      };
+      orderBy: { startDate: "asc" };
+      take: number;
+    };
+  };
+}>;
+
+function getTrekOrderBy(
+  sortBy: ListTreksQuery["sortBy"],
+  sortOrder: "asc" | "desc",
+): Prisma.TrekOrderByWithRelationInput {
+  switch (sortBy) {
+    case "popular":
+      return { departures: { _count: sortOrder } };
+    case "name":
+      return { name: sortOrder };
+    case "duration":
+      return { duration: sortOrder };
+    case "state":
+      return { state: sortOrder };
+    case "distance":
+      return { distance: sortOrder };
+    default:
+      return { createdAt: "desc" };
+  }
+}
+
+function compareTreks(
+  left: ListedTrek,
+  right: ListedTrek,
+  sortBy: NonNullable<ListTreksQuery["sortBy"]>,
+  sortOrder: "asc" | "desc",
+) {
+  const direction = sortOrder === "asc" ? 1 : -1;
+
+  if (sortBy === "difficulty") {
+    return (
+      ((difficultyRank[left.difficulty] ?? Number.MAX_SAFE_INTEGER) -
+        (difficultyRank[right.difficulty] ?? Number.MAX_SAFE_INTEGER)) *
+      direction
+    );
+  }
+
+  const leftEarliest =
+    left.departures[0]?.startDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+  const rightEarliest =
+    right.departures[0]?.startDate?.getTime() ?? Number.MAX_SAFE_INTEGER;
+
+  return (leftEarliest - rightEarliest) * direction;
+}
+
 export async function createTrek(data: CreateTrekInput) {
   const trek = await prisma.trek.create({
     data: {
@@ -83,7 +172,16 @@ export async function listTreks(
   query: ListTreksQuery,
   departuresTake: number = 1,
 ) {
-  const { state, difficulty, minPrice, maxPrice, page = 1, limit = 10 } = query;
+  const {
+    state,
+    difficulty,
+    sortBy,
+    sortOrder = "desc",
+    minPrice,
+    maxPrice,
+    page = 1,
+    limit = 10,
+  } = query;
 
   const skip = (page - 1) * limit;
 
@@ -103,44 +201,43 @@ export async function listTreks(
     if (maxPrice) where.basePrice.lte = maxPrice;
   }
 
+  const select = {
+    ...trekListSelect,
+    departures: {
+      where: { isCancelled: false },
+      select: {
+        id: true,
+        seatsAvailable: true,
+        totalSeats: true,
+        startDate: true,
+        endDate: true,
+        pricePerPerson: true,
+      },
+      orderBy: { startDate: "asc" as const },
+      take: departuresTake,
+    },
+  };
+
+  const sortInMemory = sortBy === "difficulty" || sortBy === "earliest";
+
   const [treks, total] = await Promise.all([
     prisma.trek.findMany({
       where,
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        description: true,
-        state: true,
-        basePrice: true,
-        difficulty: true,
-        duration: true,
-        distance: true,
-        thumbnailUrl: true,
-        tags: true,
-        departures: {
-          where: { isCancelled: false },
-          select: {
-            id: true,
-            seatsAvailable: true,
-            totalSeats: true,
-            startDate: true,
-            endDate: true,
-            pricePerPerson: true,
-          },
-          orderBy: { startDate: "asc" },
-          take: departuresTake,
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
+      select,
+      orderBy: getTrekOrderBy(sortBy, sortOrder),
+      ...(sortInMemory ? {} : { skip, take: limit }),
     }),
     prisma.trek.count({ where }),
   ]);
 
+  const paginatedTreks = sortInMemory
+    ? [...treks]
+        .sort((left, right) => compareTreks(left, right, sortBy, sortOrder))
+        .slice(skip, skip + limit)
+    : treks;
+
   return {
-    treks,
+    treks: paginatedTreks,
     pagination: {
       page,
       limit,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireApiRole } from "@/lib/apiAuth";
-import { getAdminDashboardOverview } from "@/lib/adminDashboard";
+import { getAdminDashboardOverview } from "@/lib/services/adminDashboardService";
 
 // GET /api/admin/dashboard/overview - Get dashboard overview stats
 export async function GET(request: Request) {

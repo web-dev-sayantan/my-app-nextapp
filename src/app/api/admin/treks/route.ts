@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { logAudit } from "@/lib/roleUtils";
 import { prisma } from "@/lib/prisma";
 import { requireApiRole } from "@/lib/apiAuth";
+import {
+  getAdminTreks,
+  parseAdminPagination,
+} from "@/lib/services/adminDashboardService";
 
 // GET /api/admin/treks - List all treks with stats
 export async function GET(request: Request) {
@@ -13,64 +17,19 @@ export async function GET(request: Request) {
 
   try {
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 100);
-
-    const treks = await prisma.trek.findMany({
-      include: {
-        departures: {
-          where: {
-            startDate: { gte: new Date() },
-            isCancelled: false,
-          },
-          select: {
-            id: true,
-            startDate: true,
-            endDate: true,
-            totalSeats: true,
-            seatsAvailable: true,
-            waitlistCount: true,
-            status: true,
-            User: {
-              select: {
-                id: true,
-                firstName: true,
-                lastName: true,
-              },
-            },
-          },
-        },
-        _count: {
-          select: {
-            reviews: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * limit,
-      take: limit,
+    const pagination = parseAdminPagination(
+      searchParams.get("page"),
+      searchParams.get("limit"),
+      20,
+    );
+    const data = await getAdminTreks({
+      page: pagination.page,
+      limit: pagination.limit,
     });
-
-    const total = await prisma.trek.count();
-
-    const normalizedTreks = treks.map((trek) => ({
-      ...trek,
-      departures: trek.departures.map((departure) => ({
-        ...departure,
-        trekLeader: departure.User,
-        User: undefined,
-      })),
-    }));
 
     return NextResponse.json({
       success: true,
-      treks: normalizedTreks,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
-      },
+      ...data,
     });
   } catch (error) {
     console.error("Error fetching treks:", error);

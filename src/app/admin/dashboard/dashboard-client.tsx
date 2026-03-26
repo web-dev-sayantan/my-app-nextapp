@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UserRole } from "@prisma/client";
-import type { DashboardStats } from "@/lib/adminDashboard";
+import type { DashboardStats } from "@/lib/services/adminDashboardService";
 
 interface Trek {
   id: string;
@@ -75,6 +75,14 @@ interface MarketingData {
   topTreks: { trekName: string; bookingCount: number; revenue: number }[];
 }
 
+type AdminTab =
+  | "overview"
+  | "treks"
+  | "participants"
+  | "finance"
+  | "marketing"
+  | "users";
+
 export default function AdminDashboardClient({
   initialRole,
   initialStats,
@@ -83,17 +91,41 @@ export default function AdminDashboardClient({
   initialStats: DashboardStats;
 }) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState<AdminTab>("overview");
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState<DashboardStats | null>(initialStats);
   const [treks, setTreks] = useState<Trek[]>([]);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [finance, setFinance] = useState<FinanceData | null>(null);
   const [marketing, setMarketing] = useState<MarketingData | null>(null);
+  const loadedTabsRef = useRef<Set<AdminTab>>(new Set(["overview"]));
+  const inFlightRequestsRef = useRef<Map<AdminTab, Promise<void>>>(new Map());
+
+  const isTabLoaded = (tab: AdminTab) => loadedTabsRef.current.has(tab);
 
   useEffect(() => {
-    if (activeTab === "overview") {
+    if (activeTab === "overview" || activeTab === "users") {
       return;
+    }
+
+    if (isTabLoaded(activeTab)) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const existingRequest = inFlightRequestsRef.current.get(activeTab);
+    if (existingRequest) {
+      setLoading(true);
+      void existingRequest.finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+      return () => {
+        cancelled = true;
+      };
     }
 
     const loadDashboardData = async () => {
@@ -107,6 +139,7 @@ export default function AdminDashboardClient({
           if (response.ok) {
             const data = await response.json();
             setTreks(data.treks || []);
+            loadedTabsRef.current.add("treks");
           }
         } else if (activeTab === "participants") {
           const response = await fetch("/api/admin/participants", {
@@ -115,6 +148,7 @@ export default function AdminDashboardClient({
           if (response.ok) {
             const data = await response.json();
             setParticipants(data.participants || []);
+            loadedTabsRef.current.add("participants");
           }
         } else if (activeTab === "finance") {
           const response = await fetch("/api/admin/finance", {
@@ -123,6 +157,7 @@ export default function AdminDashboardClient({
           if (response.ok) {
             const data = await response.json();
             setFinance(data.data);
+            loadedTabsRef.current.add("finance");
           }
         } else if (activeTab === "marketing") {
           const response = await fetch("/api/admin/marketing", {
@@ -131,16 +166,28 @@ export default function AdminDashboardClient({
           if (response.ok) {
             const data = await response.json();
             setMarketing(data.data);
+            loadedTabsRef.current.add("marketing");
           }
         }
       } catch (error) {
         console.error("Failed to load data", error);
       } finally {
-        setLoading(false);
+        inFlightRequestsRef.current.delete(activeTab);
       }
     };
 
-    void loadDashboardData();
+    const request = loadDashboardData();
+    inFlightRequestsRef.current.set(activeTab, request);
+
+    void request.finally(() => {
+      if (!cancelled) {
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [activeTab]);
 
   const formatCurrency = (amount: number) => {
