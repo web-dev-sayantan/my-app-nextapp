@@ -10,7 +10,7 @@ const navLinks = [
   { name: "Courses", href: "/courses" },
   { name: "Lessons", href: "/lessons" },
   { name: "FAQs", href: "/faq" },
-  { name: "Contact Us", href: "/contact" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default async function Navbar() {
@@ -24,22 +24,54 @@ export default async function Navbar() {
       : "/dashboard";
 
   return (
-    <header className="sticky top-0 left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border z-sticky">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="shrink-0">
-          <Image
-            src="/TTM.png"
-            alt="The Trail Makers Logo"
-            width={60}
-            height={60}
-          />
-        </Link>
+    <header
+      className="sticky top-0 left-0 right-0 z-sticky"
+      style={
+        {
+          "--navbar-h": "72px",
+          "--navbar-mobile-offset": "calc(var(--navbar-h) + 1.25rem)",
+        } as React.CSSProperties
+      }
+    >
+      <div
+        aria-hidden
+        className="nav-fade-scrim pointer-events-none absolute inset-x-0 top-0 h-36 sm:h-40"
+      />
 
-        <NavbarClient
-          links={navLinks}
-          isAuthenticated={isAuthenticated}
-          dashboardHref={dashboardHref}
-        />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-3 sm:pt-4">
+        <div className="flex min-h-[var(--navbar-h)] items-start justify-between gap-4 sm:gap-5">
+          <Link
+            href="/"
+            className="group flex h-14 shrink-0 items-center justify-center px-1.5"
+            aria-label="The Trail Makers home"
+          >
+            <span className="relative block h-[60px] w-[60px]">
+              <Image
+                src="/TTM_Dark.png"
+                alt="The Trail Makers"
+                width={60}
+                height={60}
+                className="transition-transform duration-200 group-hover:scale-[1.04] dark:hidden"
+                priority
+              />
+              <Image
+                src="/TTM.png"
+                alt="The Trail Makers"
+                aria-hidden="true"
+                width={60}
+                height={60}
+                className="absolute inset-0 hidden transition-transform duration-200 group-hover:scale-[1.04] dark:block"
+                priority
+              />
+            </span>
+          </Link>
+
+          <NavbarClient
+            links={navLinks}
+            isAuthenticated={isAuthenticated}
+            dashboardHref={dashboardHref}
+          />
+        </div>
       </div>
     </header>
   );

@@ -21,15 +21,6 @@ type SortOptionValue =
   | "distance"
   | "earliest";
 
-type SortOptionValue =
-  | "popular"
-  | "name"
-  | "difficulty"
-  | "duration"
-  | "state"
-  | "distance"
-  | "earliest";
-
 interface TrekCardProps {
   id: string;
   name: string;
@@ -354,7 +345,11 @@ export default function AllTreksPageClient({
           {initialTreks.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16 md:gap-x-12 md:gap-y-24">
               {initialTreks.map((trek) => (
-                <ScrollReveal key={trek.id} animation="fade-up" offset={["start 95%", "start 75%"]}>
+                <ScrollReveal
+                  key={trek.id}
+                  animation="fade-up"
+                  offset={["start 95%", "start 75%"]}
+                >
                   <TrekCardEditorial trek={trek} />
                 </ScrollReveal>
               ))}

@@ -18,28 +18,28 @@
 
 :root {
   /* Sunset / amber family — primary accent */
-  --tm-sunset:          oklch(0.65 0.19 52);
-  --tm-sunset-light:    oklch(0.75 0.14 52);
-  --tm-sunset-dark:     oklch(0.55 0.20 50);
+  --tm-sunset: oklch(0.65 0.19 52);
+  --tm-sunset-light: oklch(0.75 0.14 52);
+  --tm-sunset-dark: oklch(0.55 0.2 50);
 
   /* Forest / moss / sage family — nature secondary */
-  --tm-forest:          oklch(0.22 0.04 145);
-  --tm-moss:            oklch(0.45 0.08 145);
-  --tm-sage:            oklch(0.62 0.08 145);
+  --tm-forest: oklch(0.22 0.04 145);
+  --tm-moss: oklch(0.45 0.08 145);
+  --tm-sage: oklch(0.62 0.08 145);
 
   /* Earth neutrals */
-  --tm-parchment:       oklch(0.975 0.005 85);
-  --tm-sand:            oklch(0.95 0.01 80);
-  --tm-stone:           oklch(0.895 0.012 75);
-  --tm-bark:            oklch(0.35 0.04 55);
-  --tm-charcoal:        oklch(0.17 0.015 55);
-  --tm-charcoal-light:  oklch(0.21 0.015 50);
+  --tm-parchment: oklch(0.975 0.005 85);
+  --tm-sand: oklch(0.95 0.01 80);
+  --tm-stone: oklch(0.895 0.012 75);
+  --tm-bark: oklch(0.35 0.04 55);
+  --tm-charcoal: oklch(0.17 0.015 55);
+  --tm-charcoal-light: oklch(0.21 0.015 50);
 
   /* Functional */
-  --tm-terracotta:      oklch(0.55 0.20 27);
-  --tm-terracotta-light:oklch(0.65 0.17 25);
-  --tm-success:         oklch(0.55 0.12 150);
-  --tm-warning:         oklch(0.75 0.14 75);
+  --tm-terracotta: oklch(0.55 0.2 27);
+  --tm-terracotta-light: oklch(0.65 0.17 25);
+  --tm-success: oklch(0.55 0.12 150);
+  --tm-warning: oklch(0.75 0.14 75);
 }
 
 /* ============================================================
@@ -48,31 +48,31 @@
    ============================================================ */
 
 :root {
-  --background:           var(--tm-parchment);
-  --foreground:           oklch(0.185 0.015 55);
+  --background: var(--tm-parchment);
+  --foreground: oklch(0.185 0.015 55);
 
-  --card:                 oklch(0.99 0.003 85);
-  --card-foreground:      oklch(0.185 0.015 55);
+  --card: oklch(0.99 0.003 85);
+  --card-foreground: oklch(0.185 0.015 55);
 
-  --popover:              oklch(0.99 0.003 85);
-  --popover-foreground:   oklch(0.185 0.015 55);
+  --popover: oklch(0.99 0.003 85);
+  --popover-foreground: oklch(0.185 0.015 55);
 
-  --primary:              var(--tm-sunset);
-  --primary-foreground:   oklch(0.99 0.005 85);
+  --primary: var(--tm-sunset);
+  --primary-foreground: oklch(0.99 0.005 85);
 
-  --secondary:            var(--tm-sand);
-  --secondary-foreground: oklch(0.30 0.015 55);
+  --secondary: var(--tm-sand);
+  --secondary-foreground: oklch(0.3 0.015 55);
 
-  --muted:                var(--tm-sand);
-  --muted-foreground:     oklch(0.46 0.015 55);
+  --muted: var(--tm-sand);
+  --muted-foreground: oklch(0.46 0.015 55);
 
-  --accent:               oklch(0.94 0.01 80);
-  --accent-foreground:    oklch(0.185 0.015 55);
+  --accent: oklch(0.94 0.01 80);
+  --accent-foreground: oklch(0.185 0.015 55);
 
-  --destructive:          var(--tm-terracotta);
-  --border:               var(--tm-stone);
-  --input:                var(--tm-stone);
-  --ring:                 var(--tm-sunset);
+  --destructive: var(--tm-terracotta);
+  --border: var(--tm-stone);
+  --input: var(--tm-stone);
+  --ring: var(--tm-sunset);
 
   --chart-1: oklch(0.65 0.19 52);
   --chart-2: oklch(0.55 0.12 150);
@@ -82,14 +82,14 @@
 
   --radius: 0.625rem;
 
-  --sidebar:                    oklch(0.97 0.004 85);
-  --sidebar-foreground:         oklch(0.185 0.015 55);
-  --sidebar-primary:            var(--tm-sunset);
+  --sidebar: oklch(0.97 0.004 85);
+  --sidebar-foreground: oklch(0.185 0.015 55);
+  --sidebar-primary: var(--tm-sunset);
   --sidebar-primary-foreground: oklch(0.99 0.005 85);
-  --sidebar-accent:             oklch(0.94 0.01 80);
-  --sidebar-accent-foreground:  oklch(0.185 0.015 55);
-  --sidebar-border:             var(--tm-stone);
-  --sidebar-ring:               var(--tm-sunset);
+  --sidebar-accent: oklch(0.94 0.01 80);
+  --sidebar-accent-foreground: oklch(0.185 0.015 55);
+  --sidebar-border: var(--tm-stone);
+  --sidebar-ring: var(--tm-sunset);
 }
 
 /* ============================================================
@@ -98,46 +98,46 @@
    ============================================================ */
 
 .dark {
-  --background:           var(--tm-charcoal);
-  --foreground:           oklch(0.93 0.005 85);
+  --background: var(--tm-charcoal);
+  --foreground: oklch(0.93 0.005 85);
 
-  --card:                 var(--tm-charcoal-light);
-  --card-foreground:      oklch(0.93 0.005 85);
+  --card: var(--tm-charcoal-light);
+  --card-foreground: oklch(0.93 0.005 85);
 
-  --popover:              var(--tm-charcoal-light);
-  --popover-foreground:   oklch(0.93 0.005 85);
+  --popover: var(--tm-charcoal-light);
+  --popover-foreground: oklch(0.93 0.005 85);
 
-  --primary:              oklch(0.72 0.17 52);
-  --primary-foreground:   oklch(0.17 0.015 55);
+  --primary: oklch(0.72 0.17 52);
+  --primary-foreground: oklch(0.17 0.015 55);
 
-  --secondary:            oklch(0.25 0.015 55);
-  --secondary-foreground: oklch(0.90 0.005 85);
+  --secondary: oklch(0.25 0.015 55);
+  --secondary-foreground: oklch(0.9 0.005 85);
 
-  --muted:                oklch(0.25 0.012 55);
-  --muted-foreground:     oklch(0.62 0.012 55);
+  --muted: oklch(0.25 0.012 55);
+  --muted-foreground: oklch(0.62 0.012 55);
 
-  --accent:               oklch(0.25 0.015 55);
-  --accent-foreground:    oklch(0.93 0.005 85);
+  --accent: oklch(0.25 0.015 55);
+  --accent-foreground: oklch(0.93 0.005 85);
 
-  --destructive:          var(--tm-terracotta-light);
-  --border:               oklch(0.30 0.012 55);
-  --input:                oklch(0.28 0.012 55);
-  --ring:                 oklch(0.72 0.17 52);
+  --destructive: var(--tm-terracotta-light);
+  --border: oklch(0.3 0.012 55);
+  --input: oklch(0.28 0.012 55);
+  --ring: oklch(0.72 0.17 52);
 
   --chart-1: oklch(0.72 0.17 52);
-  --chart-2: oklch(0.62 0.10 150);
+  --chart-2: oklch(0.62 0.1 150);
   --chart-3: oklch(0.65 0.07 145);
   --chart-4: oklch(0.78 0.12 75);
   --chart-5: oklch(0.55 0.07 145);
 
-  --sidebar:                    oklch(0.20 0.015 50);
-  --sidebar-foreground:         oklch(0.93 0.005 85);
-  --sidebar-primary:            oklch(0.72 0.17 52);
+  --sidebar: oklch(0.2 0.015 50);
+  --sidebar-foreground: oklch(0.93 0.005 85);
+  --sidebar-primary: oklch(0.72 0.17 52);
   --sidebar-primary-foreground: oklch(0.93 0.005 85);
-  --sidebar-accent:             oklch(0.25 0.015 55);
-  --sidebar-accent-foreground:  oklch(0.93 0.005 85);
-  --sidebar-border:             oklch(0.30 0.012 55);
-  --sidebar-ring:               oklch(0.72 0.17 52);
+  --sidebar-accent: oklch(0.25 0.015 55);
+  --sidebar-accent-foreground: oklch(0.93 0.005 85);
+  --sidebar-border: oklch(0.3 0.012 55);
+  --sidebar-ring: oklch(0.72 0.17 52);
 }
 
 /* ============================================================
@@ -146,15 +146,33 @@
    ============================================================ */
 
 :root {
-  --duration-instant:  75ms;
-  --duration-fast:     150ms;
-  --duration-normal:   250ms;
-  --duration-slow:     400ms;
-  --duration-enter:    500ms;
+  --duration-instant: 75ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --duration-enter: 500ms;
 
-  --ease-out:          cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-out-expo:     cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out:       cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+/* ── Theme transition burst ─────────────────────────────────
+   Applied briefly when switching themes so CSS variable changes
+   animate smoothly instead of snapping. Class is added/removed
+   programmatically by ThemeToggle (see theme-toggle.tsx).
+   ---------------------------------------------------------- */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 500ms cubic-bezier(0.25, 1, 0.5, 1),
+    color 500ms cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 500ms cubic-bezier(0.25, 1, 0.5, 1),
+    fill 500ms cubic-bezier(0.25, 1, 0.5, 1),
+    stroke 500ms cubic-bezier(0.25, 1, 0.5, 1) !important;
+  transition-delay: 0ms !important;
 }
 
 /* ============================================================
@@ -163,14 +181,14 @@
    ============================================================ */
 
 :root {
-  --z-base:      0;
-  --z-raised:    10;
-  --z-sticky:    100;
-  --z-dropdown:  200;
-  --z-overlay:   300;
-  --z-modal:     400;
-  --z-toast:     500;
-  --z-max:       999;
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-max: 999;
 }
 
 /* ============================================================
@@ -258,19 +276,24 @@
   html {
     @apply font-body antialiased;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
   }
   body {
     @apply bg-background text-foreground;
   }
 
   /* Typography hierarchy — serif display + sans body */
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1.2;
   }
-  h4, h5, h6 {
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-body);
     font-weight: 600;
     line-height: 1.3;
@@ -310,4 +333,92 @@
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@utility nav-pill {
+  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  background-color: color-mix(in oklab, var(--background) 74%, transparent);
+  box-shadow: 0 24px 48px -34px
+    color-mix(in oklab, var(--foreground) 28%, transparent);
+  backdrop-filter: blur(22px);
+  border-radius: 999px;
+}
+
+@utility nav-floating-pill {
+  @apply nav-pill border-foreground/12 bg-background/72 backdrop-blur-xl;
+}
+
+@utility nav-desktop-pill-height {
+  @apply h-14;
+}
+
+@utility nav-icon-button {
+  @apply flex h-10 w-10 items-center justify-center rounded-full text-foreground/58 transition-colors duration-150 hover:bg-foreground/[0.06] hover:text-foreground;
+}
+
+@utility nav-primary-action {
+  @apply rounded-full bg-foreground px-4 py-2 text-sm font-semibold tracking-[0.01em] text-background transition-all duration-150 hover:bg-foreground/92;
+}
+
+@utility nav-secondary-action {
+  @apply rounded-full px-4 py-2 text-sm font-medium text-foreground/72 transition-colors duration-150 hover:bg-foreground/[0.05] hover:text-foreground;
+}
+
+@utility nav-theme-toggle {
+  @apply nav-icon-button inline-flex text-foreground/68 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring;
+}
+
+@utility nav-desktop-link-active-pill {
+  @apply absolute inset-0 rounded-full bg-foreground/92;
+}
+
+@utility nav-desktop-link {
+  @apply relative flex h-10 items-center rounded-full px-4 text-sm font-medium tracking-[0.01em] transition-colors duration-150;
+}
+
+@utility nav-desktop-link-muted {
+  @apply text-foreground/62 hover:bg-foreground/[0.05] hover:text-foreground;
+}
+
+@utility nav-mobile-link-active-pill {
+  @apply absolute inset-0 rounded-[1.35rem] bg-foreground/[0.06];
+}
+
+@utility nav-mobile-link {
+  @apply relative flex min-h-12 items-center rounded-[1.35rem] px-4 py-3.5 text-[1.0625rem] font-medium tracking-[-0.01em] transition-colors duration-150;
+}
+
+@utility nav-mobile-link-muted {
+  @apply text-foreground/72 hover:bg-foreground/[0.04] hover:text-foreground active:bg-foreground/[0.06];
+}
+
+@utility nav-mobile-sheet {
+  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+  background: color-mix(in oklab, var(--background) 90%, transparent);
+  box-shadow: 0 30px 70px -42px
+    color-mix(in oklab, var(--foreground) 40%, transparent);
+  backdrop-filter: blur(24px);
+  border-radius: calc(var(--radius-4xl) + 0.15rem);
+}
+
+@utility nav-mobile-primary-action {
+  @apply flex min-h-12 w-full items-center justify-center rounded-full bg-foreground px-5 py-3 text-center text-sm font-semibold text-background transition-all duration-150 hover:bg-foreground/92;
+}
+
+@utility nav-mobile-secondary-action {
+  @apply flex min-h-12 w-full items-center justify-center rounded-full border border-foreground/12 px-5 py-3 text-center text-sm font-medium text-foreground/72 transition-all duration-150 hover:bg-foreground/[0.04] hover:text-foreground;
+}
+
+@utility nav-mobile-danger-action {
+  @apply flex min-h-12 w-full items-center justify-center rounded-full border border-destructive/28 px-5 py-3 text-center text-sm font-medium text-destructive transition-all duration-150 hover:bg-destructive/8;
+}
+
+@utility nav-fade-scrim {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--background) 94%, transparent) 0%,
+    color-mix(in oklab, var(--background) 78%, transparent) 26%,
+    color-mix(in oklab, var(--background) 38%, transparent) 68%,
+    transparent 100%
+  );
 }
